@@ -1,0 +1,54 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoxNestGroup"
+        xmlns:GridView="clr-namespace:BoxNestGroup.GridView" x:Class="BoxNestGroup.MainWindow"
+        mc:Ignorable="d"
+        Title="BoxNestGroup" Height="768" Width="1024"
+        >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="28*"/>
+        </Grid.RowDefinitions>
+        <Menu x:Name="menuMain" DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="8">
+            <MenuItem Header="設定">
+                <MenuItem Header="接続設定" Click="settingsClick"/>
+                <MenuItem Header="承認" Click="webAuthClick"/>
+            </MenuItem>
+            <MenuItem Header="メニュー">
+                <MenuItem Header="About" Click="aboutClick" />
+                <MenuItem Header="終了" />
+            </MenuItem>
+        </Menu>
+        <Label x:Name="labelLogin"  Grid.Row="1" Grid.Column="0" Content="ログイン：" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"/>
+        <Button x:Name="buttonWebAuth" Grid.Row="1" Grid.Column="1" Content="承認" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="webAuthClick"/>
+        <Button x:Name="buttonRenewFoloder" Grid.Row="2" Grid.Column="0"  Content="ネスト更新" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button x:Name="buttonRenewGroup" Grid.Row="2" Grid.Column="2"  Content="グループ更新" HorizontalAlignment="Left" VerticalAlignment="Top" Click="renewGroupButtonClick"/>
+        <Button x:Name="buttonMakeGroup" Grid.Row="2" Grid.Column="3"  Content="グループ作成" HorizontalAlignment="Left" VerticalAlignment="Top" Click="makeGroupButtonClick"/>
+        <TreeView x:Name="treeViewFolder" Grid.Row="3" Grid.Column="1"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0"/>
+        <DataGrid x:Name="dataGridGroup" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="グループ名" Binding="{Binding GroupName}" Width="3*"/>
+                <DataGridTextColumn Header="グループID" Binding="{Binding GroupId}" Width="2*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="ネスト最大数" Binding="{Binding MaxNestCount}" Width="*" IsReadOnly="True" />
+                <DataGridTextColumn Header="フォルダ数" Binding="{Binding FolderCount}" Width="*" IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
