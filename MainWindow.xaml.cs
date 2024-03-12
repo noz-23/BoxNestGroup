@@ -28,6 +28,8 @@ namespace BoxNestGroup
         {
             InitializeComponent();
 
+            Loaded += windowLoaded;
+
             //dataGridGroup.ItemsSource = new ObservableCollection<BoxGroupDataGridView>();
             var listDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
             dataGridGroup.ItemsSource = listDataGridRow.ToList();
@@ -64,7 +66,7 @@ namespace BoxNestGroup
         }
         private async void aboutClick(object sender, RoutedEventArgs e)
         {
-            await SetLoginUserText();
+            //await SetLoginUserText();
         }
 
         public async Task SetLoginUserText() 
@@ -78,31 +80,57 @@ namespace BoxNestGroup
         //    var userName = await BoxManager.Instance.LoginUserName();
         //}
 
-        private async void renewGroupButtonClick(object sender, RoutedEventArgs e)
+        private async void renewFoloderButtonClick(object sender, RoutedEventArgs e)
         {
-            var listDataGridRow = await BoxManager.Instance.ListGroupData();
-            dataGridGroup.ItemsSource = listDataGridRow.ToList();            
+            renewFolder();
+            renewGroup();
         }
 
-        private async void makeGroupButtonClick(object sender, RoutedEventArgs e) 
+
+        /*
+         * 更新フォルダ
+         *  引数　：なし
+         *  戻り値：なし
+         */
+        private async void renewFolder()
         {
-            foreach(BoxGroupDataGridView group in dataGridGroup.ItemsSource)
+            var list = await FolderManager.Instance.ListFolder();
+            treeViewFolder.ItemsSource = list.ToList();
+        }
+
+
+        private async void makeGroupButtonClick(object sender, RoutedEventArgs e)
+        {
+            foreach (BoxGroupDataGridView group in dataGridGroup.ItemsSource)
             {
-                if(group.GroupId != string.Empty) 
+                if (group.GroupId != string.Empty)
                 {
                     continue;
                 }
 
                 await BoxManager.Instance.CreateGroup(group.GroupName);
-                FolderManager.Instance.CreateGroup(group.GroupName);
+                FolderManager.Instance.CreateFolder(group.GroupName);
             }
+            var list = await BoxManager.Instance.ListGroupData();
+            dataGridGroup.ItemsSource = list.ToList();
+        }
+
+        /*
+         * 更新グループ
+         *  引数　：なし
+         *  戻り値：なし
+         */
+        private async void renewGroup()
+        {
             var listDataGridRow = await BoxManager.Instance.ListGroupData();
             dataGridGroup.ItemsSource = listDataGridRow.ToList();
         }
 
-        private async void renewFolder()
+        private async void renewGroupButtonClick(object sender, RoutedEventArgs e)
         {
-            await FolderManager.Instance.ListFolder();
+            renewGroup();
+            renewFolder();
         }
+
     }
 }

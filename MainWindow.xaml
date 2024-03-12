@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoxNestGroup"
-        xmlns:GridView="clr-namespace:BoxNestGroup.GridView" x:Class="BoxNestGroup.MainWindow"
+        xmlns:GridView="clr-namespace:BoxNestGroup.GridView" xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" x:Class="BoxNestGroup.MainWindow"
         mc:Ignorable="d"
         Title="BoxNestGroup" Height="768" Width="1024"
         >
@@ -37,18 +37,42 @@
             </MenuItem>
         </Menu>
         <Label x:Name="labelLogin"  Grid.Row="1" Grid.Column="0" Content="ログイン：" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"/>
-        <Button x:Name="buttonWebAuth" Grid.Row="1" Grid.Column="1" Content="承認" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="webAuthClick"/>
-        <Button x:Name="buttonRenewFoloder" Grid.Row="2" Grid.Column="0"  Content="ネスト更新" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button x:Name="buttonRenewGroup" Grid.Row="2" Grid.Column="2"  Content="グループ更新" HorizontalAlignment="Left" VerticalAlignment="Top" Click="renewGroupButtonClick"/>
-        <Button x:Name="buttonMakeGroup" Grid.Row="2" Grid.Column="3"  Content="グループ作成" HorizontalAlignment="Left" VerticalAlignment="Top" Click="makeGroupButtonClick"/>
-        <TreeView x:Name="treeViewFolder" Grid.Row="3" Grid.Column="1"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0"/>
-        <DataGrid x:Name="dataGridGroup" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="グループ名" Binding="{Binding GroupName}" Width="3*"/>
-                <DataGridTextColumn Header="グループID" Binding="{Binding GroupId}" Width="2*" IsReadOnly="True"/>
-                <DataGridTextColumn Header="ネスト最大数" Binding="{Binding MaxNestCount}" Width="*" IsReadOnly="True" />
-                <DataGridTextColumn Header="フォルダ数" Binding="{Binding FolderCount}" Width="*" IsReadOnly="True" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <Button x:Name="buttonWebAuth" Grid.Row="1" Grid.Column="1" Content="承認" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="1,1,1,1" Click="webAuthClick"/>
+        <Button x:Name="buttonRenewFoloder" Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" Content="ネスト更新" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="renewFoloderButtonClick"/>
+        <TabControl x:Name="tabControlBox" Grid.Row="1" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3" Grid.ColumnSpan="6">
+            <TabItem Header="Group">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="23*"/>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="buttonRenewGroup" Grid.Row="0" Grid.Column="0"  Content="グループ更新" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="renewGroupButtonClick"/>
+                    <Button x:Name="buttonMakeGroup" Grid.Row="0" Grid.Column="1"  Content="グループ作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="makeGroupButtonClick"/>
+                    <DataGrid x:Name="dataGridGroup" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="グループ名" Binding="{Binding GroupName}" Width="3*"/>
+                            <DataGridTextColumn Header="グループID" Binding="{Binding GroupId}" Width="2*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="ネスト最大数" Binding="{Binding MaxNestCount}" Width="*" IsReadOnly="True" />
+                            <DataGridTextColumn Header="フォルダ数" Binding="{Binding FolderCount}" Width="*" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="User">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+        <TreeView x:Name="treeViewFolder" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1" >
+            <TreeView.ItemTemplate >
+                <HierarchicalDataTemplate  DataType= "local:BoxNestGroup.View.FolderGroupTreeView" ItemsSource="{Binding ListNestGroup}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
     </Grid>
 </Window>
