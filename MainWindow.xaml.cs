@@ -31,8 +31,11 @@ namespace BoxNestGroup
             Loaded += windowLoaded;
 
             //dataGridGroup.ItemsSource = new ObservableCollection<BoxGroupDataGridView>();
-            var listDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
-            dataGridGroup.ItemsSource = listDataGridRow.ToList();
+            var listGroupDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
+            dataGridGroup.ItemsSource = listGroupDataGridRow.ToList();
+
+            var listUserDataGridRow = new ObservableCollection<BoxUserDataGridView>();
+            dataGridUser.ItemsSource = listUserDataGridRow.ToList();
 
             //
             var listTreeViewRow = new ObservableCollection<FolderGroupTreeView>();
@@ -86,19 +89,6 @@ namespace BoxNestGroup
             renewGroup();
         }
 
-
-        /*
-         * 更新フォルダ
-         *  引数　：なし
-         *  戻り値：なし
-         */
-        private async void renewFolder()
-        {
-            var list = await FolderManager.Instance.ListFolder();
-            treeViewFolder.ItemsSource = list.ToList();
-        }
-
-
         private async void makeGroupButtonClick(object sender, RoutedEventArgs e)
         {
             foreach (BoxGroupDataGridView group in dataGridGroup.ItemsSource)
@@ -108,13 +98,37 @@ namespace BoxNestGroup
                     continue;
                 }
 
-                await BoxManager.Instance.CreateGroup(group.GroupName);
+                await BoxManager.Instance.CreateGroupName(group.GroupName);
                 FolderManager.Instance.CreateFolder(group.GroupName);
             }
             var list = await BoxManager.Instance.ListGroupData();
             dataGridGroup.ItemsSource = list.ToList();
         }
 
+        private async void renewGroupButtonClick(object sender, RoutedEventArgs e)
+        {
+            renewGroup();
+            renewFolder();
+        }
+
+
+        private async void makeUserButtonClick(object sender, RoutedEventArgs e)
+        {
+        }
+        private async void renewUserButtonClick(object sender, RoutedEventArgs e)
+        {
+        }
+
+        /*
+         * 更新フォルダ
+         *  引数　：なし
+         *  戻り値：なし
+         */
+        private async void renewFolder()
+        {
+            var list = FolderManager.Instance.ListCommonFolder();
+            treeViewFolder.ItemsSource = list.ToList();
+        }
         /*
          * 更新グループ
          *  引数　：なし
@@ -126,11 +140,23 @@ namespace BoxNestGroup
             dataGridGroup.ItemsSource = listDataGridRow.ToList();
         }
 
-        private async void renewGroupButtonClick(object sender, RoutedEventArgs e)
+        private void dataGridGroupRowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            renewGroup();
-            renewFolder();
+            var newValue = e.Row;
+            var oldValue = e.Row.Item;
+
+            Console.WriteLine("{0}", e);
+
         }
 
+        private async void dataGridGroupCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            var newGroupName = (e.EditingElement as System.Windows.Controls.TextBox).Text;
+            var oldGroup = (e.Row.Item as BoxGroupDataGridView);
+            Console.WriteLine("dataGridGroupCellEditEnding  Id[{0}] old[{1}] -> new[{2}]", oldGroup.GroupId, oldGroup.GroupName, newGroupName);
+            var rtn =BoxManager.Instance.UpdateGroupName(oldGroup.GroupId, newGroupName);
+            FolderManager.Instance.UpdateFolder(oldGroup.GroupName, newGroupName);
+
+        }
     }
 }

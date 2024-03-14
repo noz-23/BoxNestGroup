@@ -2,13 +2,14 @@
 using System.Data;
 using System.IO;
 using System.Windows;
+using System.Windows.Annotations;
 
 namespace BoxNestGroup
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         public App():base()
         {
