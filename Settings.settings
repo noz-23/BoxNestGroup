@@ -3,7 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="CommonGroupFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">CommonGroup</Value>
+      <Value Profile="(Default)">GroupFolder</Value>
+    </Setting>
+    <Setting Name="CommonGroupSetting" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SettingFolder</Value>
     </Setting>
     <Setting Name="ClientID" Type="System.String" Scope="User">
       <Value Profile="(Default)">Please Input</Value>

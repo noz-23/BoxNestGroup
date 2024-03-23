@@ -12,10 +12,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2"/>
-            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="28*"/>
@@ -32,24 +31,22 @@
         </Menu>
         <Label x:Name="labelLogin"  Grid.Row="1" Grid.Column="0" Content="ログイン：" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"/>
         <Button x:Name="buttonWebAuth" Grid.Row="1" Grid.Column="2" Content="承認" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="1,1,1,1" Click="webAuthClick"/>
-        <Button x:Name="buttonRenewFoloder" Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" Content="ネスト更新" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="renewFoloderButtonClick"/>
-        <TreeView x:Name="treeViewFolder" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1" >
+        <TreeView x:Name="treeViewFolder" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1" PreviewMouseDown="treeViewFolderPreviewMouseDown" MouseMove="treeViewFolderMouseMove" Drop="treeViewFolderDrop">
             <TreeView.ItemTemplate >
                 <HierarchicalDataTemplate  DataType= "local:BoxNestGroup.View.FolderGroupTreeView" ItemsSource="{Binding ListNestGroup}">
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding GroupName}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
         <GridSplitter
             Grid.Column="1"
-            Grid.Row="3"
+            Grid.Row="2"
             HorizontalAlignment="Stretch"
             Background="Gray" />
-        <TabControl x:Name="tabControlBox" Grid.Row="3" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3">
+        <TabControl x:Name="tabControlBox" Grid.Row="2" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3">
             <TabItem Header="Group">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="6*"/>
                     </Grid.ColumnDefinitions>
@@ -57,9 +54,8 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="23*"/>
                     </Grid.RowDefinitions>
-                    <Button x:Name="buttonRenewGroup" Grid.Row="0" Grid.Column="0"  Content="グループ更新" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="renewGroupButtonClick"/>
-                    <Button x:Name="buttonMakeGroup" Grid.Row="0" Grid.Column="1"  Content="グループ作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="makeGroupButtonClick"/>
-                    <DataGrid x:Name="dataGridGroup" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column" RowEditEnding="dataGridGroupRowEditEnding" CellEditEnding="dataGridGroupCellEditEnding">
+                    <Button x:Name="buttonMakeGroup" Grid.Row="0" Grid.Column="0"  Content="グループ作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="makeGroupButtonClick"/>
+                    <DataGrid x:Name="dataGridGroup" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column" RowEditEnding="dataGridGroupRowEditEnding" CellEditEnding="dataGridGroupCellEditEnding">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="グループ名" Binding="{Binding GroupName}" Width="3*"/>
                             <DataGridTextColumn Header="グループID" Binding="{Binding GroupId}" Width="2*" IsReadOnly="True"/>
