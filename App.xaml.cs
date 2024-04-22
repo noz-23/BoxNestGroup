@@ -16,7 +16,7 @@ namespace BoxNestGroup
             LogFile.Instance.Create();
 
             var currentFolder = Directory.GetCurrentDirectory();
-            Console.WriteLine("currentFolder:" + currentFolder.ToString());
+            Console.WriteLine("■currentFolder:" + currentFolder.ToString());
 
             var commonGroupFolder = currentFolder + @"\" + Settings.Default.CommonGroupFolder;
 
@@ -24,8 +24,18 @@ namespace BoxNestGroup
             if (Directory.Exists(commonGroupFolder) == false)
             {
                 Directory.CreateDirectory(commonGroupFolder);
-                Console.WriteLine("commonGroupFolder" + commonGroupFolder.ToString());
+                Console.WriteLine("■commonGroupFolder" + commonGroupFolder.ToString());
             }
+
+            var commonGroupSetting = currentFolder + @"\" + Settings.Default.CommonGroupSetting;
+
+            // 基本フォルダがない場合は作成
+            if (Directory.Exists(commonGroupSetting) == false)
+            {
+                Directory.CreateDirectory(commonGroupSetting);
+                Console.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
+            }
+
         }
         protected override void OnStartup(StartupEventArgs e)
         {

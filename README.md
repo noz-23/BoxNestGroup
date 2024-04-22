@@ -31,7 +31,7 @@ MIT license
 
 developer.box.com：APACHE LICENSE
 
-　　https://developer.box.com/
+　https://developer.box.com/
 
   https://github.com/box/box-windows-sdk-v2
 

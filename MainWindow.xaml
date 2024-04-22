@@ -8,11 +8,11 @@
         mc:Ignorable="d"
         Title="BoxNestGroup" Height="768" Width="1024"
         >
-    <Grid>
+    <Grid Cursor="">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="14*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -30,32 +30,37 @@
             </MenuItem>
         </Menu>
         <Label x:Name="labelLogin"  Grid.Row="1" Grid.Column="0" Content="ログイン：" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"/>
-        <Button x:Name="buttonWebAuth" Grid.Row="1" Grid.Column="2" Content="承認" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="1,1,1,1" Click="webAuthClick"/>
-        <TreeView x:Name="treeViewFolder" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1" PreviewMouseDown="treeViewFolderPreviewMouseDown" MouseMove="treeViewFolderMouseMove" Drop="treeViewFolderDrop">
+        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" >
+            <Button x:Name="buttonWebAuth" Content="　承　認　" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="1,1,1,1" Click="webAuthClick"/>
+            <Button x:Name="buttonOffLine" Content="オフライン" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="1,1,1,1" Click="aboutClick"/>
+        </StackPanel>
+        <TreeView x:Name="treeViewFolder" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1,1,1,1"
+                  PreviewMouseDown="treeViewFolderPreviewMouseDown"
+                  MouseMove="treeViewFolderMouseMove"
+                  Drop="treeViewFolderDrop">
             <TreeView.ItemTemplate >
                 <HierarchicalDataTemplate  DataType= "local:BoxNestGroup.View.FolderGroupTreeView" ItemsSource="{Binding ListNestGroup}">
                     <TextBlock Text="{Binding GroupName}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <GridSplitter
-            Grid.Column="1"
-            Grid.Row="2"
-            HorizontalAlignment="Stretch"
-            Background="Gray" />
+        <GridSplitter Grid.Column="1" Grid.Row="2" Grid.RowSpan="1" HorizontalAlignment="Stretch" Background="Gray" />
+        <Button x:Name="buttonAdd" Grid.Column="1" Grid.Row="2" Content="追加" HorizontalAlignment="Center"  VerticalAlignment="Center" Margin="1,1,1,1" Click="addClick"/>
         <TabControl x:Name="tabControlBox" Grid.Row="2" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3">
-            <TabItem Header="Group">
+            <TabItem Header="Group" Height="22" Margin="-2,-2,-2,0" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="6*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="23*"/>
                     </Grid.RowDefinitions>
-                    <Button x:Name="buttonMakeGroup" Grid.Row="0" Grid.Column="0"  Content="グループ作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="makeGroupButtonClick"/>
-                    <DataGrid x:Name="dataGridGroup" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column" RowEditEnding="dataGridGroupRowEditEnding" CellEditEnding="dataGridGroupCellEditEnding">
+                    <Button x:Name="buttonMakeGroup" Grid.Row="0"  Content="グループ作成" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,1,0,0" Click="makeGroupButtonClick"/>
+                    <DataGrid x:Name="dataGridGroup" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
+                              HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+                              RowEditEnding="dataGridGroupRowEditEnding"
+                              CellEditEnding="dataGridGroupCellEditEnding">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="グループ名" Binding="{Binding GroupName}" Width="3*"/>
                             <DataGridTextColumn Header="グループID" Binding="{Binding GroupId}" Width="2*" IsReadOnly="True"/>
@@ -69,22 +74,24 @@
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="6*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="23*"/>
+                        <RowDefinition Height="18*"/>
+                        <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
-                    <Button x:Name="buttonRenewUser" Grid.Row="0" Grid.Column="0"  Content="ユーザー更新" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="renewUserButtonClick"/>
-                    <Button x:Name="buttonMakeUser" Grid.Row="0" Grid.Column="1"  Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="makeUserButtonClick"/>
-                    <DataGrid x:Name="dataGridUser" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+                    <Button x:Name="buttonMakeUser" Grid.Row="0" Grid.Column="0" Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" Click="makeUserButtonClick" Grid.ColumnSpan="3"/>
+                    <DataGrid x:Name="dataGridUser" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ユーザー名" Binding="{Binding GroupName}" Width="*"/>
-                            <DataGridTextColumn Header="ユーザーID" Binding="{Binding GroupId}" Width="*" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="所属グループ" Binding="{Binding GroupId}" Width="*" IsReadOnly="True"/>
+                            <DataGridCheckBoxColumn Header="選択" Binding="{Binding Selected}" Width="*"/>
+                            <DataGridTextColumn Header="ユーザー名" Binding="{Binding UserName}" Width="4*"/>
+                            <DataGridTextColumn Header="ユーザーメールアドレス" Binding="{Binding UserMailAddress}" Width="4*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="ユーザーID" Binding="{Binding UserId}" Width="4*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="所属グループ" Binding="{Binding ListNowGroup}" Width="4*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="変更グループ" Binding="{Binding ListModGroup}" Width="4*" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    <TextBox x:Name="textFilter" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" AcceptsReturn="True"/>
                 </Grid>
             </TabItem>
         </TabControl>
