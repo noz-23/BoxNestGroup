@@ -36,7 +36,7 @@ namespace BoxNestGroup
             Loaded += windowLoaded;
         }
 
-        private async void windowLoaded(object sender, RoutedEventArgs e)
+        private void windowLoaded(object sender, RoutedEventArgs e)
         {
             // 基本設定(フォルダとBox比較)の読み込みはここ
             SettingManager.Instance.LoadFile();
@@ -50,24 +50,38 @@ namespace BoxNestGroup
 
         private async System.Threading.Tasks.Task renewBox()
         {
-            if (BoxManager.Instance.IsHaveAccessToken == true)
-            {
-                // トークンありの場合は、ユーザー名を取得して利用できるか確認
-                var flg=await setLoginUserText();
-                if (flg == true)
-                {
-                    await renewListGroupData();
-                    await renewListUserData();
-                    return;
-                }
-            }
+            //if (BoxManager.Instance.IsHaveAccessToken == true)
+            //{
+            //    // トークンありの場合は、ユーザー名を取得して利用できるか確認
+            //    var flg=await setLoginUserText();
+            //    if (flg == true)
+            //    {
+            //        await renewListGroupData();
+            //        await renewListUserData();
+            //        return;
+            //    }
+            //}
             // リフレッシュトークンとか全部だめな場合は、再取得と表示
-            labelLogin.Content = "ログイン：" + "再取得";
-            var listGroupDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
-            dataGridGroup.ItemsSource = listGroupDataGridRow.ToList();
+            //labelLogin.Content = "ログイン：" + "再取得";
+            //var listGroupDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
+            //dataGridGroup.ItemsSource = listGroupDataGridRow.ToList();
 
-            var listUserDataGridRow = new ObservableCollection<BoxUserDataGridView>();
-            dataGridUser.ItemsSource = listUserDataGridRow.ToList();
+            //var listUserDataGridRow = new ObservableCollection<BoxUserDataGridView>();
+            //dataGridUser.ItemsSource = listUserDataGridRow.ToList();
+            var flg = await setLoginUserText();
+            if (flg == true)
+            {
+                await renewListGroupData();
+                await renewListUserData();
+            }
+            else 
+            {
+                var listGroupDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
+                dataGridGroup.ItemsSource = listGroupDataGridRow.ToList();
+                var listUserDataGridRow = new ObservableCollection<BoxUserDataGridView>();
+                dataGridUser.ItemsSource = listUserDataGridRow.ToList();
+            }
+
         }
 
         private async Task<bool> setLoginUserText() 
@@ -75,6 +89,12 @@ namespace BoxNestGroup
             try
             {
                 var userName = await BoxManager.Instance.LoginUserName();
+                if (userName == string.Empty)
+                {
+                    BoxManager.Instance.SetUserToken(string.Empty);
+                    labelLogin.Content = "ログイン：" + "再取得";
+                    return false;
+                }
                 labelLogin.Content = "ログイン：" + userName;
                 return true;
             }
@@ -82,18 +102,21 @@ namespace BoxNestGroup
             {
                 Console.WriteLine(ex_.ToString());
                 //
-                var flg = await BoxManager.Instance.RefreshToken();
-                if (flg == true)
-                {
-                    var userName = await BoxManager.Instance.LoginUserName();
-                    labelLogin.Content = "ログイン：" + userName;
-                    return true;
-                }
-                else
-                {
-                    labelLogin.Content = "ログイン：" + "再取得";
-                    return false;
-                }
+                //var flg = await BoxManager.Instance.RefreshToken();
+                //if (flg == true)
+                //{
+                //    var userName = await BoxManager.Instance.LoginUserName();
+                //    labelLogin.Content = "ログイン：" + userName;
+                //    return true;
+                //}
+                //else
+                //{
+                //    labelLogin.Content = "ログイン：" + "再取得";
+                //    return false;
+                //}
+                BoxManager.Instance.SetUserToken(string.Empty);
+                labelLogin.Content = "ログイン：" + "再取得";
+                return false;
             }
         }
 
@@ -133,7 +156,7 @@ namespace BoxNestGroup
             Console.WriteLine("■dataGridGroupRowEditEnding : {0}", e);
         }
 
-        private async void dataGridGroupCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        private void dataGridGroupCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             var newGroupName = (e.EditingElement as System.Windows.Controls.TextBox).Text;
             var oldGroup = (e.Row.Item as BoxGroupDataGridView);
@@ -171,7 +194,7 @@ namespace BoxNestGroup
             foreach (var name in listFolder)
             {
                 var add = new BoxGroupDataGridView() { GroupName = name };
-                add.Inittal();
+                add.Inital();
 
                 listGridView.Add(add);
             }

@@ -33,6 +33,12 @@ namespace BoxNestGroup
 				//win.Show();
 				win.Owner = this;
 				win.ShowDialog(); // モーダルで表示
+
+				BoxManager.Instance.OAuthToken();
+			}
+			else
+			{
+				await BoxManager.Instance.RefreshToken();
 			}
 
 			await renewBox();
@@ -48,7 +54,7 @@ namespace BoxNestGroup
 			win.Owner = this;
 			win.ShowDialog(); // モーダルで表示
 		}
-		private async void aboutClick(object sender, RoutedEventArgs e)
+		private void aboutClick(object sender, RoutedEventArgs e)
 		{
 			//await SetLoginUserText();
 			var win = new AboutWindow();
@@ -76,30 +82,43 @@ namespace BoxNestGroup
 			dataGridGroup.ItemsSource = list.ToList();
 		}
 
-		private async void makeUserButtonClick(object sender, RoutedEventArgs e)
+		private void makeUserButtonClick(object sender, RoutedEventArgs e)
 		{
 		}
 
-		private async void addClick(object sender, RoutedEventArgs e)
+		private void addClick(object sender, RoutedEventArgs e)
 		{
             Console.WriteLine("■addClick : {0} {1}", sender, e);
 			//
             var listUser = dataGridUser.ItemsSource as List<BoxUserDataGridView>;
 			var selectGroup =treeViewFolder.SelectedItem as FolderGroupTreeView;
 
-			if (selectGroup ==null)
+            if (listUser == null)
+            {
+                return;
+            }
+            if (selectGroup ==null)
 			{
 				return;
 			}
+
 
 			foreach(var user in listUser)
 			{
 				if (user.Selected == false) 
 				{
-					continue;
-				}
 
-				var addList=new List<string>();
+                    continue;
+				}
+                if (selectGroup.GroupName == Settings.Default.ClearGroupName)
+                {
+                    // クリア設定の場合はクリア
+                    user.ListNestGroup = string.Empty;
+                    user.ListModGroup = selectGroup.GroupName;
+                    continue;
+                }
+
+                var addList =new List<string>();
 
                 var nowList =user.ListModGroup;
 				if (nowList != string.Empty)
@@ -109,9 +128,13 @@ namespace BoxNestGroup
                 }
 
 
+				addList.Add(selectGroup.GroupName);
+                user.ListModGroup= string.Join("\n", new HashSet<string>(addList));
+
+                // 重複はHashSetで消えるから、そのまま追加
                 addList.AddRange(FolderManager.Instance.ListUniqueGroup(new List<string>([selectGroup.GroupName])));
 
-                user.ListModGroup = string.Join("\n",new HashSet<string>(addList));
+                user.ListNestGroup = string.Join("\n",new HashSet<string>(addList));
 
                 //ListPathFindFolderName
             }
@@ -119,8 +142,9 @@ namespace BoxNestGroup
 			dataGridUser.ItemsSource = new List<BoxUserDataGridView>( listUser);
             dataGridUser.UpdateLayout();
 
-
         }
 
-	}
+		private void renewUserButtonClick(object sender, RoutedEventArgs e) { }
+
+    }
 }

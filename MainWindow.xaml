@@ -56,7 +56,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="23*"/>
                     </Grid.RowDefinitions>
-                    <Button x:Name="buttonMakeGroup" Grid.Row="0"  Content="グループ作成" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,1,0,0" Click="makeGroupButtonClick"/>
+                    <Button x:Name="buttonMakeGroup" Grid.Row="0"  Content="グループ作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,1,0,0" Click="makeGroupButtonClick"/>
                     <DataGrid x:Name="dataGridGroup" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
                               HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
                               RowEditEnding="dataGridGroupRowEditEnding"
@@ -66,6 +66,7 @@
                             <DataGridTextColumn Header="グループID" Binding="{Binding GroupId}" Width="2*" IsReadOnly="True"/>
                             <DataGridTextColumn Header="ネスト最大数" Binding="{Binding MaxNestCount}" Width="*" IsReadOnly="True" />
                             <DataGridTextColumn Header="フォルダ数" Binding="{Binding FolderCount}" Width="*" IsReadOnly="True" />
+                            <DataGridTextColumn Header="ユーザー数" Binding="{Binding UserCount}" Width="*" IsReadOnly="True" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -80,7 +81,10 @@
                         <RowDefinition Height="18*"/>
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
-                    <Button x:Name="buttonMakeUser" Grid.Row="0" Grid.Column="0" Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" Click="makeUserButtonClick" Grid.ColumnSpan="3"/>
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
+                        <Button x:Name="buttonMakeUser" Content="作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" Click="makeUserButtonClick" Grid.ColumnSpan="3"/>
+                        <Button x:Name="buttonRenewUser" Content="更新" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" Click="renewUserButtonClick" Grid.ColumnSpan="3"/>
+                    </StackPanel>     
                     <DataGrid x:Name="dataGridUser" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,0,0" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column">
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn Header="選択" Binding="{Binding Selected}" Width="*"/>
@@ -88,7 +92,8 @@
                             <DataGridTextColumn Header="ユーザーメールアドレス" Binding="{Binding UserMailAddress}" Width="4*" IsReadOnly="True"/>
                             <DataGridTextColumn Header="ユーザーID" Binding="{Binding UserId}" Width="4*" IsReadOnly="True"/>
                             <DataGridTextColumn Header="所属グループ" Binding="{Binding ListNowGroup}" Width="4*" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="変更グループ" Binding="{Binding ListModGroup}" Width="4*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="変更[追　加]" Binding="{Binding ListModGroup}" Width="4*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="変更[ネスト]" Binding="{Binding ListNestGroup}" Width="4*" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <TextBox x:Name="textFilter" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" AcceptsReturn="True"/>

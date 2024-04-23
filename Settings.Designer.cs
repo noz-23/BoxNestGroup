@@ -34,22 +34,19 @@ namespace BoxNestGroup {
                 this["CommonGroupFolder"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SettingFolder")]
-        public string CommonGroupSetting
-        {
-            get
-            {
+        public string CommonGroupSetting {
+            get {
                 return ((string)(this["CommonGroupSetting"]));
             }
-            set
-            {
+            set {
                 this["CommonGroupSetting"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Please Input")]
@@ -116,5 +113,16 @@ namespace BoxNestGroup {
             }
         }
         
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("【グループなしに設定】\"")]
+        public string ClearGroupName {
+            get {
+                return ((string)(this["ClearGroupName"]));
+            }
+            set {
+                this["ClearGroupName"] = value;
+            }
+        }
     }
 }
