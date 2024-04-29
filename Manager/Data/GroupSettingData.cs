@@ -9,97 +9,78 @@ using System.Windows.Shapes;
 
 namespace BoxNestGroup.Manager.Data
 {
+    /// <summary>
+    /// 保存しているグループ名の呼び出し
+    /// 　基本は上位のフォルダ名の比較用
+    /// </summary>
     internal class GroupSettingData
     {
-        public string GroupId { get; private set; } = string.Empty;
-        public string GroupName { get; private set; } = string.Empty; // 1行目
-        public BoxGroup GroupBox { get; private set; } = null;
+        /// <summary>
+        /// 基本グループ設定 フォルダパス
+        /// </summary>
+        private static readonly string _commonGroupSettingPath = Directory.GetCurrentDirectory() + @"\" + Settings.Default.CommonGroupSetting;
+        /// <summary>
+        /// ファイル名 : グループ名ID_Setting.txt
+        /// </summary>
+        private const string _settingFile = "_Setting.txt";
 
-
-        //private bool _loadMemberId = false;
-
-        //public HashSet<string> ListMemberId { get; private set; } = new HashSet<string>(); // Boxから取得
-
-        public List<BoxGroupMembership> ListMember { get; private set; } = null;
-
-        public GroupSettingData(string groupId_, string path_)
+        /// <summary>
+        /// 全て設定ファイルの取得
+        /// </summary>
+        /// <returns>全て設定ファイル名リスト</returns>
+        public static string [] ListAllGroupSettingData()
         {
-            Console.WriteLine("■GroupSettingData [{0}]-[{1}]", groupId_, path_);
-            //
+            return Directory.GetFiles(_commonGroupSettingPath, "*" + _settingFile);
+        }
+        /// <summary>
+        /// グループIDからの設定ファイルのパス取得
+        /// </summary>
+        /// <param name="id_">グループID</param>
+        /// <returns>ファイルへのパス</returns>
+        public static string PathGroupSetting(string groupId_)
+        {
+            return _commonGroupSettingPath + @"\" + groupId_ + _settingFile;
+        }
+        /// <summary>
+        /// パス(ファイル名)からグループIDの取得
+        /// </summary>
+        /// <param name="path_">設定ファイルのパス</param>
+        /// <returns>グループID</returns>
+        public static string GetGroupId(string path_)
+        {
+            return path_.Replace(_commonGroupSettingPath, string.Empty).Replace(_settingFile, string.Empty).Replace(@"\", string.Empty);
+        }
 
-            GroupId = groupId_;
+        /// <summary>
+        /// 設定ファイルの呼び出し
+        /// </summary>
+        /// <param name="path_">パス</param>
+        /// <returns>グルー名</returns>
+        public static string ReadGroupName(string path_)
+        {
+            Console.WriteLine("■ReadGroupName [{0}]",  path_);
+            //
             // 既存は読み込む
             var reader = new System.IO.StreamReader(path_);
-            GroupName = reader.ReadLine();
-            //while (reader.Peek() > -1)
-            //{
-            //    ListMemberId.Add(reader.ReadLine());
-            //}
-            //
+            var  name = reader.ReadLine();
             reader.Close();
+
+            return name;
         }
 
-        //public GroupSettingData(string groupId_, string path_, string groupName_)
-        //{
-        //    Console.WriteLine("■GroupSettingData [{0}]-[{1}]-[{2}]", groupId_, path_, groupName_);
-        //    //
-        //    // 新規はグループを追加
-        //    var writer = new System.IO.StreamWriter(path_, false); // 常に上書き
-        //    writer.WriteLine(groupName_);
-        //    writer.Close();
-        //}
-        public GroupSettingData(BoxGroup boxGroup_, string path_)
+        /// <summary>
+        /// 設定ファイルの保存
+        /// </summary>
+        /// <param name="path_">パス</param>
+        /// <param name="groupName_">グループ名</param>
+        public static void WriteGroupName(string path_, string groupName_)
         {
-            Console.WriteLine("■GroupSettingData [{0}]-[{1}]-[{2}]",  path_, boxGroup_.Id, boxGroup_.Name);
-            GroupBox = boxGroup_;
+            Console.WriteLine("■WriteGroupName [{0}]", path_);
             //
-            // 新規はグループを追加
+
             var writer = new System.IO.StreamWriter(path_, false); // 常に上書き
-            writer.WriteLine(boxGroup_.Name);
+            writer.WriteLine(groupName_);
             writer.Close();
         }
-
-
-        // BoxからグループIDからメンバーの情報を取得
-        public async Task<int> LoadGroupMemberId() 
-        {
-            //var list = await BoxManager.Instance.ListMemberIdFromGroup(GroupId);
-
-            //if(list !=null)
-            //{
-            //    ListMemberId.Clear();
-            //    foreach (var member in list.Entries)
-            //    {
-            //        ListMemberId.Add(member.User.Id);
-            //    }
-            //    _loadMemberId = true;
-            //    return ListMemberId.Count;
-            //}
-
-            if (ListMember == null)
-            {
-                var list = await BoxManager.Instance.ListMemberIdFromGroup(GroupId);
-                ListMember = list.Entries;
-            }
-            if(ListMember != null) 
-            {
-                return ListMember.Count;
-            }
-
-            return 0;
-        }
-
-        public bool ListMemberContains(string userId_)
-        {
-            foreach (var member in ListMember)
-            {
-                if (member.User.Id == userId_)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
     }
 }

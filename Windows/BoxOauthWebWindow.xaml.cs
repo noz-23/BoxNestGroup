@@ -1,23 +1,6 @@
-﻿using Box.V2.Config;
-using Box.V2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using BoxNestGroup.Manager;
 using System.Net;
-using System.Security.Policy;
-using System.Net.Http;
-using System.IO;
-using BoxNestGroup.Manager;
+using System.Windows;
 
 namespace BoxNestGroup
 {
@@ -26,12 +9,23 @@ namespace BoxNestGroup
     /// </summary>
     public partial class BoxOauthWebWindow : Window
     {
+        /// <summary>
+        /// リダイレクト(localhost)の操作
+        /// </summary>
         private HttpListener _listener =null;
+        /// <summary>
+        /// ログイン後の表示
+        /// </summary>
         private string _htmlLogin = @"\html\login.html";
 
-        private bool _loadedTopPage = false;
-        private bool _loadedEndPage = false;
+        /// <summary>
+        /// 画面表示後の処理
+        /// </summary>
+        private bool _loadedTopPage =false;
 
+        /// <summary>
+        /// Box承認画面操作
+        /// </summary>
         public BoxOauthWebWindow()
         {
             InitializeComponent();
@@ -41,6 +35,9 @@ namespace BoxNestGroup
             setAuthBox();
         }
 
+        /// <summary>
+        /// listner(ユーザーコード受信)設定
+        /// </summary>
         private void setListner() 
         {
             _listener = new HttpListener();
@@ -48,51 +45,89 @@ namespace BoxNestGroup
             _listener.Start();
         }
 
+        /// <summary>
+        /// Box承認画面の表示
+        /// </summary>
         private void setAuthBox()
         {
-            BoxOAuthWebBrowser.Navigate(BoxManager.Instance.AuthorizationUrl);
+            var url = BoxManager.Instance.AuthorizationUrl;
+            Console.WriteLine("■ setAuthBox url : {0}", url);
+            BoxOAuthWebBrowser.Source = new System.Uri(url);
         }
 
-        private async void boxOAuthWebBrowserNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        /// <summary>
+        /// 画面を閉じた時の処理
+        /// 　開いたlisnerを閉じて削除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void windowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _listener.Close();
+            _listener = null;
+        }
+
+        /// <summary>
+        /// ユーザーコード受信待ち
+        /// </summary>
+        /// <returns>ユーザーコード</returns>
+        private async Task<string> getUserCode()
+        {
+            try
+            {
+                var context = await _listener.GetContextAsync();
+                Console.WriteLine("■getUserCode StatusCode[{0}]", context.Response.StatusCode);
+
+                if (context.Response.StatusCode == (int)HttpStatusCode.OK)
+                {
+                    var request = context.Request;
+
+                    var rawUrl = request.RawUrl;    // 		RawUrl	"/callback?code=yWtJmL9c2xgtZd3V2jTwCDiMMASK0sF5"	string
+                    var userCode = rawUrl.Replace(@"/callback?code=", "");
+
+                    return userCode;
+                }
+            }
+            catch (System.Exception ex_)
+            {
+                Console.WriteLine("■getUserCode : {0}", ex_.ToString());
+            }
+            return string.Empty;
+       }
+
+        /// <summary>
+        /// Box承認画面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void boxOAuthWebBrowserNavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
             if (_loadedTopPage == false)
             {
                 _loadedTopPage = true;
 
-                //var userCode = await getUserCode();
+                var userCode = await getUserCode();
+                if (userCode != string.Empty)
+                {
+                    await BoxManager.Instance.CreateBoxClient(userCode);
 
-                await BoxManager.Instance.CreateBoxClient(_listener);
-                //var context = await _listener.GetContextAsync();
+                    _listener.Stop();
+                    
+                    var currentFolder = System.IO.Directory.GetCurrentDirectory();
+                    var uri = currentFolder + _htmlLogin;
 
-                _listener.Stop();
-                _listener.Close();
-                _listener = null;
+                    uri ="file:///" + uri.Replace("\\","/");
+                    Console.WriteLine("■ setAuthBox url : {0}", uri);
+                    BoxOAuthWebBrowser.Source = new System.Uri(uri);
+                    
 
+                    Thread.Sleep(1000);
+                }
 
-                var currentFolder = Directory.GetCurrentDirectory();
-                BoxOAuthWebBrowser.Navigate(currentFolder + _htmlLogin);
-
-                Thread.Sleep(1000);
-
-
-                await MainWindow.Instance.SetLoginUserText();
                 this.Close();
-
-                return;
             }
         }
-/*       
-        private async Task<string> getUserCode()
-        {
-
-            var context = await _listener.GetContextAsync();
-            var request = context.Request;
-
-            var rawUrl = request.RawUrl;    // 		RawUrl	"/callback?code=yWtJmL9c2xgtZd3V2jTwCDiMMASK0sF5"	string
-            var userCode = rawUrl.Replace(@"/callback?code=", "");
-
-            return userCode;
-        }
+        /*       
 */
     }
 }

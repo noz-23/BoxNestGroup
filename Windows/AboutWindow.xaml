@@ -1,0 +1,14 @@
+﻿<Window x:Class="BoxNestGroup.Windows.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoxNestGroup.Windows"
+        mc:Ignorable="d"
+        Title="AboutWindow" Height="150" Width="300">
+    <Grid>
+        <Label x:Name="label" Content="BoxNestGroup&#xA; Lisence: MIT license&#xD;&#xA;Use:&#xD;&#xA; developer.box.com：APACHE LICENSE&#xA;  https://developer.box.com/&#xA;  https://github.com/box/box-windows-sdk-v2&#xA;&#xA;" HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Top"/>
+        <Button x:Name="button" Content="Close" HorizontalAlignment="Right" Margin="1,1,1,1" VerticalAlignment="Bottom" Click="buttonClick"/>
+
+    </Grid>
+</Window>

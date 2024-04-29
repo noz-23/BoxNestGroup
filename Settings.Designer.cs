@@ -91,13 +91,13 @@ namespace BoxNestGroup {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string UserToken {
+        [global::System.Configuration.DefaultSettingValueAttribute("N/A")]
+        public string AccessToken {
             get {
-                return ((string)(this["UserToken"]));
+                return ((string)(this["AccessToken"]));
             }
             set {
-                this["UserToken"] = value;
+                this["AccessToken"] = value;
             }
         }
         
@@ -122,6 +122,18 @@ namespace BoxNestGroup {
             }
             set {
                 this["ClearGroupName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("N/A")]
+        public string RefreshToken {
+            get {
+                return ((string)(this["RefreshToken"]));
+            }
+            set {
+                this["RefreshToken"] = value;
             }
         }
     }

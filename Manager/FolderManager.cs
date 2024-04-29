@@ -154,7 +154,7 @@ namespace BoxNestGroup.Manager
                 addData.GroupName = System.IO.Path.GetFileName(folderPath);
                 //ListFolderName.Add(addData.GroupName);
 
-                addData.ListNest = listFolder(folderPath, list);
+                addData.ListNestGroup = listFolder(folderPath, list);
 
                 list_.Add(addData);
 

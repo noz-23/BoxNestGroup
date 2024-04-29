@@ -1,21 +1,8 @@
 ﻿using BoxNestGroup.GridView;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Text;
+using BoxNestGroup.Manager;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using BoxNestGroup.Manager;
-using BoxNestGroup.View;
-using Org.BouncyCastle.Utilities;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using BoxNestGroup.Windows;
 
 //using Microsoft.Exchange.WebServices.Data;
 
@@ -26,8 +13,10 @@ namespace BoxNestGroup
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// シングルトン
+        /// </summary>
         public static MainWindow Instance { get; } = new MainWindow(); // App.xaml の編集が必要
-
         private MainWindow()
         {
             InitializeComponent();
@@ -36,113 +25,82 @@ namespace BoxNestGroup
             Loaded += windowLoaded;
         }
 
+        /// <summary>
+        /// 起動後の処理
+        /// 　表示関係はここで処理しないと出ない
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
             // 基本設定(フォルダとBox比較)の読み込みはここ
-            SettingManager.Instance.LoadFile();
-            // 自動認証の場合
-            //await renewBox();
-            //renewFolderData();
+            //SettingManager.Instance.LoadFile();
 
             checkFolderToDataGridViewGroupData();
+            renewFolderData();
         }
 
-
-        private async System.Threading.Tasks.Task renewBox()
+        /// <summary>
+        /// データの表示クリア
+        /// </summary>
+        /// <param name="name_">ログイン名 of ファイル名</param>
+        private void clearBox(string name_)
         {
-            //if (BoxManager.Instance.IsHaveAccessToken == true)
-            //{
-            //    // トークンありの場合は、ユーザー名を取得して利用できるか確認
-            //    var flg=await setLoginUserText();
-            //    if (flg == true)
-            //    {
-            //        await renewListGroupData();
-            //        await renewListUserData();
-            //        return;
-            //    }
-            //}
-            // リフレッシュトークンとか全部だめな場合は、再取得と表示
-            //labelLogin.Content = "ログイン：" + "再取得";
-            //var listGroupDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
-            //dataGridGroup.ItemsSource = listGroupDataGridRow.ToList();
-
-            //var listUserDataGridRow = new ObservableCollection<BoxUserDataGridView>();
-            //dataGridUser.ItemsSource = listUserDataGridRow.ToList();
-            var flg = await setLoginUserText();
-            if (flg == true)
-            {
-                await renewListGroupData();
-                await renewListUserData();
-            }
-            else 
-            {
-                var listGroupDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
-                dataGridGroup.ItemsSource = listGroupDataGridRow.ToList();
-                var listUserDataGridRow = new ObservableCollection<BoxUserDataGridView>();
-                dataGridUser.ItemsSource = listUserDataGridRow.ToList();
-            }
-
+            labelLogin.Content = "ログイン：" + name_;
+            SettingManager.Instance.ListGroupDataGridRow.Clear();
+            dataGridGroup.ItemsSource = SettingManager.Instance.ListGroupDataGridRow.ToList();
+            SettingManager.Instance.ListUserDataGridRow.Clear();
+            dataGridUser.ItemsSource = SettingManager.Instance.ListUserDataGridRow.ToList();
         }
 
-        private async Task<bool> setLoginUserText() 
+        /// <summary>
+        /// Box関係の表示更新
+        /// </summary>
+        /// <returns>なし</returns>
+        private async Task renewBox()
         {
-            try
+            await setLoginUserText();
+            await renewListGroupData();
+            await renewListUserData();
+        }
+
+        /// <summary>
+        /// Boxからのログインの表示更新
+        /// </summary>
+        /// <returns>なし</returns>
+        private async Task setLoginUserText() 
+        {
+            var userName = await BoxManager.Instance.LoginUserName();
+            if (userName == string.Empty)
             {
-                var userName = await BoxManager.Instance.LoginUserName();
-                if (userName == string.Empty)
-                {
-                    BoxManager.Instance.SetUserToken(string.Empty);
-                    labelLogin.Content = "ログイン：" + "再取得";
-                    return false;
-                }
-                labelLogin.Content = "ログイン：" + userName;
-                return true;
-            }
-            catch (Exception ex_)
-            {
-                Console.WriteLine(ex_.ToString());
-                //
-                //var flg = await BoxManager.Instance.RefreshToken();
-                //if (flg == true)
-                //{
-                //    var userName = await BoxManager.Instance.LoginUserName();
-                //    labelLogin.Content = "ログイン：" + userName;
-                //    return true;
-                //}
-                //else
-                //{
-                //    labelLogin.Content = "ログイン：" + "再取得";
-                //    return false;
-                //}
-                BoxManager.Instance.SetUserToken(string.Empty);
+                BoxManager.Instance.SetTokens(string.Empty, string.Empty);
                 labelLogin.Content = "ログイン：" + "再取得";
-                return false;
+                return ;
             }
+            labelLogin.Content = "ログイン：" + userName;
         }
-
-        /*
-         * 更新フォルダ
-         *  引数　：なし
-         *  戻り値：なし
-         */
+        /// <summary>
+        /// フォルダツリーの表示更新
+        /// </summary>
         private void renewFolderData()
         {
-            var list = FolderManager.Instance.ListCommonFolder();
-            treeViewFolder.ItemsSource = list.ToList();
+            treeViewFolder.ItemsSource = FolderManager.Instance.ListFolderTree.ToList();
         }
-        /*
-         * 更新グループ
-         *  引数　：なし
-         *  戻り値：なし
-         */
+        /// <summary>
+        /// Boxグループの表示更新
+        /// </summary>
+        /// <returns></returns>
         private async Task renewListGroupData()
         {
             var listDataGridRow = await BoxManager.Instance.ListGroupData();
             dataGridGroup.ItemsSource = listDataGridRow.ToList();
-
         }
 
-        private async System.Threading.Tasks.Task renewListUserData()
+        /// <summary>
+        /// Boxユーザーの表示更新
+        /// </summary>
+        /// <returns></returns>
+        private async Task renewListUserData()
         {
             var listDataGridRow = await BoxManager.Instance.ListUserData();
             dataGridUser.ItemsSource = listDataGridRow.ToList();
@@ -172,19 +130,23 @@ namespace BoxNestGroup
 
             renewFolderData();
         }
-
-        // フォルダのみあったら作成候補に追加
-        private void checkFolderToDataGridViewGroupData()
+        /// <summary>
+        /// フォルダのみあったらBoxグループの作成候補に追加
+        /// </summary>
+        private async Task checkFolderToDataGridViewGroupData()
         {
             // Boxにあるけどフォルダにない場合は、BoxのDataGridView更新時に作成している
+            // Boxでのグループ名変更も更新している
             var listFolder = new HashSet<string>(FolderManager.Instance.ListFolderName);
-            var listBox = BoxManager.Instance.ListGroup;
+            var listGroup = SettingManager.Instance.ListGroupDataGridRow;
 
-            foreach (var group in listBox)
+            // Boxグループにあるフォルダ名は削除
+            foreach (var group in listGroup)
             {
-                listFolder.Remove(group.Name);
+                listFolder.Remove(group.GroupName);
             }
 
+            // 別のリストをコピーしてから置き換える
             var listGridView = new List<BoxGroupDataGridView>();
             var list =dataGridGroup.ItemsSource as List<BoxGroupDataGridView>;
             if(list !=null)
@@ -193,8 +155,9 @@ namespace BoxNestGroup
             }
             foreach (var name in listFolder)
             {
-                var add = new BoxGroupDataGridView() { GroupName = name };
-                add.Inital();
+                // 新規グループを作成
+                var add = new BoxGroupDataGridView(name);
+                await add.Inital();
 
                 listGridView.Add(add);
             }
@@ -202,39 +165,39 @@ namespace BoxNestGroup
         }
 
         // ツリービューのドラッグアンドドロップ処理
-        private System.Windows.Point lastPoint;
+        //private System.Windows.Point lastPoint;
         private void treeViewFolderPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton != MouseButton.Left)
-            {
-                return;
-            }
-            lastPoint = e.GetPosition(treeViewFolder);
-            //Console.WriteLine("■treeViewFolderPreviewMouseDown lastPoint :[ {0} - {1} ]", lastPoint.X, lastPoint.Y);
+        //    if (e.ChangedButton != MouseButton.Left)
+        //    {
+        //        return;
+        //    }
+        //    lastPoint = e.GetPosition(treeViewFolder);
+        //    //Console.WriteLine("■treeViewFolderPreviewMouseDown lastPoint :[ {0} - {1} ]", lastPoint.X, lastPoint.Y);
         }
 
         private void treeViewFolderDrop(object sender, System.Windows.DragEventArgs e)
         {
-            Console.WriteLine("■treeViewFolderDrop : {0}", e);
+        //    Console.WriteLine("■treeViewFolderDrop : {0}", e);
         }
 
         private void treeViewFolderMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            //Console.WriteLine("■treeViewFolderMouseMove : {0}", e.LeftButton);
-            if (e.LeftButton == MouseButtonState.Released)
-            {
-                return; 
-            }
+        //    //Console.WriteLine("■treeViewFolderMouseMove : {0}", e.LeftButton);
+        //    if (e.LeftButton == MouseButtonState.Released)
+        //    {
+        //        return; 
+        //    }
 
-            var nowPoint = e.GetPosition(treeViewFolder);
-            var distance = nowPoint - lastPoint;
+        //    var nowPoint = e.GetPosition(treeViewFolder);
+        //    var distance = nowPoint - lastPoint;
 
-            if (distance.Length <10.0)
-            {
-                return;
-            }
-            var selectItem =treeViewFolder.SelectedItem;
-            DragDrop.DoDragDrop(treeViewFolder, treeViewFolder.SelectedValue, System.Windows.DragDropEffects.Move);
+        //    if (distance.Length <10.0)
+        //    {
+        //        return;
+        //    }
+        //    var selectItem =treeViewFolder.SelectedItem;
+        //    DragDrop.DoDragDrop(treeViewFolder, treeViewFolder.SelectedValue, System.Windows.DragDropEffects.Move);
         }
 
 

@@ -1,24 +1,27 @@
-﻿using BoxNestGroup.GridView;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace BoxNestGroup.View
 {
-    class FolderGroupTreeView
+    /// <summary>
+    /// フォルダーツリーのデータ構造
+    /// </summary>
+    public class FolderGroupTreeView
     {
-        public string Name { get; set; } = string.Empty;
+        /// <summary>
+        /// グループ名(フォルダ名)
+        /// </summary>
+        public string GroupName { get; set; } = string.Empty;
 
         public override string ToString()
         {
-            return Name;
+            return GroupName;
         }
 
 
-        public ObservableCollection<FolderGroupTreeView> ListNest = new ObservableCollection<FolderGroupTreeView>();
+        /// <summary>
+        /// サブフォルダリスト
+        /// </summary>
+        public ObservableCollection<FolderGroupTreeView> ListNestGroup { get; set; } = new ObservableCollection<FolderGroupTreeView>();
 
     }
 }

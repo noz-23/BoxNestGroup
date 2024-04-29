@@ -13,6 +13,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -20,15 +21,16 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="buttonCancel" Content="Cancel"  Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="cancelClick"/>
-        <Button x:Name="buttonSave" Content="Save"  Grid.Row="4" Grid.Column="3" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Click="saveClick"/>
-        <Label x:Name="labelClientID" Content="ClientID" Grid.Row="0" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button x:Name="buttonCancel" Content="Cancel"  Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="1,1,1,1" Click="cancelClick"/>
+        <Button x:Name="buttonSave" Content="Save"  Grid.Row="5" Grid.Column="3" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Margin="1,1,1,1" Click="saveClick"/>
+        <Label x:Name="labelClientID" Content="ClientID" Grid.Row="0" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,1"/>
         <Label x:Name="labelSecretID" Content="SecretID" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Label x:Name="labelPortNumber" Content="PortNumber" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBox x:Name="textBoxClientID"  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text="" Margin="0,0,0,0" />
-        <TextBox x:Name="textBoxSecretID"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text="" Margin="0,0,0,0" />
-        <TextBox x:Name="textBoxPortNumber"  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text="" Margin="0,0,0,0" />
-        <TextBox x:Name="textBoxToken"  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text="" Margin="0,0,0,0" />
+        <Label x:Name="labelPortNumber" Content="PortNumber" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,1"/>
+        <TextBox x:Name="textBoxClientID"  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text=""  Margin="1,1,1,1" />
+        <TextBox x:Name="textBoxSecretID"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text="" Margin="1,1,1,1" />
+        <TextBox x:Name="textBoxPortNumber"  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text=""  Margin="1,1,1,1" />
+        <TextBox x:Name="textBoxAccess"  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text=""  Margin="1,1,1,1" />
+        <TextBox x:Name="textBoxRefresh"  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"  VerticalAlignment="Center" Text=""  Margin="1,1,1,1" />
 
     </Grid>
 </Window>

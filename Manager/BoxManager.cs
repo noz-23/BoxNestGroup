@@ -1,26 +1,12 @@
-﻿using Box.V2.Config;
-using Box.V2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using System.Windows.Media.Animation;
-using System.Collections.Specialized;
-using Box.V2.Models;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Net;
-using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Bcpg;
+﻿using Box.V2;
 using Box.V2.Auth;
-using BoxNestGroup.GridView;
-using System.Collections.ObjectModel;
+using Box.V2.Config;
+using Box.V2.Models;
 using Box.V2.Models.Request;
-using Org.BouncyCastle.Utilities.Collections;
+using BoxNestGroup.GridView;
 using BoxNestGroup.View;
-using Windows.Media.Protection.PlayReady;
+using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 
 /*
@@ -29,39 +15,34 @@ using Windows.Media.Protection.PlayReady;
 
 namespace BoxNestGroup.Manager
 {
+    /// <summary>
+    /// Boxの通信などの管理
+    /// </summary>
     internal class BoxManager
     {
+        /// <summary>
+        ///  シングルトン
+        /// </summary>
         static public BoxManager Instance { get; } = new BoxManager();
 
         // 設定
-        private BoxConfig ?_config;
+        private BoxConfig ?_config =null;
         // 通信クライアント
-        private BoxClient ?_client;
+        private BoxClient ?_client =null;
 
         // token
-        private string _authEnticationUrl = "https://api.box.com/oauth2/token";
-        //private string _clientID = Settings.Default.ClientID;
-        //private string _sercretID = Settings.Default.SecretID;
+        private const string _authEnticationUrl = "https://api.box.com/oauth2/token";
 
-        public List<BoxGroup> ListGroup { get; private set; } = new List<BoxGroup>();
-        public List<BoxUser> ListUser { get; private set; } = new List<BoxUser>();
+        //public List<BoxGroup> ListGroup { get; private set; } = new List<BoxGroup>();
+        //public List<BoxUser> ListUser { get; private set; } = new List<BoxUser>();
 
         // 参照 URL
-        public string AuthorizationUrl { get { return _config.AuthCodeUri.ToString(); } }
+        public string AuthorizationUrl { get { return (_config !=null) ?_config.AuthCodeUri.ToString():string.Empty; } }
 
         //private string _userToken = "";
         private BoxManager()
         {
             RenewConfig();
-            //
-            //if (IsHaveAccessToken == true)
-            //{
-            //    // トークンがあればそのトークンを使って再セッション
-            //    var userToken = Settings.Default.UserToken;
-            //    Console.WriteLine("■BoxManager userToken:{0}", userToken);
-            //    var session = new OAuthSession(userToken, "N/A", 3600, "bearer");
-            //    _client = new BoxClient(_config, session);
-            //}
         }
 
         public void RenewConfig()
@@ -70,23 +51,25 @@ namespace BoxNestGroup.Manager
             _config = new BoxConfig(Settings.Default.ClientID, Settings.Default.SecretID, redirectUri);
             _client = new BoxClient(_config);
         }
-        // 
-        //public async Task CreateBoxClient(HttpListener listener_)
-        //{
-        //    var userCode = await getUserCode(listener_);
-
-        //    var session = await _client.Auth.AuthenticateAsync(userCode);
-        //    _client = new BoxClient(_config, session);
-
-        //    setUserToken(_client.Auth.Session.AccessToken);
-        //}
 
         public async Task CreateBoxClient(string userCode_)
         {
+            Console.WriteLine("■CreateBoxClient userCode_:{0}", userCode_);
             var session = await _client.Auth.AuthenticateAsync(userCode_);
             _client = new BoxClient(_config, session);
+            //
+            //
+            try
+            {
+                session = await _client.Auth.RefreshAccessTokenAsync(session.AccessToken);
+                _client = new BoxClient(_config, session);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("　CreateBoxClient:{0}", ex.Message);
+            }
 
-            SetUserToken(_client.Auth.Session.AccessToken);
+            SetTokens(_client.Auth.Session.AccessToken, _client.Auth.Session.RefreshToken);
         }
 
         // アクセストークンを持ってるか？
@@ -94,7 +77,7 @@ namespace BoxNestGroup.Manager
         {
             get
             {
-                var userToken = Settings.Default.UserToken;
+                var userToken = Settings.Default.AccessToken;
                 Console.WriteLine("■IsHaveAccessToken:{0}", userToken);
     
                 switch (userToken)
@@ -107,91 +90,66 @@ namespace BoxNestGroup.Manager
             }
         }
 
+        public bool IsHaveRefreshToken
+        {
+            get
+            {
+                var refreshToken = Settings.Default.RefreshToken;
+                Console.WriteLine("■IsHaveRefreshToken:{0}", refreshToken);
+
+                switch (refreshToken)
+                {
+                    case "N/A":
+                    case "":
+                        return false;
+                }
+                return true;
+            }
+        }
+
         public void OAuthToken()
         {
             // トークンがあればそのトークンを使って再セッション
-            var userToken = Settings.Default.UserToken;
-            Console.WriteLine("■OAuthToken userToken:{0}", userToken);
-            var session = new OAuthSession(userToken, "N/A", 3600, "bearer");
+            var accessToken = Settings.Default.AccessToken;
+            string refreshToken = (IsHaveRefreshToken == false) ? "" : Settings.Default.RefreshToken;
+            Console.WriteLine("■OAuthToken : AccessToken[{0}] RefreshToken[{1}]", accessToken, refreshToken);
+
+            // リフレッシュトークン取得
+            var session = new OAuthSession(accessToken, refreshToken, Constants.AccessTokenExpirationTime, Constants.BearerTokenType);
             _client = new BoxClient(_config, session);
+
+            SetTokens(session.AccessToken, session.RefreshToken);
+
         }
 
-        // リフレッシュトークン取得
-        public async Task<bool> RefreshToken()
+        public async Task RefreshToken()
         {
-            try
-            {
-                OAuthToken();
-                //
-                var userToken = Settings.Default.UserToken;
-                //Console.WriteLine("■RefreshToken userToken:{0}", userToken);
+            Console.WriteLine("■RefreshToken");
+            var session = await _client.Auth.RefreshAccessTokenAsync(Settings.Default.AccessToken);
+            _client = new BoxClient(_config, session);
 
-                var newSession = await _client.Auth.RefreshAccessTokenAsync(userToken);
-                SetUserToken(newSession.RefreshToken);
-
-                _client = new BoxClient(_config, newSession);
-
-                return true;
-            }
-            catch (Exception ex_)
-            {
-                Console.WriteLine(ex_);
-                return false;
-            }
+            SetTokens(session.AccessToken, session.RefreshToken);
         }
 
-        //// 一時的なユーザーコードの取得
-        //private async Task<string> getUserCode(HttpListener listener_)
-        //{
-        //    var context = await listener_.GetContextAsync();
-        //    var request = context.Request;
-
-        //    var rawUrl = request.RawUrl;    // 		RawUrl	"/callback?code=yWtJmL9c2xgtZd3V2jTwCDiMMASK0sF5"	string
-        //    var userCode = rawUrl.Replace(@"/callback?code=", "");
-
-        //    return userCode;
-        //}
-
-        /*
-        private async Task<string> getToken( string code_)
-        {
-            var client = new HttpClient();
-            var content = new FormUrlEncodedContent(new[]
-            {
-              new KeyValuePair<string, string>("grant_type", "authorization_code"),
-              new KeyValuePair<string, string>("code", code_),
-              new KeyValuePair<string, string>("client_id", _clientID),
-              new KeyValuePair<string, string>("client_secret", _sercretID)
-            });
-
-            var response = await client.PostAsync(_authEnticationUrl, content);
-            var data = await response.Content.ReadAsStringAsync();
-            var token = JsonConvert.DeserializeObject<Token>(data);
-            return token.access_token;
-        }*/
-
-        /*
-        private async Task<string> setUserToken(string userCode_)
-        {
-            _userToken = await getToken(userCode_);
-            Settings.Default.UserToken = _userToken;
-            Settings.Default.Save();
-            return userCode_;
-        }
-        */
 
         // ユーザートークンの保存
-        public void SetUserToken(string userToken_)
+        public void SetTokens(string accessToken_, string refreshToken_)
         {
-            Console.WriteLine("■setUserToken userToken_:{0}", userToken_);
+            Console.WriteLine("■ SeTokens Access[{0}] Refresh[{1}]", accessToken_, refreshToken_);
 
-            Settings.Default.UserToken = userToken_;
+            Settings.Default.AccessToken = accessToken_;
+            Settings.Default.RefreshToken = refreshToken_;
+
             Settings.Default.Save();
         }
 
         // ログインしてるユーザー名
         public async Task<string> LoginUserName()
         {
+            if (_client == null) 
+            {
+                return string.Empty;
+            }
             try
             {
                 var currentUser = await _client.UsersManager.GetCurrentUserInformationAsync();
@@ -211,28 +169,32 @@ namespace BoxNestGroup.Manager
          */
         public async Task<ObservableCollection<BoxGroupDataGridView>> ListGroupData()
         {
-            try
+            if (_client != null)
             {
-                var listGroup = await _client.GroupsManager.GetAllGroupsAsync();
+                try
+                {
+                    var listGroup = await _client.GroupsManager.GetAllGroupsAsync();
 
-                ListGroup = listGroup.Entries;
+                    var list = listGroup.Entries;
 
+                    return await listGroupData(list);
+                }
+                catch (Exception ex_)
+                {
+                    Console.WriteLine("■ListGroupData:" + ex_.ToString());
+                }
             }
-            catch (Exception ex_)
-            {
-                Console.WriteLine("■ListGroupData:" + ex_.ToString());
-            }
-            return  listGroupData(ListGroup);
+            return new ObservableCollection<BoxGroupDataGridView>();
         }
         // グループデータの取得 Box から View 変換
-        private ObservableCollection<BoxGroupDataGridView> listGroupData(List<BoxGroup> listGroup_)
+        private async Task<ObservableCollection<BoxGroupDataGridView>> listGroupData(List<BoxGroup> listGroup_)
         {
             //var listDataGridRow = new ObservableCollection<BoxGroupDataGridView>();
             SettingManager.Instance.ListGroupDataGridRow.Clear();
             foreach (var group in listGroup_)
             {
                 var add = new BoxGroupDataGridView(group);
-                add.Inital();
+                await add.Inital();
 
                 //listDataGridRow.Add(add);
                 SettingManager.Instance.ListGroupDataGridRow.Add(add);
@@ -245,57 +207,62 @@ namespace BoxNestGroup.Manager
         }
 
         // グループの作成
-        public async Task<BoxGroup> CreateGroupName(string name_)
+        public async Task<BoxGroup> CreateGroup(string name_)
         {
-            var request = new BoxGroupRequest() { Name = name_ };
-            var rtn = await _client.GroupsManager.CreateAsync(request);
+            Console.WriteLine("■CreateGroup : {0}" , name_);
+            if (_client == null)
+            {
+                return null;
+            }
 
-            Console.WriteLine("■ChangeGroupName:" + rtn.ToString());
-            return rtn;
+            var request = new BoxGroupRequest() { Name = name_ };
+            return await _client.GroupsManager.CreateAsync(request);
+
         }
 
         // グループの更新
         public async Task<BoxGroup> UpdateGroupName(string id_, string name_)
         {
-            var request = new BoxGroupRequest() { Id = id_, Name = name_ };
-            var rtn = await _client.GroupsManager.UpdateAsync(id_, request);
+            Console.WriteLine("■UpdateGroupName : id[{0}] name[{0}]", id_, name_);
+            if (_client == null)
+            {
+                return null;
+            }
 
-            Console.WriteLine("■UpdateGroupName:" + rtn.ToString());
-            return rtn;
+            var request = new BoxGroupRequest() { Id = id_, Name = name_ };
+            return await _client.GroupsManager.UpdateAsync(id_, request);
         }
 
         // グループのメンバー取得
         public async Task<BoxCollection<BoxGroupMembership>> ListMemberIdFromGroup(string gorupId_)
         {
-            try
+            Console.WriteLine("■UpdateGroupName : [{0}]", gorupId_);
+            if (_client == null)
             {
-                var listGroup = await _client.GroupsManager.GetAllGroupMembershipsForGroupAsync(gorupId_);
-
-                return listGroup;
-
-            }
-            catch (Exception ex_)
-            {
-                Console.WriteLine("■ListGroupMemberId:" + ex_.ToString());
                 return null;
             }
+            return await _client.GroupsManager.GetAllGroupMembershipsForGroupAsync(gorupId_);
         }
 
         // ユーザー情報の取得
         public async Task<ObservableCollection<BoxUserDataGridView>> ListUserData()
         {
-            try
+            if (_client != null)
             {
-                var listUser = await _client.UsersManager.GetEnterpriseUsersAsync();
+                try
+                {
+                    var listUser = await _client.UsersManager.GetEnterpriseUsersAsync();
 
-                ListUser = listUser.Entries;
+                    var list = listUser.Entries;
+                    return listUserData(list);
 
+                }
+                catch (Exception ex_)
+                {
+                    Console.WriteLine("■ListUserData:" + ex_.ToString());
+                }
             }
-            catch (Exception ex_)
-            {
-                Console.WriteLine("■ListUserData:" + ex_.ToString());
-            }
-            return listUserData(ListUser);
+            return new ObservableCollection<BoxUserDataGridView>();
         }
 
         // ユーザー情報の取得 Box から Viewへ変換
@@ -315,18 +282,8 @@ namespace BoxNestGroup.Manager
             return SettingManager.Instance.ListUserDataGridRow;
         }
 
-        //public async Task DeletateAllUserGroups(string userId_, List<string> listGroupName_) 
-        //{
 
-        //    foreach (var name in listGroupName_)
-        //    {
-        //        var groupId = SettingManager.Instance.GetGroupId(name);
-        //        await _client.GroupsManager.UpdateGroupMembershipAsync("33333");
-        //    }
-
-        //}
-
-        public async Task UpadateGroup(string userId_, List<string> listGroupName_) 
+        public async Task AddGroupUser(string userId_, List<string> listGroupId_) 
         {
             //var updates = new BoxGroupMembershipRequest()
             //{
@@ -336,12 +293,18 @@ namespace BoxNestGroup.Manager
 
             //var = _client.GroupsManager.GetAllGroupMembershipsForUserAsync(userId_);
 
-            var list =new List<BoxGroupMembership>();
-            foreach(var name in listGroupName_)
+            foreach(var id in listGroupId_)
             {
                 //var groupId = SettingManager.Instance.GetGroupId(name);
                 //var group = SettingManager.Instance.GetGroupData(name);
                 //list.Add(new BoxGroupMembership() { Group );
+                var request = new BoxGroupMembershipRequest()
+                {
+                    User = new BoxRequestEntity() { Id = userId_ },
+                    Group = new BoxGroupRequest() { Id = id }
+                };
+
+                await _client.GroupsManager.AddMemberToGroupAsync(request);
             }
 
 
@@ -350,6 +313,7 @@ namespace BoxNestGroup.Manager
 
         public async Task DeleteGroupUser(List<BoxGroupMembership> list_)
         {
+
             foreach (var member in list_) 
             {
                 Console.WriteLine("■DeleteGroupUser id[{0}] group[{1}] user[{2}]" , member.Id, member.Group.Id, member.User.Id);

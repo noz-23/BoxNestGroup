@@ -35,6 +35,15 @@ developer.box.com：APACHE LICENSE
 
   https://github.com/box/box-windows-sdk-v2
 
+Microsoft.Web.WebView2 : Copyright (C) Microsoft Corporation. 
+  
+  https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.2478.35/license
+
+ClosedXML : MIT
+
+  https://github.com/ClosedXML/ClosedXML
+
+
 ## 6.バージョン履歴
 
  2024/03/06 0.1.0 C# WPF で現在作成中
