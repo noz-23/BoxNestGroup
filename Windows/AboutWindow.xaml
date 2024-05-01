@@ -1,0 +1,14 @@
+﻿<Window x:Class="BoxNestGroup.Windows.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoxNestGroup.Windows"
+        mc:Ignorable="d"
+        Title="AboutWindow" Height="240" Width="300" HorizontalAlignment="Left">
+    <Grid Width="300">
+        <Label x:Name="label" Content="BoxNestGroup Ver.0.1.0&#xA; Lisence: MIT license&#xA;Use:&#xA; developer.box.com：APACHE LICENSE&#xA;  https://developer.box.com/&#xA;  https://github.com/box/box-windows-sdk-v2&#xA;&#xA; Microsoft.Web.WebView2 : Copyright (C) Microsoft Corporation. &#xA;  https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.2478.35/license&#xA;&#xA; ClosedXML : MIT&#xA;  https://github.com/ClosedXML/ClosedXML" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="10" Width="300"/>
+        <Button x:Name="button" Content="Close" HorizontalAlignment="Right" Margin="1,1,1,1" VerticalAlignment="Bottom" Click="buttonClick"/>
+
+    </Grid>
+</Window>
