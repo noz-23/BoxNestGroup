@@ -73,23 +73,23 @@
         <GridSplitter Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="Gray" />
         <Button x:Name="buttonAddUserGroup" Grid.Row="2" Grid.Column="2" Content="グループ追加" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="1,1,1,1" Click="addUserGroupClick"/>
         <TabControl x:Name="tabControlBox" Grid.Row="3" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3" TabStripPlacement="Left">
-            <TabItem Header="ユーザー" HorizontalAlignment="Left" Margin="-2,-2,0,2">
+            <TabItem Header="ユーザー" Margin="1,1,1,1" VerticalAlignment="Top"  HorizontalAlignment="Left">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="18*"/>
-                        <RowDefinition Height="5*"/>
+                        <RowDefinition Height="28*"/>
+                        <RowDefinition Height="641*"/>
+                        <RowDefinition Height="0*"/>
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Row="0" Grid.Column="0" Margin="1,1,1,1">
                         <Button x:Name="buttonMakeUser" Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="makeUserButtonClick" Visibility="Collapsed" />
                         <Button x:Name="buttonRenewUser" Content="更新"   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" Click="renewUserButtonClick"/>
                         <Button x:Name="buttonSaveExcel" Content="Excel保存"   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" Click="saveExcelButtonClick"/>
                     </DockPanel>
-                    <DataGrid x:Name="dataGridUser" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
-                              HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+                    <DataGrid x:Name="dataGridUser" Grid.Row="1"
+                              HorizontalAlignment="Center" VerticalAlignment="Top" Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
                               CellEditEnding="dataGridUserCellEditEnding">
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn Header="{x:Static local:MainWindow.MENU_USER_SEELCT}" Binding="{Binding Selected}" Width="*">

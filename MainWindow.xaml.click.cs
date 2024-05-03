@@ -4,7 +4,6 @@ using BoxNestGroup.View;
 using BoxNestGroup.Windows;
 using ClosedXML.Excel;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace BoxNestGroup
 {
@@ -288,8 +287,10 @@ namespace BoxNestGroup
 				buttonWebAuth.IsEnabled = false;
 
 			}
+            renewFolderData();
+            await checkFolderToDataGridViewGroupData();
 
-			wait.Close();
+            wait.Close();
 		}
 
 		/// <summary>
