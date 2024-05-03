@@ -1,7 +1,6 @@
 ﻿using Box.V2.Models;
 using BoxNestGroup.View;
 using System.Collections.ObjectModel;
-using System.Drawing.Drawing2D;
 using System.IO;
 
 namespace BoxNestGroup.Manager
@@ -123,7 +122,7 @@ namespace BoxNestGroup.Manager
         /// <returns>フォルダ管理リスト</returns>
         private ObservableCollection<FolderGroupTreeView> listFolder(string path_, ObservableCollection<FolderGroupTreeView> list_)
         {
-            Console.WriteLine("■ listFolder :" + path_.Replace(_commonGroupFolderPath,string.Empty));
+            //Console.WriteLine("■ listFolder :" + path_.Replace(_commonGroupFolderPath,string.Empty));
 
             // このフォルダリスト
             foreach (var folderPath in Directory.GetDirectories(path_))
@@ -146,12 +145,12 @@ namespace BoxNestGroup.Manager
         /// <returns>パスリスト</returns>
         public IList<string> ListPathFindFolderName(string groupName_) 
         {
-            Console.WriteLine("■ListPathFindFolderName[{0}]" , groupName_);
+            //Console.WriteLine("■ListPathFindFolderName[{0}]" , groupName_);
 
             var rtn = new List<string>();
             foreach (var folderName in Directory.GetDirectories(_commonGroupFolderPath, groupName_, System.IO.SearchOption.AllDirectories))
             {
-                Console.WriteLine("　find:" + folderName);
+                //Console.WriteLine("　find:" + folderName);
                 rtn.Add(folderName.Replace(_commonGroupFolderPath, string.Empty));
             }
 
