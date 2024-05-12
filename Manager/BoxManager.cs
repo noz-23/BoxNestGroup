@@ -76,7 +76,7 @@ namespace BoxNestGroup.Manager
         /// <returns></returns>
         public async Task CreateBoxClient(string userCode_)
         {
-            Console.WriteLine("■CreateBoxClient userCode_:{0}", userCode_);
+            Console.WriteLine("■BoxManager CreateBoxClient userCode_:{0}", userCode_);
             if (_client == null)
             {
                 return ;
@@ -91,7 +91,7 @@ namespace BoxNestGroup.Manager
             }
             catch (Exception ex)
             {
-                Console.WriteLine("　CreateBoxClient:{0}", ex.Message);
+                Console.WriteLine("　BoxManager CreateBoxClient:{0}", ex.Message);
             }
 
             SetTokens(_client.Auth.Session.AccessToken, _client.Auth.Session.RefreshToken);
@@ -105,7 +105,7 @@ namespace BoxNestGroup.Manager
             get
             {
                 var userToken = Settings.Default.AccessToken;
-                Console.WriteLine("■IsHaveAccessToken:{0}", userToken);
+                Console.WriteLine("■BoxManager IsHaveAccessToken:{0}", userToken);
     
                 switch (userToken)
                 {
@@ -125,7 +125,7 @@ namespace BoxNestGroup.Manager
             get
             {
                 var refreshToken = Settings.Default.RefreshToken;
-                Console.WriteLine("■IsHaveRefreshToken:{0}", refreshToken);
+                Console.WriteLine("■BoxManager IsHaveRefreshToken:{0}", refreshToken);
 
                 switch (refreshToken)
                 {
@@ -145,7 +145,7 @@ namespace BoxNestGroup.Manager
             // トークンがあればそのトークンを使って再セッション
             var accessToken = Settings.Default.AccessToken;
             string refreshToken = (IsHaveRefreshToken == false) ? "" : Settings.Default.RefreshToken;
-            Console.WriteLine("■OAuthToken : AccessToken[{0}] RefreshToken[{1}]", accessToken, refreshToken);
+            Console.WriteLine("■BoxManager OAuthToken : AccessToken[{0}] RefreshToken[{1}]", accessToken, refreshToken);
 
             // リフレッシュトークン取得
             var session = new OAuthSession(accessToken, refreshToken, Constants.AccessTokenExpirationTime, Constants.BearerTokenType);
@@ -160,7 +160,12 @@ namespace BoxNestGroup.Manager
         /// </summary>
         public async Task RefreshToken()
         {
-            Console.WriteLine("■RefreshToken");
+            Console.WriteLine("■BoxManager RefreshToken");
+            if (_client == null)
+            {
+                return;
+            }
+
             var session = await _client.Auth.RefreshAccessTokenAsync(Settings.Default.AccessToken);
             _client = new BoxClient(_config, session);
 
@@ -175,7 +180,7 @@ namespace BoxNestGroup.Manager
         /// <param name="refreshToken_">リフレッシュトークン</param>
         public void SetTokens(string accessToken_, string refreshToken_)
         {
-            Console.WriteLine("■ SeTokens Access[{0}] Refresh[{1}]", accessToken_, refreshToken_);
+            Console.WriteLine("■BoxManager SeTokens Access[{0}] Refresh[{1}]", accessToken_, refreshToken_);
 
             Settings.Default.AccessToken = accessToken_;
             Settings.Default.RefreshToken = refreshToken_;
@@ -194,8 +199,11 @@ namespace BoxNestGroup.Manager
                 try
                 {
                     var currentUser = await _client.UsersManager.GetCurrentUserInformationAsync();
-                    Console.WriteLine("■LoginUserName:" + currentUser.Name);
-                    return currentUser.Name;
+                    Console.WriteLine("■BoxManager LoginUserName:" + currentUser.Name);
+
+                    SettingManager.Instance.LoginName = currentUser.Name;
+
+                    return SettingManager.Instance.LoginName;
                 }
                 catch (Exception ex_)
                 {
@@ -211,7 +219,7 @@ namespace BoxNestGroup.Manager
         /// <returns>全グループの取得(データービュー)</returns>
         public async Task<ObservableCollection<BoxGroupDataGridView>> ListGroupData()
         {
-            Console.WriteLine("■ListGroupData");
+            Console.WriteLine("■BoxManager ListGroupData");
             if (_client != null)
             {
                 try
@@ -243,8 +251,7 @@ namespace BoxNestGroup.Manager
                 await add.Inital();
 
                 SettingManager.Instance.ListGroupDataGridRow.Add(add);
-
-                Console.WriteLine("■listGroupData add : name[{0}] id[{1}]", add.GroupName, add.GroupId);
+                Console.WriteLine("■BoxManager listGroupData add : name[{0}] id[{1}]", add.GroupName, add.GroupId);
 
             }
             return SettingManager.Instance.ListGroupDataGridRow;
@@ -257,7 +264,7 @@ namespace BoxNestGroup.Manager
         /// <returns>作成したBoxグループ</returns>
         public async Task<BoxGroup> CreateGroup(string groupName_)
         {
-            Console.WriteLine("■CreateGroup [{0}]" , groupName_);
+            Console.WriteLine("■BoxManager CreateGroup [{0}]", groupName_);
             if (_client != null)
             {
 
@@ -268,7 +275,7 @@ namespace BoxNestGroup.Manager
                 }
                 catch (Exception ex_)
                 {
-                    Console.WriteLine("　CreateGroup:" + ex_.ToString());
+                    Console.WriteLine("　BoxManager CreateGroup:" + ex_.ToString());
                 }
             }
             return new BoxGroup();
@@ -307,7 +314,7 @@ namespace BoxNestGroup.Manager
         /// <returns>所属するメンバシップ(グループとユーザの紐付け)の取得</returns>
         public async Task<BoxCollection<BoxGroupMembership>> ListMemberIdFromGroup(string gorupId_)
         {
-            Console.WriteLine("■ListMemberIdFromGroup : [{0}]", gorupId_);
+            Console.WriteLine("■BoxManager ListMemberIdFromGroup : [{0}]", gorupId_);
             if (_client != null)
             {
                 try
@@ -316,7 +323,7 @@ namespace BoxNestGroup.Manager
                 }
                 catch (Exception ex_)
                 {
-                    Console.WriteLine("　ListMemberIdFromGroup:" + ex_.ToString());
+                    Console.WriteLine("　BoxManager ListMemberIdFromGroup:" + ex_.ToString());
                 }
             }
             return new BoxCollection<BoxGroupMembership>();
@@ -328,7 +335,7 @@ namespace BoxNestGroup.Manager
         /// <returns>全ユーザーの取得(データービュー)</returns>
         public async Task<ObservableCollection<BoxUserDataGridView>> ListUserData()
         {
-            Console.WriteLine("■ListUserData");
+            Console.WriteLine("■BoxManager ListUserData");
             if (_client != null)
             {
                 try
@@ -359,7 +366,7 @@ namespace BoxNestGroup.Manager
             {
                 var add = new BoxUserDataGridView(user);
                 SettingManager.Instance.ListUserDataGridRow.Add(add);
-                Console.WriteLine("■listUserData add : name[{0}] id[{1}]", add.UserName, add.UserId);
+                Console.WriteLine("■BoxManager listUserData add : name[{0}] id[{1}]", add.UserName, add.UserId);
 
             }
             return SettingManager.Instance.ListUserDataGridRow;
@@ -372,7 +379,7 @@ namespace BoxNestGroup.Manager
         /// <param name="listGroupId_">追加するグループIDのリスト</param>
         public async Task AddGroupUser(string userId_, IList<string> listGroupId_) 
         {
-            Console.WriteLine("■AddGroupUser userId_[{0}] listGroupId_[{1}]", userId_,string.Join(",", listGroupId_));
+            Console.WriteLine("■BoxManager AddGroupUser userId_[{0}] listGroupId_[{1}]", userId_,string.Join(",", listGroupId_));
             if (_client != null)
             {
                 foreach (var groupId in listGroupId_)
@@ -400,19 +407,19 @@ namespace BoxNestGroup.Manager
         /// <param name="list_">削除するメンバシップ(グループとユーザーの紐付け)のリスト</param>
         public async Task DeleteGroupUser(IList<BoxGroupMembership> list_)
         {
-            Console.WriteLine("■DeleteGroupUser");
+            Console.WriteLine("■BoxManager DeleteGroupUser");
             if (_client != null)
             {
                 foreach (var member in list_)
                 {
-                    Console.WriteLine("　DeleteGroupUser id[{0}] group[{1}] user[{2}]", member.Id, member.Group.Id, member.User.Id);
+                    Console.WriteLine("　BoxManager DeleteGroupUser id[{0}] group[{1}] user[{2}]", member.Id, member.Group.Id, member.User.Id);
                     try
                     {
                         var rtn = await _client.GroupsManager.DeleteGroupMembershipAsync(member.Id);
                     }
                     catch (Exception ex_)
                     {
-                        Console.WriteLine("　DeleteGroupUser:" + ex_.ToString());
+                        Console.WriteLine("　BoxManager DeleteGroupUser:" + ex_.ToString());
                     }
                 }
             }

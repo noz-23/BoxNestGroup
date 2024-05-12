@@ -24,7 +24,7 @@ namespace BoxNestGroup.Manager
         /// <summary>
         /// フォルダ管理パス
         /// </summary>
-        private string _commonGroupFolderPath = Directory.GetCurrentDirectory() + @"\" + Settings.Default.CommonGroupFolder;
+        public string CommonGroupFolderPath { get; private set; } = Directory.GetCurrentDirectory() + @"\" + Settings.Default.CommonGroupFolder;
 
         /// <summary>
         /// フォルダ(グループ名)の一覧
@@ -56,7 +56,7 @@ namespace BoxNestGroup.Manager
         {
             get
             {
-                Console.WriteLine("■ListCommonFolder:" + _commonGroupFolderPath);
+                Console.WriteLine("■ListCommonFolder:" + CommonGroupFolderPath);
                 _listFolderTree.Clear();
 
                 //ListFolderName.Clear();
@@ -64,7 +64,7 @@ namespace BoxNestGroup.Manager
                 var list = new ObservableCollection<FolderGroupTreeView>();
                 list.Add(new FolderGroupTreeView() { GroupName = Settings.Default.ClearGroupName });
 
-                _listFolderTree = listFolder(_commonGroupFolderPath, list);
+                _listFolderTree = listFolder(CommonGroupFolderPath, list);
                 return _listFolderTree;
             }
         }
@@ -85,7 +85,7 @@ namespace BoxNestGroup.Manager
         /// <param name="boxGroup_">グループ名</param>
         public void CreateFolder(string name_) 
         {
-            var pathName = _commonGroupFolderPath + @"\" + name_;
+            var pathName = CommonGroupFolderPath + @"\" + name_;
 
             if (Directory.Exists(pathName) == false)
             {
@@ -106,8 +106,8 @@ namespace BoxNestGroup.Manager
 
             foreach (var path in list)
             {
-                var oldPath = _commonGroupFolderPath + path;
-                var newPath = _commonGroupFolderPath + path.Substring(0,path.LastIndexOf(@"\"))+@"\"+ newName_;
+                var oldPath = CommonGroupFolderPath + path;
+                var newPath = CommonGroupFolderPath + path.Substring(0,path.LastIndexOf(@"\"))+@"\"+ newName_;
 
                 Directory.Move(oldPath,newPath);
                 Console.WriteLine("　UpdateFolder old [{0}] -> new [{1}]", oldPath, newPath);
@@ -148,10 +148,10 @@ namespace BoxNestGroup.Manager
             //Console.WriteLine("■ListPathFindFolderName[{0}]" , groupName_);
 
             var rtn = new List<string>();
-            foreach (var folderName in Directory.GetDirectories(_commonGroupFolderPath, groupName_, System.IO.SearchOption.AllDirectories))
+            foreach (var folderName in Directory.GetDirectories(CommonGroupFolderPath, groupName_, System.IO.SearchOption.AllDirectories))
             {
                 //Console.WriteLine("　find:" + folderName);
-                rtn.Add(folderName.Replace(_commonGroupFolderPath, string.Empty));
+                rtn.Add(folderName.Replace(CommonGroupFolderPath, string.Empty));
             }
 
             return rtn;

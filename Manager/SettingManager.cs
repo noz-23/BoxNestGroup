@@ -22,6 +22,11 @@ namespace BoxNestGroup.Manager
         }
 
         /// <summary>
+        /// ログインネーム
+        /// </summary>
+        public string LoginName { get; set;} ="認証前";
+
+        /// <summary>
         /// グループビュー
         /// </summary>
         public ObservableCollection<BoxGroupDataGridView> ListGroupDataGridRow { get; private set; } = new ObservableCollection<BoxGroupDataGridView>();
@@ -246,6 +251,10 @@ namespace BoxNestGroup.Manager
             }
         }
 
+        /// <summary>
+        /// エクセルのシートの保存処理
+        /// </summary>
+        /// <param name="path_"></param>
         public void SaveExcelFile(string path_)
         {
             using (var workbook = new XLWorkbook())
