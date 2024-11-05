@@ -1,0 +1,320 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoxNestGroup"
+        xmlns:view="clr-namespace:BoxNestGroup.View"
+        xmlns:manager="clr-namespace:BoxNestGroup.Manager"
+        xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" x:Class="BoxNestGroup.MainWindow"
+        mc:Ignorable="d"
+        Title="BoxNestGroup" Height="768" Width="1024"
+        >
+    <Window.Resources>
+        <Style TargetType="TextBox" x:Key="_dataGridUserTextBoxStyle">
+            <EventSetter Event="KeyDown" Handler="_dataGridUserTextColumnKeyDown" />
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" ></BooleanToVisibilityConverter>
+    </Window.Resources>
+    <Grid Cursor="">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="24*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="27*"/>
+        </Grid.RowDefinitions>
+        <Menu x:Name="_menuMain" DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="8">
+            <MenuItem x:Name="_menuSetting" Header="設定">
+                <MenuItem Header="接続設定" Click="_buttonSettingsClick"/>
+                <MenuItem Header="承認" Click="_buttonWebAuthClick"/>
+            </MenuItem>
+            <MenuItem x:Name="_menuShow" Header="表示">
+                <MenuItem x:Name="menuShowUser" Header="ユーザー">
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_ID}"     IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserId}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_MAIL}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserMail}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_NOW}"    IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserNowGroup}" />
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_ALL}"    IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserAllGroup}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_MOD}"    IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserModGroup}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_NEST}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserNestGroup}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_USED}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserUsed}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_USER_COLABO}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserColabo}"/>
+                </MenuItem>
+                <MenuItem x:Name="menuShowGroup" Header="グループ">
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_GROUP_ID}"         IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupId}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_GROUP_NEST_MAX}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupNestMax}"/>
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_GROUP_FOLDER_NUM}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupFolderCount}" />
+                    <MenuItem Header="{x:Static local:MainWindow.MENU_GROUP_USER_NUM}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupUserCount}" />
+                </MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="_menuMenu" Header="メニュー">
+                <MenuItem Header="About" Click="_buttonAboutClick" />
+                <MenuItem Header="終了" />
+            </MenuItem>
+        </Menu>
+        <TextBlock
+            x:Name="_textLogin" 
+            Grid.Row="1" Grid.Column="0"
+            HorizontalAlignment="Left" VerticalAlignment="Center"
+            Margin="1,1,1,1"
+            Text="{Binding LoginName,Source={x:Static manager:SettingManager.Instance},StringFormat=ログイン:{0},Mode=OneWay}"
+            />
+        <DockPanel Grid.Row="1" Grid.Column="2" Margin="1,1,1,1">
+            <Button x:Name="_buttonWebAuth" Content="　承　認　" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="1,1,1,1" Click="_buttonWebAuthClick"/>
+            <Button x:Name="_buttonOffLine" Content="オフライン" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="1,1,1,1" Click="_buttonOffLineButtonClick"/>
+        </DockPanel>
+        <Button x:Name="_buttonOpenFolder"
+                Grid.Row="2" Grid.Column="0" Content="グループ整理" 
+                HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="1,1,1,1"
+                Click="_buttonOpenFolderClick"/>
+        <TreeView
+            x:Name="_treeViewFolder"
+            Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" 
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            Margin="1,1,1,1"
+            ItemsSource="{Binding ListFolderTree ,Source={x:Static manager:FolderManager.Instance}, Mode=OneWay}"
+            PreviewMouseDown="_treeViewFolderPreviewMouseDown"
+            MouseMove="_treeViewFolderMouseMove"
+            Drop="_treeViewFolderDrop"
+            >
+            <TreeView.ItemTemplate >
+                <HierarchicalDataTemplate DataType="{x:Type view:FolderGroupTreeView}" ItemsSource="{Binding ListNestGroup}">
+                    <TextBlock Text="{Binding GroupName}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <GridSplitter Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="Gray" />
+        <Button
+            x:Name="_buttonAddUserGroup"
+            Grid.Row="2" Grid.Column="2"
+            HorizontalAlignment="Left"  VerticalAlignment="Center"
+            Margin="1,1,1,1"
+            Content="ユーザーにグループ追加" 
+            Click="_buttonAddUserGroupClick"
+            />
+        <TabControl x:Name="_tabControlBox" Grid.Row="3" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3" TabStripPlacement="Left" SelectionChanged="_tabControlBoxSelectionChanged">
+            <TabItem Header="ユーザー" Margin="1,1,0,-1"  HorizontalAlignment="Left">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="0" Grid.Column="0" Margin="1,1,1,1">
+                        <Button x:Name="_buttonMakeUser" Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="_buttonMakeUserButtonClick" Visibility="Collapsed" />
+                        <Label x:Name="_labelDescriptionUser" Content="グループの改行「Shift+Enter」"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" />
+                        <Button x:Name="_buttonSaveExcel" Content="Excel保存"   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" Click="saveExcelButtonClick"/>
+                    </DockPanel>
+                    <DataGrid
+                        x:Name="_dataGridUser"
+                        Grid.Row="1"
+                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                        Margin="1,1,1,1"                       
+                        ItemsSource="{Binding ListUserDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
+                        CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+                        >
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_SEELCT}"
+                                Binding="{Binding Selected}" Width="*" >
+                                <DataGridColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.HeaderStyle>
+                                <DataGridColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.CellStyle>
+                            </DataGridCheckBoxColumn>
+                            <DataGridTextColumn 
+                                Header="{x:Static local:MainWindow.MENU_USER_NAME}"
+                                Binding="{Binding UserName, Mode=OneWay}"
+                                Width="4*"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_MAIL}"
+                                Binding="{Binding UserMailAddress, Mode=OneWay}" 
+                                Width="4*" 
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserMail, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                            <DataGridTextColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_ID}"
+                                Binding="{Binding UserId, Mode=OneWay}"
+                                Width="3*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserId, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                            <DataGridTextColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_NOW}"
+                                Binding="{Binding ListNowGroup, Mode=OneWay}"
+                                Width="4*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                            <DataGridTextColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_ALL}"
+                                Binding="{Binding ListNowAllGroup, Mode=OneWay}"
+                                Width="4*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserAllGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                            <DataGridTextColumn
+                                Binding="{Binding ListModGroup,Mode=TwoWay}"
+                                Width="4*">
+                                <DataGridColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.HeaderStyle>
+                                <DataGridColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.CellStyle>
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical" >
+                                            <TextBlock                                              
+                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                Text="{x:Static local:MainWindow.MENU_USER_MOD}"/>
+                                            <Button
+                                                x:Name="_buttonRenewUser" 
+                                                Content="更新"
+                                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                Margin="1,1,1,1"
+                                                Click="_buttonRenewUserButtonClick"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_NEST}"
+                                Binding="{Binding ListModAllGroup,Mode=OneWay}"
+                                Width="4*" 
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNestGroup, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <DataGridTextColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_USED}"
+                                Binding="{Binding UserSpaceUsed}"
+                                Width="*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserUsed, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <DataGridTextColumn
+                                Header="{x:Static local:MainWindow.MENU_USER_COLABO}"
+                                Binding="{Binding UserExternalCollaborate}"
+                                Width="*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserColabo, Converter={StaticResource BoolVisibilityConverter}}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="グループ" Margin="1,1,1,1" HorizontalAlignment="Left">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label x:Name="labelDescriptionGroup" Content="グループIDがない場合は未作成"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" />
+                    <DataGrid
+                        x:Name="_dataGridGroup"
+                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
+                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+                        ItemsSource="{Binding ListGroupDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
+                        CellEditEnding="_dataGridGroupCellEditEnding">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding GroupName}" Width="3*">
+                                <DataGridColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.HeaderStyle>
+                                <DataGridColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.CellStyle>
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical" >
+                                            <TextBlock
+                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                Text="{x:Static local:MainWindow.MENU_GROUP_NAME}"
+                                                />
+                                            <Button
+                                                x:Name="_buttonMakeGroup"
+                                                Grid.Row="0"  Content="作成"
+                                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                Margin="1,1,1,1"
+                                                Click="_buttonMakeGroupButtonClick"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn 
+                                Header="{x:Static local:MainWindow.MENU_GROUP_ID}"
+                                Binding="{Binding GroupId, Mode=OneWay}"
+                                Width="2*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <DataGridTextColumn 
+                                Header="{x:Static local:MainWindow.MENU_GROUP_NEST_MAX}"
+                                Binding="{Binding MaxNestCount, Mode=OneWay}"
+                                Width="*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupNestMax, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <DataGridTextColumn 
+                                Header="{x:Static local:MainWindow.MENU_GROUP_FOLDER_NUM}"
+                                Binding="{Binding FolderCount, Mode=OneWay}"
+                                Width="*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupFolderCount, Converter={StaticResource BoolVisibilityConverter}}"/>
+                            <DataGridTextColumn 
+                                Header="{x:Static local:MainWindow.MENU_GROUP_USER_NUM}"
+                                Binding="{Binding UserCount, Mode=OneWay}"
+                                Width="*"
+                                IsReadOnly="True"
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupUserCount, Converter={StaticResource BoolVisibilityConverter}}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="ユーザー名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="23*"/>
+                    </Grid.RowDefinitions>
+                    <Label x:Name="_labelDescriptionUserNameFilter" Grid.Row="0" Grid.Column="0" Content="テキストに書いたユーザー名のみ表示します"/>
+                    <TextBox x:Name="_textBoxUserNameFilter" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="グループ名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="23*"/>
+                    </Grid.RowDefinitions>
+                    <Label x:Name="labelDescriptionGroupNameFilter" Grid.Row="0" Grid.Column="0" Content="テキストに書いたグループ名のみ表示します"/>
+                    <TextBox x:Name="textBoxGroupNameFilter" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"  />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

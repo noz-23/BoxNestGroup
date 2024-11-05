@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace BoxNestGroup
 {
+    /// <summary>
+    /// ログファイル
+    /// </summary>
     class LogFile
     {
+        /// <summary>
+        /// シングルトン
+        /// </summary>
         public static LogFile Instance { get; }= new LogFile();
 
-        private string _logFileName = Directory.GetCurrentDirectory() + @"\log.txt";
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         private LogFile() 
         {
             if( File.Exists(_logFileName)==true)
@@ -20,6 +23,14 @@ namespace BoxNestGroup
             }
         }
 
+        /// <summary>
+        /// ログファイル名
+        /// </summary>
+        private string _logFileName = Directory.GetCurrentDirectory() + @"\log.txt";
+
+        /// <summary>
+        /// 作成処理
+        /// </summary>
         public void Create()
         {
             var stream = new System.IO.StreamWriter(_logFileName);

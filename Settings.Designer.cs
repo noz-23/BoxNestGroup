@@ -23,27 +23,21 @@ namespace BoxNestGroup {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("GroupFolder")]
         public string CommonGroupFolder {
             get {
                 return ((string)(this["CommonGroupFolder"]));
             }
-            set {
-                this["CommonGroupFolder"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SettingFolder")]
         public string CommonGroupSetting {
             get {
                 return ((string)(this["CommonGroupSetting"]));
-            }
-            set {
-                this["CommonGroupSetting"] = value;
             }
         }
         
@@ -113,15 +107,12 @@ namespace BoxNestGroup {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("【グループなしに設定】\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("【グループなしに設定】")]
         public string ClearGroupName {
             get {
                 return ((string)(this["ClearGroupName"]));
-            }
-            set {
-                this["ClearGroupName"] = value;
             }
         }
         
@@ -134,6 +125,150 @@ namespace BoxNestGroup {
             }
             set {
                 this["RefreshToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowGroupId {
+            get {
+                return ((bool)(this["ShowGroupId"]));
+            }
+            set {
+                this["ShowGroupId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowGroupNestMax {
+            get {
+                return ((bool)(this["ShowGroupNestMax"]));
+            }
+            set {
+                this["ShowGroupNestMax"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowGroupFolderCount {
+            get {
+                return ((bool)(this["ShowGroupFolderCount"]));
+            }
+            set {
+                this["ShowGroupFolderCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowGroupUserCount {
+            get {
+                return ((bool)(this["ShowGroupUserCount"]));
+            }
+            set {
+                this["ShowGroupUserCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserId {
+            get {
+                return ((bool)(this["ShowUserId"]));
+            }
+            set {
+                this["ShowUserId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserMail {
+            get {
+                return ((bool)(this["ShowUserMail"]));
+            }
+            set {
+                this["ShowUserMail"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserNowGroup {
+            get {
+                return ((bool)(this["ShowUserNowGroup"]));
+            }
+            set {
+                this["ShowUserNowGroup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserAllGroup {
+            get {
+                return ((bool)(this["ShowUserAllGroup"]));
+            }
+            set {
+                this["ShowUserAllGroup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserModGroup {
+            get {
+                return ((bool)(this["ShowUserModGroup"]));
+            }
+            set {
+                this["ShowUserModGroup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserNestGroup {
+            get {
+                return ((bool)(this["ShowUserNestGroup"]));
+            }
+            set {
+                this["ShowUserNestGroup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserUsed {
+            get {
+                return ((bool)(this["ShowUserUsed"]));
+            }
+            set {
+                this["ShowUserUsed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowUserColabo {
+            get {
+                return ((bool)(this["ShowUserColabo"]));
+            }
+            set {
+                this["ShowUserColabo"] = value;
             }
         }
     }

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoxNestGroup.Windows"
         mc:Ignorable="d"
-        Title="AboutWindow" Height="150" Width="300">
-    <Grid>
-        <Label x:Name="label" Content="BoxNestGroup&#xA; Lisence: MIT license&#xD;&#xA;Use:&#xD;&#xA; developer.box.com：APACHE LICENSE&#xA;  https://developer.box.com/&#xA;  https://github.com/box/box-windows-sdk-v2&#xA;&#xA;" HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Top"/>
-        <Button x:Name="button" Content="Close" HorizontalAlignment="Right" Margin="1,1,1,1" VerticalAlignment="Bottom" Click="buttonClick"/>
+        Title="AboutWindow" Height="250" Width="340" HorizontalAlignment="Left">
+    <Grid Width="300">
+        <Label x:Name="label" Content="BoxNestGroup Ver.0.2.0&#xA; Lisence: MIT license&#xA;Use:&#xA; developer.box.com：APACHE LICENSE&#xA;  https://developer.box.com/&#xA;  https://github.com/box/box-windows-sdk-v2&#xA;&#xA; Microsoft.Web.WebView2 : Copyright (C) Microsoft Corporation. &#xA;  https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.2478.35/license&#xA;&#xA; ClosedXML : MIT&#xA;  https://github.com/ClosedXML/ClosedXML" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="10" Width="300"/>
+        <Button x:Name="button" Content="Close" HorizontalAlignment="Right" Margin="1,10,1,10" VerticalAlignment="Bottom" Click="buttonClick"/>
 
     </Grid>
 </Window>

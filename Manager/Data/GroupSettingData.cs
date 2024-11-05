@@ -1,11 +1,4 @@
-﻿using Box.V2.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
+﻿using System.IO;
 
 namespace BoxNestGroup.Manager.Data
 {
@@ -28,7 +21,7 @@ namespace BoxNestGroup.Manager.Data
         /// 全て設定ファイルの取得
         /// </summary>
         /// <returns>全て設定ファイル名リスト</returns>
-        public static string [] ListAllGroupSettingData()
+        public static IList<string> ListAllGroupSettingData()
         {
             return Directory.GetFiles(_commonGroupSettingPath, "*" + _settingFile);
         }
@@ -58,14 +51,15 @@ namespace BoxNestGroup.Manager.Data
         /// <returns>グルー名</returns>
         public static string ReadGroupName(string path_)
         {
-            Console.WriteLine("■ReadGroupName [{0}]",  path_);
+            //Debug.WriteLine("■ReadGroupName [{0}]",  path_);
             //
             // 既存は読み込む
-            var reader = new System.IO.StreamReader(path_);
-            var  name = reader.ReadLine();
-            reader.Close();
-
-            return name;
+            using (var reader = new System.IO.StreamReader(path_))
+            {
+                var name = reader?.ReadLine() ??string.Empty;
+                reader?.Close();
+                return name;
+            }
         }
 
         /// <summary>
@@ -75,7 +69,7 @@ namespace BoxNestGroup.Manager.Data
         /// <param name="groupName_">グループ名</param>
         public static void WriteGroupName(string path_, string groupName_)
         {
-            Console.WriteLine("■WriteGroupName [{0}]", path_);
+            //Debug.WriteLine("■WriteGroupName [{0}]", path_);
             //
 
             var writer = new System.IO.StreamWriter(path_, false); // 常に上書き

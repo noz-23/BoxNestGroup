@@ -1,18 +1,14 @@
 ﻿using Box.V2.Models;
 using BoxNestGroup.Manager;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace BoxNestGroup.GridView
+namespace BoxNestGroup.View
 {
     /// <summary>
     /// グループの表示データビュー
     /// </summary>
-    internal class BoxGroupDataGridView
+    internal class BoxGroupDataGridView : INotifyPropertyChanged
     {
         /// <summary>
         /// グループ名
@@ -40,8 +36,17 @@ namespace BoxNestGroup.GridView
         /// <summary>
         /// Boxのグループ(オンライン時)
         /// </summary>
-        private BoxGroup _groupBox =null;
+        private BoxGroup? _groupBox =null;
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
+        }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public BoxGroupDataGridView()
         {
         }
@@ -53,6 +58,7 @@ namespace BoxNestGroup.GridView
         public BoxGroupDataGridView(string groupName_)
         {
             GroupName = groupName_;
+            _inital();
         }
 
         /// <summary>
@@ -65,20 +71,21 @@ namespace BoxNestGroup.GridView
 
             GroupName = group_.Name;
             GroupId = group_.Id;
+
+            // Boxから取得
+            UserCount = SettingManager.Instance.ListBoxGroupMembership.CountBoxGroupMemberShip(GroupId);
+            _inital();
         }
 
         /// <summary>
         /// 初期化処理
         /// </summary>
-        public async Task Inital()
+        //public async Task Inital()
+        private void _inital()
         {
             // 設定関係を優先
             if (GroupId != string.Empty)
             {
-                // Boxから取得
-                await SettingManager.Instance.AddBoxGroupMemberShip(GroupId);
-                UserCount = SettingManager.Instance.CountBoxGroupMemberShip(GroupId);
-
                 SettingManager.Instance.CheckFolderName(_groupBox);
             }
             else 
@@ -88,16 +95,27 @@ namespace BoxNestGroup.GridView
 
                 UserCount = SettingManager.Instance.CountGroupMemberShipFromSettingData(GroupName);
 
-                //
-                SettingManager.Instance.CheckFolderName(GroupName);
+                FolderManager.Instance.CreateFolder(GroupName);
+                //if (FolderManager.Instance.Contains(GroupName) == false)
+                //{
+                //    // フォルダがない場合は作成
+                //    FolderManager.Instance.CreateFolder(GroupName);
+                //}
             }
 
             var list = FolderManager.Instance.ListPathFindFolderName(GroupName);
             FolderCount = list.Count;
 
-            MaxNestCount = maxNestCount(list);           
+            MaxNestCount = maxNestCount(list);
         }
-        private int maxNestCount(List<string> list_)
+
+        /// <summary>
+        /// 最大のネスト数の取得
+        /// </summary>
+        /// <param name="list_">パス一覧</param>
+        /// <returns>最大のネスト数</returns>
+
+        private int maxNestCount(IList<string> list_)
         {
             int count = 1;
             foreach (var path in list_)

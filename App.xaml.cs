@@ -1,8 +1,6 @@
-﻿using System.Configuration;
-using System.Data;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Annotations;
+using System.Diagnostics;
 
 namespace BoxNestGroup
 {
@@ -13,10 +11,12 @@ namespace BoxNestGroup
     {
         public App():base()
         {
+            // ログ作成
             LogFile.Instance.Create();
 
+            // 基本フォルダ
             var currentFolder = Directory.GetCurrentDirectory();
-            Console.WriteLine("■currentFolder:" + currentFolder.ToString());
+            Debug.WriteLine("■currentFolder:" + currentFolder.ToString());
 
             var commonGroupFolder = currentFolder + @"\" + Settings.Default.CommonGroupFolder;
 
@@ -24,7 +24,7 @@ namespace BoxNestGroup
             if (Directory.Exists(commonGroupFolder) == false)
             {
                 Directory.CreateDirectory(commonGroupFolder);
-                Console.WriteLine("■commonGroupFolder" + commonGroupFolder.ToString());
+                Debug.WriteLine("■commonGroupFolder" + commonGroupFolder.ToString());
             }
 
             var commonGroupSetting = currentFolder + @"\" + Settings.Default.CommonGroupSetting;
@@ -33,12 +33,17 @@ namespace BoxNestGroup
             if (Directory.Exists(commonGroupSetting) == false)
             {
                 Directory.CreateDirectory(commonGroupSetting);
-                Console.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
+                Debug.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
             }
 
         }
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnStartup(StartupEventArgs e)
         {
+            // シングルトン化のため変更
             /* App.xaml 
                 <Application x:Class="BoxNestGroup.App"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
