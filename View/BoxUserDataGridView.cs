@@ -21,15 +21,55 @@ namespace BoxNestGroup.View
         /// <summary>
         /// 選択
         /// </summary>
-        public bool Selected { get; set; } = false;
+        private bool _selected = false;
+        public bool Selected 
+        {
+            get { return _selected; }
+
+            set
+            {
+                if ((string.IsNullOrEmpty(_userName) == false)
+                 && (string.IsNullOrEmpty(_userMailAddress) == false)
+                 && (string.IsNullOrEmpty(UserSpaceUsed)==false)) // 初期化中はEmpty
+                {
+                    _selected = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
         /// <summary>
         /// ユーザー名
         /// </summary>
-        public string UserName { get; set; } = string.Empty;
+        private string _userName = string.Empty;
+        public string UserName
+        {
+            get { return _userName; }
+
+            set
+            {
+                _userName = value;
+                NotifyPropertyChanged();
+                //
+                Selected = true;
+            }
+        }
         /// <summary>
         /// メールアドレス
         /// </summary>
-        public string UserMailAddress { get; set; } = string.Empty;
+        private string _userMailAddress = string.Empty;
+        public string UserMailAddress
+        {
+            get { return _userMailAddress; }
+
+            set
+            {
+                _userMailAddress = value;
+                NotifyPropertyChanged();
+                //
+                Selected = true;
+            }
+        }
+
         /// <summary>
         /// ユーザーID
         /// </summary>
@@ -42,21 +82,21 @@ namespace BoxNestGroup.View
             get
             {
                 //return string.Join("\n",FolderManager.Instance.ListMinimumGroup(_listAllGroup));
-                return string.Join("\n", FolderManager.Instance.ListMinimumGroup(UserId));
+                //return string.Join("\n", FolderManager.Instance.ListMinimumGroup(UserId));
+                return string.Join("\n", FolderManager.Instance.ListMinimumGroup(_listNowAllGroup));                
             }
-
         }
 
         /// <summary>
         /// 現在所属の全所属
         /// </summary>
-        //private List<string> _listAllGroup =new List<string>();
+        private List<string> _listNowAllGroup =new List<string>();
         public string ListNowAllGroup
         {
             get
             {
-                //return string.Join("\n", _listAllGroup);
-                return string.Join("\n", SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
+                return string.Join("\n", _listNowAllGroup);
+                //return string.Join("\n", SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
             }
             //set 
             //{
@@ -81,6 +121,8 @@ namespace BoxNestGroup.View
                 _listModGroup.AddRange(value.Split("\n"));
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("ListModAllGroup");
+                //
+                Selected = true;
             }
         }
         /// <summary>
@@ -147,8 +189,12 @@ namespace BoxNestGroup.View
             //_listAllGroup.Clear();
             //_listAllGroup.AddRange(SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
 
-            UserExternalCollaborate = (user_.IsExternalCollabRestricted ==true) ? APP_ENABLED : APP_DISABLED;
+            _listNowAllGroup.Clear();
+            _listNowAllGroup.AddRange(SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(user_.Id));
+
+
             UserSpaceUsed = (user_.SpaceUsed == -1) ? APP_UNLIMITED : user_.SpaceUsed.ToString();
+            UserExternalCollaborate = (user_.IsExternalCollabRestricted ==true) ? APP_ENABLED : APP_DISABLED;
 
         }
 
@@ -165,6 +211,10 @@ namespace BoxNestGroup.View
             Debug.WriteLine("■BoxUserDataGridView name_[{0}] mail_[{1}] listGroup_[{2}] strage_[{3}] colabo_[{4}]", name_, mail_,string.Join(",", listGroup_), strage_,colabo_);
             UserName = name_;
             UserMailAddress = mail_;
+
+
+            _listNowAllGroup.Clear();
+            _listNowAllGroup.AddRange(listGroup_);
 
             UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) ==true) ? APP_UNLIMITED : strage_;
             UserExternalCollaborate = (colabo_.Contains( "disabled") ==true) ? "許　可" : "不許可";

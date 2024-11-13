@@ -227,7 +227,7 @@ namespace BoxNestGroup
 		/// 「更新」ボタン操作
 		///  設定されているグループに更新
 		/// </summary>
-		private async void _buttonRenewUserButtonClick(object sender, RoutedEventArgs e)
+		private async void _buttonUserGroupChangeButtonClick(object sender, RoutedEventArgs e)
 		{
 			Debug.WriteLine("■renewUserButtonClick : {0} {1}", sender, e);
             //var listUser = dataGridUser.ItemsSource as List<BoxUserDataGridView>;

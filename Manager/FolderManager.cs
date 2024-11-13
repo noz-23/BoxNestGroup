@@ -15,32 +15,60 @@ namespace BoxNestGroup.Manager
         /// シングルトン
         /// </summary>
         static public FolderManager Instance { get; } = new FolderManager();
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        private FolderManager()
-        {
-            //ListFolderTree = new FolderGroupTreeView(new DirectoryInfo(CommonGroupFolderPath));
-            //Debug.WriteLine("■ListCommonFolder:" + CommonGroupFolderPath);
-            //ListFolderTree.Clear();
-            var commonDirInfo = new DirectoryInfo(CommonGroupFolderPath);
-
-            var list =new List<FolderGroupTreeView>();
-            foreach (var info in commonDirInfo.GetDirectories())
-            {
-                list.Add(new FolderGroupTreeView(info));
-                //ListFolderTree.Add(new FolderGroupTreeView(info));
-            }
-            //ListFolderTree =ListFolderTree.OrderBy(x => x.GroupName);
-            list.Sort((a, b) => string.Compare(a.GroupName,b.GroupName));
-            ListFolderTree = new ObservableCollection<FolderGroupTreeView>(list);
-
-        }
 
         /// <summary>
         /// フォルダ管理パス
         /// </summary>
         public string CommonGroupFolderPath { get; private set; } = Directory.GetCurrentDirectory() + @"\" + Settings.Default.CommonGroupFolder;
+
+
+        private FileSystemWatcher _watcher = null;
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        private FolderManager()
+        {
+            ////ListFolderTree = new FolderGroupTreeView(new DirectoryInfo(CommonGroupFolderPath));
+            ////Debug.WriteLine("■ListCommonFolder:" + CommonGroupFolderPath);
+            ////ListFolderTree.Clear();
+            //var commonDirInfo = new DirectoryInfo(CommonGroupFolderPath);
+
+            //var list =new List<FolderGroupTreeView>();
+            //foreach (var info in commonDirInfo.GetDirectories())
+            //{
+            //    list.Add(new FolderGroupTreeView(info));
+            //    //ListFolderTree.Add(new FolderGroupTreeView(info));
+            //}
+            ////ListFolderTree =ListFolderTree.OrderBy(x => x.GroupName);
+            //list.Sort((a, b) => string.Compare(a.GroupName,b.GroupName));
+            //ListFolderTree = new ObservableCollection<FolderGroupTreeView>(list);
+            _watcher = new FileSystemWatcher(CommonGroupFolderPath)
+            {
+                NotifyFilter = System.IO.NotifyFilters.DirectoryName | System.IO.NotifyFilters.CreationTime | System.IO.NotifyFilters.LastWrite,
+                IncludeSubdirectories = true
+            };
+            _watcher.Changed += new System.IO.FileSystemEventHandler((source_, e_) =>  Reload());
+            _watcher.Created += new System.IO.FileSystemEventHandler((source_, e_) =>  Reload());
+            _watcher.Renamed += new System.IO.RenamedEventHandler((source_, e_) =>  Reload());
+
+            Reload();
+        }
+
+        public void Reload()
+        {
+            _watcher.EnableRaisingEvents = false;
+            var commonDirInfo = new DirectoryInfo(CommonGroupFolderPath);
+
+            var list = new List<FolderGroupTreeView>();
+            foreach (var info in commonDirInfo.GetDirectories())
+            {
+                list.Add(new FolderGroupTreeView(info));
+            }
+            list.Sort((a, b) => string.Compare(a.GroupName, b.GroupName));
+            ListFolderTree = new ObservableCollection<FolderGroupTreeView>(list);
+
+            _watcher.EnableRaisingEvents = true;
+        }
 
         /// <summary>
         /// フォルダ(グループ名)の一覧
@@ -259,14 +287,15 @@ namespace BoxNestGroup.Manager
         //    rtn.Remove(string.Empty);
         //    return new List<string>(rtn);
         //}
-        public IList<string> ListMinimumGroup(string userId_ )
+        //public IList<string> ListMinimumGroup(string userId_ )
+        public IList<string> ListMinimumGroup(IList<string> listGroupName_)
         {
-            var listGroupName = SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(userId_);
+            //var listGroupName = SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(userId_);
             var listNest = new HashSet<string>();
-            var rtn = new HashSet<string>(listGroupName);
+            var rtn = new HashSet<string>(listGroupName_);
 
             // ネストしているフォルダの削除
-            foreach (var name in listGroupName)
+            foreach (var name in listGroupName_)
             {
                 // パスの「\」を変換することで全フォルダになる
                 var listPath = ListPathFindFolderName(name);

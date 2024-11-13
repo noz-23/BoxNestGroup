@@ -25,7 +25,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="27*"/>
         </Grid.RowDefinitions>
         <Menu x:Name="_menuMain" DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="8">
@@ -88,15 +87,7 @@
             </TreeView.ItemTemplate>
         </TreeView>
         <GridSplitter Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="Gray" />
-        <Button
-            x:Name="_buttonAddUserGroup"
-            Grid.Row="2" Grid.Column="2"
-            HorizontalAlignment="Left"  VerticalAlignment="Center"
-            Margin="1,1,1,1"
-            Content="ユーザーにグループ追加" 
-            Click="_buttonAddUserGroupClick"
-            />
-        <TabControl x:Name="_tabControlBox" Grid.Row="3" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3" TabStripPlacement="Left" SelectionChanged="_tabControlBoxSelectionChanged">
+        <TabControl x:Name="_tabControlBox" Grid.Row="2" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3" TabStripPlacement="Left" SelectionChanged="_tabControlBoxSelectionChanged">
             <TabItem Header="ユーザー" Margin="1,1,0,-1"  HorizontalAlignment="Left">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -117,8 +108,13 @@
                         HorizontalAlignment="Center" VerticalAlignment="Top"
                         Margin="1,1,1,1"                       
                         ItemsSource="{Binding ListUserDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
-                        CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+                        CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="All"
                         >
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="{x:Type DataGridRowHeader}">
+                                <Setter Property="Content" Value="*"/>
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn
                                 Header="{x:Static local:MainWindow.MENU_USER_SEELCT}"
@@ -135,16 +131,51 @@
                                 </DataGridColumn.CellStyle>
                             </DataGridCheckBoxColumn>
                             <DataGridTextColumn 
-                                Header="{x:Static local:MainWindow.MENU_USER_NAME}"
-                                Binding="{Binding UserName, Mode=OneWay}"
-                                Width="4*"
-                                IsReadOnly="True" />
+                                Binding="{Binding UserName, Mode=TwoWay}"
+                                Width="4*" >
+                                <DataGridColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.HeaderStyle>
+                                <DataGridColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.CellStyle>
+                                <DataGridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical" >
+                                            <TextBlock                                              
+                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                Text="{x:Static local:MainWindow.MENU_USER_NAME}"/>
+                                            <Button
+                                                x:Name="_buttonAddUserGroup"
+                                                HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                Margin="1,1,1,1"
+                                                Content="追加" 
+                                                Click="_buttonAddUserGroupClick"
+                                                />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridColumn.HeaderTemplate>
+                            </DataGridTextColumn>
                             <DataGridTextColumn
                                 Header="{x:Static local:MainWindow.MENU_USER_MAIL}"
-                                Binding="{Binding UserMailAddress, Mode=OneWay}" 
+                                Binding="{Binding UserMailAddress, Mode=TwoWay}" 
                                 Width="4*" 
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserMail, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserMail, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}">
+                                <DataGridColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.HeaderStyle>
+                                <DataGridColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Background" Value="Aquamarine"/>
+                                    </Style>
+                                </DataGridColumn.CellStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn
                                 Header="{x:Static local:MainWindow.MENU_USER_ID}"
                                 Binding="{Binding UserId, Mode=OneWay}"
@@ -183,11 +214,11 @@
                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                                 Text="{x:Static local:MainWindow.MENU_USER_MOD}"/>
                                             <Button
-                                                x:Name="_buttonRenewUser" 
+                                                x:Name="_buttonUserGroupChange" 
                                                 Content="更新"
                                                 HorizontalAlignment="Right" VerticalAlignment="Top"
                                                 Margin="1,1,1,1"
-                                                Click="_buttonRenewUserButtonClick"/>
+                                                Click="_buttonUserGroupChangeButtonClick"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridColumn.HeaderTemplate>
@@ -253,7 +284,7 @@
                                                 />
                                             <Button
                                                 x:Name="_buttonMakeGroup"
-                                                Grid.Row="0"  Content="作成"
+                                                Grid.Row="0"  Content="作成/更新"
                                                 HorizontalAlignment="Right" VerticalAlignment="Top"
                                                 Margin="1,1,1,1"
                                                 Click="_buttonMakeGroupButtonClick"/>

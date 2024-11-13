@@ -364,7 +364,6 @@ namespace BoxNestGroup.Manager
                     {
                         SettingManager.Instance.ListUserDataGridView.Add(new BoxUserDataGridView(user));
                         //Debug.WriteLine("■BoxManager listUserData add : name[{0}] id[{1}]", add.UserName, add.UserId);
-
                     }
                 }
                 catch (Exception ex_)

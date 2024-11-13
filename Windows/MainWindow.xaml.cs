@@ -38,7 +38,7 @@ namespace BoxNestGroup
             Settings.Default.Save();
         }
 
-        public const string MENU_USER_SEELCT = "選択";
+        public const string MENU_USER_SEELCT = "変更";
         public const string MENU_USER_NAME = "ユーザー名";
         public const string MENU_USER_ID = "ユーザーID";
         public const string MENU_USER_MAIL ="メールアドレス";
@@ -202,10 +202,10 @@ namespace BoxNestGroup
         //    //
         //}
 
-        private void _dataGridGroupRowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            Debug.WriteLine("■_dataGridGroupRowEditEnding : {0} {1}", sender, e);
-        }
+        //private void _dataGridGroupRowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        //{
+        //    Debug.WriteLine("■_dataGridGroupRowEditEnding : {0} {1}", sender, e);
+        //}
         
         /// <summary>
         /// グループ名の編集
@@ -246,10 +246,11 @@ namespace BoxNestGroup
             }
 
             Debug.WriteLine("_dataGridGroupCellEditEnding  Id[{0}] old[{1}] -> new[{2}]", oldGroup.GroupId, oldGroup.GroupName, newGroupName);
+
             var rtn =BoxManager.Instance.UpdateGroupName(oldGroup.GroupId, newGroupName);
             FolderManager.Instance.UpdateFolder(oldGroup.GroupName, newGroupName);
 
-            await BoxManager.Instance.ListGroupData();
+            //await BoxManager.Instance.ListGroupData();
 
             _dataGridUser.ItemsSource = _dataGridUser.ItemsSource;
             //await setView();
