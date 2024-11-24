@@ -127,7 +127,7 @@ namespace BoxNestGroup
 					continue;
 				}
 
-				var createName = group.GroupName.Trim();
+				var createName = group.ModGroupName.Trim();
 
                 if (createName == string.Empty)
                 {
@@ -188,11 +188,11 @@ namespace BoxNestGroup
 
 			foreach (var user in listUser)
 			{
-				if (user.Selected == false)
-				{
-					// チェックがない場合は処理しない
-					continue;
-				}
+				//if (user.Selected == false)
+				//{
+				//	// チェックがない場合は処理しない
+				//	continue;
+				//}
 				if (selectGroup.GroupName == Settings.Default.ClearGroupName)
 				{
 					// クリア設定の場合はクリア

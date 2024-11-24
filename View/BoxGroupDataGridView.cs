@@ -13,7 +13,11 @@ namespace BoxNestGroup.View
         /// <summary>
         /// グループ名
         /// </summary>
-        public string GroupName { get; set; } = string.Empty;
+        public string NowGroupName { get; set; } = string.Empty;
+
+
+        public string ModGroupName { get; set; } = string.Empty;
+
         /// <summary>
         /// グループID
         /// </summary>
@@ -57,7 +61,7 @@ namespace BoxNestGroup.View
         /// <param name="groupName_">グループ名</param>
         public BoxGroupDataGridView(string groupName_)
         {
-            GroupName = groupName_;
+            NowGroupName = groupName_;
             _inital();
         }
 
@@ -69,7 +73,7 @@ namespace BoxNestGroup.View
         {
             _groupBox = group_;
 
-            GroupName = group_.Name;
+            NowGroupName = group_.Name;
             GroupId = group_.Id;
 
             // Boxから取得
@@ -91,11 +95,11 @@ namespace BoxNestGroup.View
             else 
             {
                 // データ(ファイル)から取得
-                GroupId = SettingManager.Instance.GetGroupIdFromSttingData(GroupName);
+                GroupId = SettingManager.Instance.GetGroupIdFromSttingData(NowGroupName);
 
-                UserCount = SettingManager.Instance.CountGroupMemberShipFromSettingData(GroupName);
+                UserCount = SettingManager.Instance.CountGroupMemberShipFromSettingData(NowGroupName);
 
-                FolderManager.Instance.CreateFolder(GroupName);
+                FolderManager.Instance.CreateFolder(NowGroupName);
                 //if (FolderManager.Instance.Contains(GroupName) == false)
                 //{
                 //    // フォルダがない場合は作成
@@ -103,7 +107,7 @@ namespace BoxNestGroup.View
                 //}
             }
 
-            var list = FolderManager.Instance.ListPathFindFolderName(GroupName);
+            var list = FolderManager.Instance.ListPathFindFolderName(NowGroupName);
             FolderCount = list.Count;
 
             MaxNestCount = maxNestCount(list);

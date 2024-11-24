@@ -18,25 +18,52 @@ namespace BoxNestGroup.View
         public const string APP_DISABLED = "しない";
 
 
-        /// <summary>
-        /// 選択
-        /// </summary>
-        private bool _selected = false;
-        public bool Selected 
-        {
-            get { return _selected; }
+        ///// <summary>
+        ///// 選択
+        ///// </summary>
+        //private bool _selected = false;
+        //public bool Selected 
+        //{
+        //    get { return _selected; }
 
-            set
+        //    set
+        //    {
+        //        if ((string.IsNullOrEmpty(_userName) == false)
+        //         && (string.IsNullOrEmpty(_userMailAddress) == false)
+        //         && (string.IsNullOrEmpty(UserSpaceUsed)==false)) // 初期化中はEmpty
+        //        {
+        //            _selected = value;
+        //            NotifyPropertyChanged();
+        //        }
+        //    }
+        //}
+        private enum StatusView
+        {
+            NONE,
+            ADD,
+            MOD,
+        };
+        private StatusView status = StatusView.NONE;
+
+        public string Status
+        {
+            get 
             {
-                if ((string.IsNullOrEmpty(_userName) == false)
-                 && (string.IsNullOrEmpty(_userMailAddress) == false)
-                 && (string.IsNullOrEmpty(UserSpaceUsed)==false)) // 初期化中はEmpty
+                switch (status)
                 {
-                    _selected = value;
-                    NotifyPropertyChanged();
+                    case StatusView.ADD:
+                        return "追加";
+                    case StatusView.MOD:
+                        return "変更";
+                    default:
+                    case StatusView.NONE:
+                        break;
                 }
+                return "　　";
             }
         }
+
+
         /// <summary>
         /// ユーザー名
         /// </summary>
@@ -50,7 +77,7 @@ namespace BoxNestGroup.View
                 _userName = value;
                 NotifyPropertyChanged();
                 //
-                Selected = true;
+                //Selected = true;
             }
         }
         /// <summary>
@@ -66,7 +93,7 @@ namespace BoxNestGroup.View
                 _userMailAddress = value;
                 NotifyPropertyChanged();
                 //
-                Selected = true;
+                //Selected = true;
             }
         }
 
@@ -122,7 +149,7 @@ namespace BoxNestGroup.View
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("ListModAllGroup");
                 //
-                Selected = true;
+                //Selected = true;
             }
         }
         /// <summary>

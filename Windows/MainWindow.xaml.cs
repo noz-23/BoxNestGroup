@@ -238,17 +238,17 @@ namespace BoxNestGroup
                 return;
             }
 
-            var result = System.Windows.MessageBox.Show("グループ名を変更しますか\n["+ oldGroup.GroupName+"]→[" + newGroupName+"]", "確認",MessageBoxButton.OKCancel);
+            var result = System.Windows.MessageBox.Show("グループ名を変更しますか\n["+ oldGroup.NowGroupName+"]→[" + newGroupName+"]", "確認",MessageBoxButton.OKCancel);
             if(result != MessageBoxResult.OK)
             {
-                editBox.Text = oldGroup.GroupName;
+                editBox.Text = oldGroup.NowGroupName;
                 return; 
             }
 
-            Debug.WriteLine("_dataGridGroupCellEditEnding  Id[{0}] old[{1}] -> new[{2}]", oldGroup.GroupId, oldGroup.GroupName, newGroupName);
+            Debug.WriteLine("_dataGridGroupCellEditEnding  Id[{0}] old[{1}] -> new[{2}]", oldGroup.GroupId, oldGroup.NowGroupName, newGroupName);
 
             var rtn =BoxManager.Instance.UpdateGroupName(oldGroup.GroupId, newGroupName);
-            FolderManager.Instance.UpdateFolder(oldGroup.GroupName, newGroupName);
+            FolderManager.Instance.UpdateFolder(oldGroup.NowGroupName, newGroupName);
 
             //await BoxManager.Instance.ListGroupData();
 

@@ -20,7 +20,7 @@ namespace BoxNestGroup.View
         {
             var group = this.ToList().Find((d) => (d.GroupId == groupId_));
 
-            return (group == null) ? string.Empty : group.GroupName;
+            return (group == null) ? string.Empty : group.NowGroupName;
         }
         /// <summary>
         /// グループ名からグループIDの取得
@@ -29,7 +29,7 @@ namespace BoxNestGroup.View
         /// <returns>グループID</returns>
         public string GetBoxGroupId(string groupName_)
         {
-            var group = this.ToList().Find((d) => (d.GroupName == groupName_));
+            var group = this.ToList().Find((d) => (d.NowGroupName == groupName_));
             return (group == null) ? string.Empty : group.GroupId;
 
         }
@@ -46,7 +46,7 @@ namespace BoxNestGroup.View
             var listGroup = this.ToList();
             foreach (var name in listGroupName_)
             {
-                var find = listGroup.Find((g) => (g.GroupName == name));
+                var find = listGroup.Find((g) => (g.NowGroupName == name));
 
                 if (find == null)
                 {

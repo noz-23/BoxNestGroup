@@ -7,10 +7,19 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Contorls\GroupGridViewControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Contorls\UserGriviewControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Windows\AboutWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Windows\BoxOauthWebWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\SelectGroupWindows.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Windows\SettingsWindow.xaml.cs">
@@ -21,6 +30,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Contorls\GroupGridViewControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Contorls\UserGriviewControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Windows\AboutWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -28,6 +43,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Windows\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\SelectGroupWindows.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Windows\SettingsWindow.xaml">
