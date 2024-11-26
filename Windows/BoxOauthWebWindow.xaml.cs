@@ -1,4 +1,4 @@
-﻿using BoxNestGroup.Manager;
+﻿using BoxNestGroup.Managers;
 using System.Net;
 using System.Windows;
 using System.Diagnostics;

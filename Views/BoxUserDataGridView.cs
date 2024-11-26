@@ -1,12 +1,12 @@
 ﻿using Box.V2.Models;
-using BoxNestGroup.Manager;
+using BoxNestGroup.Managers;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-namespace BoxNestGroup.View
+namespace BoxNestGroup.Views
 {
-    internal class BoxUserDataGridView : INotifyPropertyChanged
+    public class BoxUserDataGridView : INotifyPropertyChanged
     {
         public const string BOX_UNLIMITED = "unlimited";
         public const string APP_UNLIMITED = "無制限";

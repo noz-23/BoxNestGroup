@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace BoxNestGroup.Manager.Data
+namespace BoxNestGroup.Managers.Data
 {
     /// <summary>
     /// 保存しているグループ名の呼び出し

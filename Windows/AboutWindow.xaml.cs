@@ -5,7 +5,7 @@ namespace BoxNestGroup.Windows
     /// <summary>
     /// AboutWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class AboutWindow : Window
+    public partial class AboutWindow : System.Windows.Window
     {
         /// <summary>
         ///  About画面

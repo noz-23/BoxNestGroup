@@ -1,5 +1,5 @@
-﻿using BoxNestGroup.Manager;
-using BoxNestGroup.View;
+﻿using BoxNestGroup.Managers;
+using BoxNestGroup.Views;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +9,8 @@ using System.Diagnostics;
 
 namespace BoxNestGroup
 {
+
+    public delegate Task ReNewDelegate();
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -207,55 +209,6 @@ namespace BoxNestGroup
         //    Debug.WriteLine("■_dataGridGroupRowEditEnding : {0} {1}", sender, e);
         //}
         
-        /// <summary>
-        /// グループ名の編集
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void _dataGridGroupCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            Debug.WriteLine("■_dataGridGroupCellEditEnding : {0} {1}", sender, e);
-
-            var editBox = e.EditingElement as System.Windows.Controls.TextBox;
-            if (editBox == null)
-            {
-                return;
-            }
-
-            var newGroupName = editBox?.Text ??string.Empty;
-            if (string.IsNullOrEmpty(newGroupName) == true)
-            {
-                return;
-            }
-            var oldGroup = (e.Row.Item as BoxGroupDataGridView);
-
-            if (oldGroup ==null)
-            {
-                return;
-            }
-            if (oldGroup.GroupId == string.Empty)
-            {
-                return;
-            }
-
-            var result = System.Windows.MessageBox.Show("グループ名を変更しますか\n["+ oldGroup.NowGroupName+"]→[" + newGroupName+"]", "確認",MessageBoxButton.OKCancel);
-            if(result != MessageBoxResult.OK)
-            {
-                editBox.Text = oldGroup.NowGroupName;
-                return; 
-            }
-
-            Debug.WriteLine("_dataGridGroupCellEditEnding  Id[{0}] old[{1}] -> new[{2}]", oldGroup.GroupId, oldGroup.NowGroupName, newGroupName);
-
-            var rtn =BoxManager.Instance.UpdateGroupName(oldGroup.GroupId, newGroupName);
-            FolderManager.Instance.UpdateFolder(oldGroup.NowGroupName, newGroupName);
-
-            //await BoxManager.Instance.ListGroupData();
-
-            _dataGridUser.ItemsSource = _dataGridUser.ItemsSource;
-            //await setView();
-        }
-
         /// <summary>
         /// ユーザーのグループ更新した時の処理
         /// </summary>

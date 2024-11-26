@@ -1,6 +1,6 @@
 ﻿using Box.V2.Models;
-using BoxNestGroup.Manager.Data;
-using BoxNestGroup.View;
+using BoxNestGroup.Managers.Data;
+using BoxNestGroup.Views;
 using ClosedXML.Excel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,9 +8,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-namespace BoxNestGroup.Manager
+namespace BoxNestGroup.Managers
 {
-    internal class SettingManager: INotifyPropertyChanged
+    public class SettingManager: INotifyPropertyChanged
     {
         private const int INDEX_NAME = 1;
         private const int INDEX_MAIL = 2;

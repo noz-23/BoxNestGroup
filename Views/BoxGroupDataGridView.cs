@@ -1,14 +1,14 @@
 ﻿using Box.V2.Models;
-using BoxNestGroup.Manager;
+using BoxNestGroup.Managers;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace BoxNestGroup.View
+namespace BoxNestGroup.Views
 {
     /// <summary>
     /// グループの表示データビュー
     /// </summary>
-    internal class BoxGroupDataGridView : INotifyPropertyChanged
+    public class BoxGroupDataGridView : INotifyPropertyChanged
     {
         /// <summary>
         /// グループ名

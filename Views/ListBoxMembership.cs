@@ -1,5 +1,5 @@
 ﻿using Box.V2.Models;
-using BoxNestGroup.Manager;
+using BoxNestGroup.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace BoxNestGroup.View
+namespace BoxNestGroup.Views
 {
-    internal class ListBoxMembership : List<BoxGroupMembership>
+    public class ListBoxMembership : List<BoxGroupMembership>
     {
 
         /// <summary>

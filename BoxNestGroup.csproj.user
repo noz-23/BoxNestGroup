@@ -10,7 +10,7 @@
     <Compile Update="Contorls\GroupGridViewControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Contorls\UserGriviewControl.xaml.cs">
+    <Compile Update="Contorls\UserGridViewControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Windows\AboutWindow.xaml.cs">
@@ -33,7 +33,7 @@
     <Page Update="Contorls\GroupGridViewControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Contorls\UserGriviewControl.xaml">
+    <Page Update="Contorls\UserGridViewControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Windows\AboutWindow.xaml">

@@ -3,7 +3,7 @@ using Box.V2.Auth;
 using Box.V2.Config;
 using Box.V2.Models;
 using Box.V2.Models.Request;
-using BoxNestGroup.View;
+using BoxNestGroup.Views;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -12,12 +12,12 @@ using System.Diagnostics;
  * https://github.com/box/box-windows-sdk-v2
  */
 
-namespace BoxNestGroup.Manager
+namespace BoxNestGroup.Managers
 {
     /// <summary>
     /// Boxの通信などの管理
     /// </summary>
-    internal class BoxManager
+    public class BoxManager
     {
         /// <summary>
         ///  シングルトン

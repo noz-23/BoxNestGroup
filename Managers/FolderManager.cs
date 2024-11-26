@@ -1,15 +1,15 @@
 ﻿using Box.V2.Models;
-using BoxNestGroup.View;
+using BoxNestGroup.Views;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Diagnostics;
 
-namespace BoxNestGroup.Manager
+namespace BoxNestGroup.Managers
 {
     /// <summary>
     /// フォルダの管理
     /// </summary>
-    class FolderManager
+    public class FolderManager
     {
         /// <summary>
         /// シングルトン

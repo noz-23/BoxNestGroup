@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:control="clr-namespace:BoxNestGroup.Contorls"
              xmlns:local="clr-namespace:BoxNestGroup"
-             xmlns:view="clr-namespace:BoxNestGroup.View"
-             xmlns:manager="clr-namespace:BoxNestGroup.Manager"
+             xmlns:view="clr-namespace:BoxNestGroup.Views"
+             xmlns:manager="clr-namespace:BoxNestGroup.Managers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -20,12 +20,12 @@
 
         <Label x:Name="labelDescriptionGroup" Content="グループIDがない場合は未作成"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" />
         <DataGrid
-                        x:Name="_dataGridGroup"
-                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
-                        HorizontalAlignment="Left" VerticalAlignment="Top"
-                        Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
-                        ItemsSource="{Binding ListGroupDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
-                        CellEditEnding="_dataGridGroupCellEditEnding">
+            x:Name="_dataGridGroup"
+            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+            ItemsSource="{Binding ListGroupDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
+            CellEditEnding="_dataGridGroupCellEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn 
                                 Header="現在[グループ名]"

@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoxNestGroup"
-        xmlns:view="clr-namespace:BoxNestGroup.View"
-        xmlns:manager="clr-namespace:BoxNestGroup.Manager"
+        xmlns:views="clr-namespace:BoxNestGroup.Views"
+        xmlns:controls="clr-namespace:BoxNestGroup.Contorls"
+        xmlns:managers="clr-namespace:BoxNestGroup.Managers"
         xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         x:Class="BoxNestGroup.MainWindow"
         mc:Ignorable="d"
@@ -61,7 +62,7 @@
             Grid.Row="1" Grid.Column="0"
             HorizontalAlignment="Left" VerticalAlignment="Center"
             Margin="1,1,1,1"
-            Text="{Binding LoginName,Source={x:Static manager:SettingManager.Instance},StringFormat=ログイン:{0},Mode=OneWay}"
+            Text="{Binding LoginName,Source={x:Static managers:SettingManager.Instance},StringFormat=ログイン:{0},Mode=OneWay}"
             />
         <DockPanel Grid.Row="1" Grid.Column="2" Margin="1,1,1,1">
             <Button x:Name="_buttonWebAuth" Content="　承　認　" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="1,1,1,1" Click="_buttonWebAuthClick"/>
@@ -76,13 +77,13 @@
             Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" 
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Margin="1,1,1,1"
-            ItemsSource="{Binding ListFolderTree ,Source={x:Static manager:FolderManager.Instance}, Mode=OneWay}"
+            ItemsSource="{Binding ListFolderTree ,Source={x:Static managers:FolderManager.Instance}, Mode=OneWay}"
             PreviewMouseDown="_treeViewFolderPreviewMouseDown"
             MouseMove="_treeViewFolderMouseMove"
             Drop="_treeViewFolderDrop"
             >
             <TreeView.ItemTemplate >
-                <HierarchicalDataTemplate DataType="{x:Type view:FolderGroupTreeView}" ItemsSource="{Binding ListNestGroup}">
+                <HierarchicalDataTemplate DataType="{x:Type views:FolderGroupTreeView}" ItemsSource="{Binding ListNestGroup}">
                     <TextBlock Text="{Binding GroupName}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
@@ -91,10 +92,14 @@
         <TabControl x:Name="_tabControlBox" Grid.Row="2" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3" TabStripPlacement="Left" SelectionChanged="_tabControlBoxSelectionChanged">
             <TabItem Header="ユーザー" Margin="1,1,0,-1"  HorizontalAlignment="Left">
                 <Grid>
+                    <controls:UserGridViewControl
+                        x:Name="_userGridViewControl"/>
                 </Grid>
             </TabItem>
             <TabItem Header="グループ" Margin="1,1,1,1" HorizontalAlignment="Left">
                 <Grid>
+                    <controls:GroupGridViewControl 
+                        x:Name="_groupGridViewControl"/>
                 </Grid>
             </TabItem>
             <TabItem Header="ユーザー名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">

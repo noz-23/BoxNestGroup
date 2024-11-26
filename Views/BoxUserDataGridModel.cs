@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoxNestGroup.View
+namespace BoxNestGroup.Views
 {
-    internal class BoxUserDataGridModel: ObservableCollection<BoxUserDataGridView>
+    public class BoxUserDataGridModel: ObservableCollection<BoxUserDataGridView>
     {
     }
 }

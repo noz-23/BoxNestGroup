@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace BoxNestGroup.View
+namespace BoxNestGroup.Views
 {
     /// <summary>
     /// フォルダーツリーのデータ構造
