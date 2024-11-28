@@ -9,6 +9,9 @@
              xmlns:manager="clr-namespace:BoxNestGroup.Managers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" ></BooleanToVisibilityConverter>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -28,11 +31,13 @@
             CellEditEnding="_dataGridGroupCellEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn 
-                                Header="現在[グループ名]"
-                                Binding="{Binding NowGroupName, Mode=OneWay}"
-                                Width="3*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"/>
+                    Header="現在[グループ名]"
+                    Binding="{Binding NowGroupName, Mode=OneWay}"
+                    Width="3*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"
+                />
+                <!-- 
                 <DataGridTextColumn Binding="{Binding ModGroupName}" Width="3*">
                     <DataGridColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
@@ -61,6 +66,7 @@
                         </DataTemplate>
                     </DataGridColumn.HeaderTemplate>
                 </DataGridTextColumn>
+                -->
                 <DataGridTextColumn 
                                 Header="{x:Static local:MainWindow.MENU_GROUP_ID}"
                                 Binding="{Binding GroupId, Mode=OneWay}"

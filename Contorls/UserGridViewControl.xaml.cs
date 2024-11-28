@@ -1,4 +1,5 @@
 ﻿using BoxNestGroup.Managers;
+using BoxNestGroup.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -205,5 +206,34 @@ namespace BoxNestGroup.Contorls
             SettingManager.Instance.SaveExcelFile(path);
         }
 
+        private void _dataGridUserMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Debug.WriteLine("■_dataGridUserMouseDoubleClick : {0} {1}", sender, e);
+            // https://qiita.com/kabosu/items/2e905a532632c1512e65
+            var elem = e.MouseDevice.DirectlyOver as FrameworkElement;
+            if (elem != null)
+            {
+                DataGridCell cell = elem.Parent as DataGridCell;
+                if (cell == null)
+                {
+                    // ParentでDataGridCellが拾えなかった時はTemplatedParentを参照
+                    // （Borderをダブルクリックした時）
+                    cell = elem.TemplatedParent as DataGridCell;
+                }
+                if (cell != null)
+                {
+                    // ここでcellの内容を処理
+                    // （cell.DataContextにバインドされたものが入っているかと思います）
+
+                    if (cell.Column.Header.ToString() == MainWindow.MENU_USER_NOW)
+                    {
+                        var data = cell.DataContext as BoxUserDataGridView;
+
+                        Debug.WriteLine("■_dataGridUserMouseDoubleClick Cell : {0} {1}", data.ListNowGroup, data.ListNowGroup);
+
+                    }
+                }
+            }
+        }
     }
 }

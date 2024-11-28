@@ -9,6 +9,9 @@
              xmlns:control="clr-namespace:BoxNestGroup.Contorls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" ></BooleanToVisibilityConverter>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -18,18 +21,26 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Grid.Column="0" Margin="1,1,1,1">
+            <Button
+                x:Name="_buttonAddUserGroup"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="1,1,1,1"
+                Content="追加" 
+                Click="_buttonAddUserGroupClick"
+             />
             <Button x:Name="_buttonMakeUser" Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="_buttonMakeUserButtonClick" Visibility="Collapsed" />
             <Label x:Name="_labelDescriptionUser" Content="グループの改行「Shift+Enter」"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" />
             <Button x:Name="_buttonSaveExcel" Content="Excel保存"   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" Click="saveExcelButtonClick"/>
         </DockPanel>
         <DataGrid
-                        x:Name="_dataGridUser"
-                        Grid.Row="1"
-                        HorizontalAlignment="Center" VerticalAlignment="Top"
-                        Margin="1,1,1,1"                       
-                        ItemsSource="{Binding ListUserDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
-                        CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="All"
-                        >
+            x:Name="_dataGridUser"
+            Grid.Row="1"
+            HorizontalAlignment="Center" VerticalAlignment="Top"
+            Margin="1,1,1,1"                       
+            ItemsSource="{Binding ListUserDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
+            CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="All"
+            MouseDoubleClick="_dataGridUserMouseDoubleClick"
+        >
             <DataGrid.RowHeaderStyle>
                 <Style TargetType="{x:Type DataGridRowHeader}">
                     <Setter Property="Content" Value="{Binding Status, Mode=OneWay}"/>
@@ -53,15 +64,8 @@
                         <DataTemplate>
                             <StackPanel Orientation="Vertical" >
                                 <TextBlock                                              
-                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                                Text="{x:Static local:MainWindow.MENU_USER_NAME}"/>
-                                <Button
-                                                x:Name="_buttonAddUserGroup"
-                                                HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                Margin="1,1,1,1"
-                                                Content="追加" 
-                                                Click="_buttonAddUserGroupClick"
-                                                />
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                    Text="{x:Static local:MainWindow.MENU_USER_NAME}"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridColumn.HeaderTemplate>
@@ -83,23 +87,36 @@
                     </DataGridColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn
-                                Header="{x:Static local:MainWindow.MENU_USER_ID}"
-                                Binding="{Binding UserId, Mode=OneWay}"
-                                Width="3*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserId, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                    Header="{x:Static local:MainWindow.MENU_USER_ID}"
+                    Binding="{Binding UserId, Mode=OneWay}"
+                    Width="3*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserId, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}" />
                 <DataGridTextColumn
-                                Header="{x:Static local:MainWindow.MENU_USER_NOW}"
-                                Binding="{Binding ListNowGroup, Mode=OneWay}"
-                                Width="4*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                    Header="{x:Static local:MainWindow.MENU_USER_NOW}"
+                    Binding="{Binding ListNowGroup, Mode=OneWay}"
+                    Width="4*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"
+                >
+                    <DataGridColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Aquamarine"/>
+                        </Style>
+                    </DataGridColumn.HeaderStyle>
+                    <DataGridColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="Aquamarine"/>
+                        </Style>
+                    </DataGridColumn.CellStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn
-                                Header="{x:Static local:MainWindow.MENU_USER_ALL}"
-                                Binding="{Binding ListNowAllGroup, Mode=OneWay}"
-                                Width="4*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserAllGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                    Header="{x:Static local:MainWindow.MENU_USER_ALL}"
+                    Binding="{Binding ListNowAllGroup, Mode=OneWay}"
+                    Width="4*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserAllGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                <!--
                 <DataGridTextColumn
                                 Binding="{Binding ListModGroup,Mode=TwoWay}"
                                 Width="4*">
@@ -135,6 +152,7 @@
                                 Width="4*" 
                                 IsReadOnly="True"
                                 Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNestGroup, Converter={StaticResource BoolVisibilityConverter}}"/>
+                -->
                 <DataGridTextColumn
                                 Header="{x:Static local:MainWindow.MENU_USER_USED}"
                                 Binding="{Binding UserSpaceUsed}"
@@ -148,6 +166,7 @@
                                 IsReadOnly="True"
                                 Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserColabo, Converter={StaticResource BoolVisibilityConverter}}"/>
             </DataGrid.Columns>
+
         </DataGrid>
 
     </Grid>
