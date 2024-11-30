@@ -51,12 +51,12 @@ Box の グループをネスト(入れ子)管理するWPFアプリ
 
 　　https://developer.box.com/
 
-  　https://github.com/box/box-windows-sdk-v2
+　　https://github.com/box/box-windows-sdk-v2
 
 
 　・Microsoft.Web.WebView2 : Copyright (C) Microsoft Corporation. 
   
-  　https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.2478.35/license
+　　https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.2478.35/license
 
 　・ClosedXML : MIT
 
