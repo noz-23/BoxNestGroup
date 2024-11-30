@@ -60,7 +60,7 @@ Box の グループをネスト(入れ子)管理するWPFアプリ
 
 　・ClosedXML : MIT
 
-  　https://github.com/ClosedXML/ClosedXML
+　　https://github.com/ClosedXML/ClosedXML
 
 
 ## 6.バージョン履歴
