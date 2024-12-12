@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
-    public class BoxGroupDataGridModel : ObservableCollection<BoxGroupDataGridView>
+    public class GroupDataGridModel : ObservableCollection<GroupDataGridView>
     {
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace BoxNestGroup.Views
         {
             var group = this.ToList().Find((d) => (d.GroupId == groupId_));
 
-            return (group == null) ? string.Empty : group.NowGroupName;
+            return (group == null) ? string.Empty : group.GroupName;
         }
         /// <summary>
         /// グループ名からグループIDの取得
@@ -29,7 +29,7 @@ namespace BoxNestGroup.Views
         /// <returns>グループID</returns>
         public string GetBoxGroupId(string groupName_)
         {
-            var group = this.ToList().Find((d) => (d.NowGroupName == groupName_));
+            var group = this.ToList().Find((d) => (d.GroupName == groupName_));
             return (group == null) ? string.Empty : group.GroupId;
 
         }
@@ -46,7 +46,7 @@ namespace BoxNestGroup.Views
             var listGroup = this.ToList();
             foreach (var name in listGroupName_)
             {
-                var find = listGroup.Find((g) => (g.NowGroupName == name));
+                var find = listGroup.Find((g) => (g.GroupName == name));
 
                 if (find == null)
                 {

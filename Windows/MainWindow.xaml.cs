@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Diagnostics;
+using BoxNestGroup.Windows;
+using ClosedXML.Excel;
 
 namespace BoxNestGroup
 {
@@ -239,7 +241,7 @@ namespace BoxNestGroup
         //        return;
         //    }
         //    find.ListModGroup = string.Join("\n", modList);
-        //    find.ListNestGroup =string.Join("\n", nestList);
+        //    find.ListChild =string.Join("\n", nestList);
 
         //    setListUserData();
         //}
@@ -282,7 +284,7 @@ namespace BoxNestGroup
 
             }
         }
-
+/*
         /// <summary>
         /// ユーザー名フィルタ
         /// </summary>
@@ -339,7 +341,7 @@ namespace BoxNestGroup
             }
             return flg;
         }
-
+*/
         /// <summary>
         /// タブ移動した場合の表示更新(フィルター)
         /// </summary>
@@ -350,5 +352,147 @@ namespace BoxNestGroup
             Debug.WriteLine("■_tabControlBoxSelectionChanged : {0} {1}", sender, e);
             //await setView();
         }
+
+        /// <summary>
+        /// 「設定」ボタン操作
+        ///  設定画面の表示
+        /// </summary>
+        private void _buttonSettingsClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("■settingsClick : {0} {1}", sender, e);
+            //
+            var win = new SettingsWindow();
+            win.Owner = this;
+            win.ShowDialog(); // モーダルで表示
+        }
+
+        /// <summary>
+        /// 「About」ボタン操作
+        ///  About画面の表示
+        /// </summary>
+
+        private void _buttonAboutClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("■settingsClick : {0} {1}", sender, e);
+            //
+            var win = new AboutWindow();
+            win.Owner = this;
+            win.ShowDialog(); // モーダルで表示
+        }
+
+        /// <summary>
+        /// 「About」ボタン操作
+        ///  About画面の表示
+        /// </summary>
+
+        private void _buttonOpenFolderClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("■openFolderClick : {0} {1}", sender, e);
+            Debug.WriteLine("　openFolderClick open: {0}", FolderManager.Instance.CommonGroupFolderPath);
+            //
+            Process.Start("explorer.exe", FolderManager.Instance.CommonGroupFolderPath);
+        }
+
+        /// <summary>
+        /// 「承認」ボタン操作
+        ///  BoxへOAuth2承認
+        /// </summary>
+
+        private async void _buttonWebAuthClick(object sender, RoutedEventArgs e)
+        {
+            if (BoxManager.Instance.IsHaveClientID == false
+             || BoxManager.Instance.IsSecretID == false)
+            {
+                System.Windows.MessageBox.Show("｢設定｣から｢アプリID｣と｢シークレットID｣を設定してください。", "注意");
+                return;
+            }
+
+            Debug.WriteLine("■webAuthClick : {0} {1}", sender, e);
+            //
+            if (BoxManager.Instance.IsHaveAccessToken == false)
+            {
+                // トークンがない場合は取得
+                var win = new BoxOauthWebWindow() { Owner = this };
+                win.ShowDialog(); // モーダルで表示
+            }
+
+            var wait = new WaitWindow() { Owner = this };
+            wait.Show();
+
+            try
+            {
+                BoxManager.Instance.OAuthToken();
+                await BoxManager.Instance.RefreshToken();
+
+                //var box =await renewBox();
+                await renewBox();
+                //Debug.WriteLine("　webAuthClick box:{0}", box);
+
+                //await setView();
+
+                _buttonWebAuth.IsEnabled = false;
+                _buttonOffLine.IsEnabled = false;
+
+            }
+            catch (Exception ex)
+            {
+                // 承認失敗したらクリア
+                Debug.WriteLine(ex.Message);
+                BoxManager.Instance.SetTokens(string.Empty, string.Empty);
+
+                clearBox("再取得");
+            }
+
+            wait.Close();
+        }
+
+
+        /// <summary>
+        /// 「オフライン」ボタン処理
+        /// 　オフライン(Excel)でやる場合
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _buttonOffLineButtonClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("■renewUserButtonClick : {0} {1}", sender, e);
+
+            var dlg = new OpenFileDialog();
+
+            dlg.Filter = "EXCEL ファイル|*.xlsx";
+            dlg.FilterIndex = 1;
+            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            {
+                return;
+            }
+
+            var wait = new WaitWindow();
+            wait.Owner = this;
+            wait.Show();
+
+            var path = dlg.FileName;
+            var name = path.Substring(path.LastIndexOf("\\") + 1);
+
+            clearBox(name);
+            // ファイルを開く処理
+            using (var workbook = new XLWorkbook(path))
+            {
+                var worksheet = workbook.Worksheet(1); // 1スタート(0なし)
+                                                       // シート読み込み
+                SettingManager.Instance.LoadExcelSheet(worksheet);
+                //
+                /*
+                                //_buttonMakeGroup.IsEnabled = false;
+                                _buttonMakeUser.IsEnabled = false;
+                                //_buttonRenewUser.IsEnabled = false;
+                                _buttonOffLine.IsEnabled = false;
+                                _buttonWebAuth.IsEnabled = false;
+                */
+            }
+            //await setView();
+
+            wait.Close();
+        }
+
     }
 }

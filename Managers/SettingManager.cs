@@ -35,6 +35,11 @@ namespace BoxNestGroup.Managers
         {
         }
 
+        ~SettingManager() 
+        {
+            ListGroupIdName.SavaData();
+        }
+
         /// <summary>
         /// ログインネーム
         /// </summary>
@@ -48,95 +53,98 @@ namespace BoxNestGroup.Managers
 
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("LoginName");
-            }
-                
-        } 
+            }               
+        }
+
+        public DictionaryGroupIdName ListGroupIdName { get; private set; } = new DictionaryGroupIdName();
         
         /// <summary>
         /// グループビュー
         /// </summary>
         //public ObservableCollection<BoxGroupDataGridView> ListGroupDataGridRow { get; private set; } = new ObservableCollection<BoxGroupDataGridView>();
-        public BoxGroupDataGridModel ListGroupDataGridView { get; private set; } = new BoxGroupDataGridModel();
+        public GroupDataGridModel ListGroupDataGridView { get; private set; } = new GroupDataGridModel();
 
         /// <summary>
         /// ユーザービュー
         /// </summary>
-        public BoxUserDataGridModel ListUserDataGridView { get; private set; } = new BoxUserDataGridModel();
+        public UserDataGridModel ListUserDataGridView { get; private set; } = new UserDataGridModel();
 
         /// <summary>
         ///  Box でのグループとユーザーの紐づけ管理
         ///  グループとユーザーの両方でカウントありのためBoxGroupMembershipを登録
         /// </summary>
-        public ListBoxMembership ListBoxGroupMembership { get; private set; }= new ListBoxMembership();
-
+        //public ListBoxMembership ListBoxGroupMembership { get; private set; }= new ListBoxMembership();
+        public MembershipGroupNameMailModel ListMembershipGroupNameMail { get; private set; } = new MembershipGroupNameMailModel();
         /// <summary>
         /// オフラインでのグループとユーザーの紐づけ管理
         /// </summary>
-        public List<KeyValuePair<string,string>> _listOffGroupMembership =new List<KeyValuePair<string,string>>(); // ユーザ名 - グループ名
+        //public List<KeyValuePair<string,string>> _listOffGroupMembership =new List<KeyValuePair<string,string>>(); // ユーザ名 - グループ名
 
         /// <summary>
         /// Boxグループとフォルダのチェック処理
         /// 　新しいフォルダ名への更新
         /// </summary>
         /// <param name="group_">Boxグループ</param>
-        public void CheckFolderName(BoxGroup? group_)
-        {
-            if (group_ == null)
-            {
-                return;
-            }
+//        public void CheckFolderName(BoxGroup? group_)
+//        {
+//            if (group_ == null)
+//            {
+//                return;
+//            }
+///*
+//            //Debug.WriteLine(string.Format("■CheckFolderName Id[{0}] Name[{1}]", group_.Id, group_.Name));
+//            string path = GroupSettingData.PathGroupSetting(group_.Id);
+//            //Debug.WriteLine(string.Format("\tCheckFolderName path[{0}]", path));
 
-            //Debug.WriteLine(string.Format("■CheckFolderName Id[{0}] Name[{1}]", group_.Id, group_.Name));
-            string path = GroupSettingData.PathGroupSetting(group_.Id);
-            //Debug.WriteLine(string.Format("\tCheckFolderName path[{0}]", path));
 
+//            if (File.Exists(path) == true)
+//            {
+//                var name =GroupSettingData.ReadGroupName(path);
 
-            if (File.Exists(path) == true)
-            {
-                var name =GroupSettingData.ReadGroupName(path);
+//                if (name == group_.Name) 
+//                {
+//                    return;
+//                }
+//                FolderManager.Instance.UpdateFolder(name, group_.Name);
 
-                if (name == group_.Name) 
-                {
-                    return;
-                }
-                FolderManager.Instance.UpdateFolder(name, group_.Name);
-
-            }
-            GroupSettingData.WriteGroupName(path, group_.Name);
-            FolderManager.Instance.CreateFolder(group_.Name);
-        }
+//            }
+//            GroupSettingData.WriteGroupName(path, group_.Name);
+//  */
+//            FolderManager.Instance.CreateFolder(group_.Name);
+//        }
 
         /// <summary>
         /// 設定データからのグループID取得
         /// </summary>
         /// <param name="groupName_">グループ名</param>
         /// <returns>グループID</returns>
-        public string GetGroupIdFromSttingData(string groupName_)
-        {
-            var listFile = GroupSettingData.ListAllGroupSettingData();
-            foreach (var path in listFile)
-            {
-                var name = GroupSettingData.ReadGroupName(path);
+//        public string GetGroupIdFromSttingData(string groupName_)
+//        {
+///*
+//            var listFile = GroupSettingData.ListAllGroupSettingData();
+//            foreach (var path in listFile)
+//            {
+//                var name = GroupSettingData.ReadGroupName(path);
 
-                if (name == groupName_)
-                {
-                    return GroupSettingData.GetGroupId(path);
-                }
-            }
-
-            return string.Empty;
-        }
+//                if (name == groupName_)
+//                {
+//                    return GroupSettingData.GetGroupId(path);
+//                }
+//            }
+//*/
+//            return string.Empty;
+//        }
 
         /// <summary>
         /// 設定データからのグループ所属人数を取得
         /// </summary>
         /// <param name="groupName_">所属人数</param>
         /// <returns>グループの所属数</returns>
-        public int CountGroupMemberShipFromSettingData(string groupName_)
-        {
-            var list = _listOffGroupMembership.FindAll((d) => (d.Value == groupName_));
-            return list.Count;
-        }
+        //public int CountGroupMemberShipFromSettingData(string groupName_)
+        //{
+        //    var list = _listOffGroupMembership.FindAll((d) => (d.Value == groupName_));
+        //    return list.Count;
+        //}
 
         /// <summary>
         /// エクセルのシート読み込み処理
@@ -159,7 +167,7 @@ namespace BoxNestGroup.Managers
                 var strage = sheet_.Cell(row, INDEX_STRAGE).Value.ToString();
                 var colabo = sheet_.Cell(row, INDEX_COLABO).Value.ToString();
                 //
-                var add = new BoxUserDataGridView(userName, userMail, group, strage, colabo);
+                var add = new UserDataGridView(userName, userMail, group, strage, colabo);
 
                 if (userName == string.Empty)
                 {
@@ -172,7 +180,8 @@ namespace BoxNestGroup.Managers
 
                 foreach (var groupName in listGroup) 
                 {
-                    _listOffGroupMembership.Add( new KeyValuePair<string, string>(userName, groupName));
+                    //_listOffGroupMembership.Add( new KeyValuePair<string, string>(userName, groupName));
+                    SettingManager.Instance.ListMembershipGroupNameMail.Add(new MembershipGroupNameMailView(groupName, userMail));
                 }
             }
 
@@ -181,7 +190,7 @@ namespace BoxNestGroup.Managers
                 //var add =new BoxGroupDataGridView(groupName);
                 //await add.Inital();
                 //ListGroupDataGridRow.Add(add);
-                ListGroupDataGridView.Add(new BoxGroupDataGridView(groupName));
+                ListGroupDataGridView.Add(new GroupDataGridView(groupName));
             }
         }
 
@@ -213,8 +222,8 @@ namespace BoxNestGroup.Managers
                     worksheet.Cell(row, INDEX_NAME).Value = user.UserName;
                     worksheet.Cell(row, INDEX_MAIL).Value = user.UserMailAddress;
                     worksheet.Cell(row, INDEX_GROUP).Value = user.ListModAllGroup.Replace("\n", ";");
-                    worksheet.Cell(row, INDEX_STRAGE).Value = (user.UserSpaceUsed == BoxUserDataGridView.APP_UNLIMITED) ? BoxUserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
-                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == BoxUserDataGridView.APP_ENABLED) ? BoxUserDataGridView.BOX_ENABLED : BoxUserDataGridView.BOX_DISABLED;
+                    worksheet.Cell(row, INDEX_STRAGE).Value = (user.UserSpaceUsed == UserDataGridView.APP_UNLIMITED) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
+                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == UserDataGridView.APP_ENABLED) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
                     row++;
 
                 }

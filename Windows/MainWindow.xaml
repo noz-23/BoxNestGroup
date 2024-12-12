@@ -83,8 +83,10 @@
             Drop="_treeViewFolderDrop"
             >
             <TreeView.ItemTemplate >
-                <HierarchicalDataTemplate DataType="{x:Type views:FolderGroupTreeView}" ItemsSource="{Binding ListNestGroup}">
-                    <TextBlock Text="{Binding GroupName}" />
+                <HierarchicalDataTemplate DataType="{x:Type views:FolderGroupTreeView}" ItemsSource="{Binding ListChild}">
+                    <StackPanel >
+                        <TextBlock Text="{Binding GroupName}" />
+                    </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
@@ -102,6 +104,7 @@
                         x:Name="_groupGridViewControl"/>
                 </Grid>
             </TabItem>
+            <!--
             <TabItem Header="ユーザー名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Grid >
                     <Grid.ColumnDefinitions>
@@ -128,6 +131,7 @@
                     <TextBox x:Name="textBoxGroupNameFilter" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"  />
                 </Grid>
             </TabItem>
+            -->
         </TabControl>
     </Grid>
 </Window>

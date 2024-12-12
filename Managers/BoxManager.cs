@@ -97,6 +97,39 @@ namespace BoxNestGroup.Managers
             SetTokens(_client.Auth.Session.AccessToken, _client.Auth.Session.RefreshToken);
         }
 
+        public bool IsHaveClientID
+        {
+            get
+            {
+                var clientID = Settings.Default.ClientID.Trim();
+                Debug.WriteLine("■BoxManager IsHaveClientID:{0}", IsHaveClientID);
+
+                switch (clientID)
+                {
+                    case "N/A":
+                    case "":
+                        return false;
+                }
+                return true;
+            }
+        }
+        public bool IsSecretID
+        {
+            get
+            {
+                var secretID = Settings.Default.SecretID.Trim();
+                Debug.WriteLine("■BoxManager IsSecretID:{0}", secretID);
+
+                switch (secretID)
+                {
+                    case "N/A":
+                    case "":
+                        return false;
+                }
+                return true;
+            }
+        }
+
         /// <summary>
         /// アクセストークンを取得済みか(true:取得済み)
         /// </summary>
@@ -104,7 +137,7 @@ namespace BoxNestGroup.Managers
         {
             get
             {
-                var userToken = Settings.Default.AccessToken;
+                var userToken = Settings.Default.AccessToken.Trim();
                 Debug.WriteLine("■BoxManager IsHaveAccessToken:{0}", userToken);
     
                 switch (userToken)
@@ -124,7 +157,7 @@ namespace BoxNestGroup.Managers
         {
             get
             {
-                var refreshToken = Settings.Default.RefreshToken;
+                var refreshToken = Settings.Default.RefreshToken.Trim();
                 Debug.WriteLine("■BoxManager IsHaveRefreshToken:{0}", refreshToken);
 
                 switch (refreshToken)
@@ -134,6 +167,14 @@ namespace BoxNestGroup.Managers
                         return false;
                 }
                 return true;
+            }
+        }
+
+        public bool IsOnlne
+        {
+            get 
+            {
+                return _client!=null;
             }
         }
 
@@ -231,16 +272,16 @@ namespace BoxNestGroup.Managers
 
                     //return await listGroupData(list);
                     SettingManager.Instance.ListGroupDataGridView.Clear();
-                    SettingManager.Instance.ListBoxGroupMembership.Clear();
+                    SettingManager.Instance.ListMembershipGroupNameMail.Clear();
 
                     foreach (var group in listGroup.Entries)
                     {
-                        await SettingManager.Instance.ListBoxGroupMembership.AddBoxGroupMemberShip(group.Id);
+                        await SettingManager.Instance.ListMembershipGroupNameMail.AddMemberShipGroupId(group.Id);
 
                         //var add = new BoxGroupDataGridView(group);
                         //await add.Inital();
 
-                        SettingManager.Instance.ListGroupDataGridView.Add(new BoxGroupDataGridView(group));
+                        SettingManager.Instance.ListGroupDataGridView.Add(new GroupDataGridView(group));
                         //Debug.WriteLine("■BoxManager listGroupData add : name[{0}] id[{1}]", add.GroupName, add.GroupId);
                     }
                 }
@@ -362,7 +403,7 @@ namespace BoxNestGroup.Managers
                     SettingManager.Instance.ListUserDataGridView.Clear();
                     foreach (var user in listUser.Entries)
                     {
-                        SettingManager.Instance.ListUserDataGridView.Add(new BoxUserDataGridView(user));
+                        SettingManager.Instance.ListUserDataGridView.Add(new UserDataGridView(user));
                         //Debug.WriteLine("■BoxManager listUserData add : name[{0}] id[{1}]", add.UserName, add.UserId);
                     }
                 }

@@ -30,13 +30,15 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// ツリービュー表示用
         /// </summary>
-        //public List<FolderGroupTreeView> ListViewGroup { get { return ListNestGroup.ToList(); } }
+        //public List<FolderGroupTreeView> ListViewGroup { get { return ListChild.ToList(); } }
+        public bool Checked { get; set; } = false;
+        public FolderGroupTreeView Parent { get; private set; } = null;
+
 
         /// <summary>
         /// サブフォルダリスト
         /// </summary>
-        public ObservableCollection<FolderGroupTreeView> ListNestGroup { get; private set; }= new ObservableCollection<FolderGroupTreeView>();
-
+        public ObservableCollection<FolderGroupTreeView> ListChild { get; private set; }= new ObservableCollection<FolderGroupTreeView>();
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
@@ -49,13 +51,14 @@ namespace BoxNestGroup.Views
             _info = null;
         }
 
-        public FolderGroupTreeView(DirectoryInfo info_) :this()
+        public FolderGroupTreeView(DirectoryInfo info_, FolderGroupTreeView parent_) :this()
         {
             _info = info_;
+            Parent = parent_;
 
             foreach (var info in info_.GetDirectories())
             {
-                ListNestGroup.Add(new FolderGroupTreeView(info));
+                ListChild.Add(new FolderGroupTreeView(info,this));
             }
         }
 
@@ -66,7 +69,7 @@ namespace BoxNestGroup.Views
                 return true;
             }
 
-            foreach (var view in ListNestGroup)
+            foreach (var view in ListChild)
             {
                 if (view.Contains(name_) == true)
                 {
@@ -83,7 +86,7 @@ namespace BoxNestGroup.Views
             {
                 list.Add(this);
             }
-            foreach (var view in ListNestGroup)
+            foreach (var view in ListChild)
             {
                 list.AddRange(view.Find(name_));
             }

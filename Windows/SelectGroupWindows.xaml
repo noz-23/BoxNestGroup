@@ -4,9 +4,42 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoxNestGroup.Windows"
+        xmlns:views="clr-namespace:BoxNestGroup.Views"
+        xmlns:managers="clr-namespace:BoxNestGroup.Managers"
         mc:Ignorable="d"
-        Title="SelectGroupWindows" Height="400" Width="200">
+        Title="SelectGroupWindows" Height="400" Width="200" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
     <Grid>
-        <ListBox x:Name="listBoxGroup" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+        <!--
+        <ListBox
+            x:Name="_listBoxGroup"
+            ItemsSource="{Binding ListGroupDataGridView,Source={x:Static managers:SettingManager.Instance},Mode=OneTime}"
+            SelectionMode="Multiple"
+        >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding NowGroupName, Mode=OneTime}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        -->
+        <TreeView
+            x:Name="_treeBoxGroup"
+            ItemsSource="{Binding ListFolderTree ,Source={x:Static managers:FolderManager.Instance}, Mode=OneTime}"
+            VerticalAlignment="Top"
+            Height="360"
+            >
+            <TreeView.ItemTemplate >
+                <HierarchicalDataTemplate DataType="{x:Type views:FolderGroupTreeView}" ItemsSource="{Binding ListChild}">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding Checked}"/>
+                        <TextBlock Text="{Binding GroupName}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <Button Content="キャンセル" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Width="50" Height="20" Click="_canselButtonClick"/>
+        <Button Content="選択" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Width="50" Height="20" Click="_okButtonClick"/>
     </Grid>
 </Window>

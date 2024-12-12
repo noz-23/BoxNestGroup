@@ -1,26 +1,28 @@
 ﻿using Box.V2.Models;
 using BoxNestGroup.Managers;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace BoxNestGroup.Views
 {
-/*
-    public class ListBoxMembership : List<BoxGroupMembership>
+    public class MembershipGroupNameMailModel:List <MembershipGroupNameMailView>
     {
-
         /// <summary>
         ///  Box でのグループとユーザーの紐づけ管理にデータ追加
         /// </summary>
         /// <param name="groupId_">BoxグループID</param>
-        public async Task AddBoxGroupMemberShip(string groupId_)
+        // public async Task AddBoxGroupMemberShip(string groupId_)
+        public async Task AddMemberShipGroupId(string groupId_)
         {
             var list = await BoxManager.Instance.ListMemberIdFromGroup(groupId_);
-            this.AddRange(list.Entries);
+            foreach (var item in list.Entries)
+            {
+                this.Add(new MembershipGroupNameMailView(item.Group.Name,item.User.Address));
+            }
         }
 
 
@@ -29,9 +31,10 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="groupId_">BoxグループID</param>
         /// <returns>所属人数</returns>
-        public int CountBoxGroupMemberShip(string groupId_)
+        //public int CountBoxGroupMemberShip(string groupId_)
+        public int CountBoxUserInGroupName(string groupName_)
         {
-            var list = this.FindAll((d) => (d.Group.Id == groupId_));
+            var list = this.FindAll((d) => (d.GroupName == groupName_));
             return list.Count;
         }
 
@@ -40,15 +43,15 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="userId__">BoxユーザーID</param>
         /// <returns>グループ名の一覧</returns>
-        public IList<string> ListGroupNameInUser(string userId_)
+        public IList<string> ListGroupNameInUser(string mailAddress_)
         {
             //Debug.WriteLine(string.Format("■ListGroupNameInUser id  [{0}]", userId_));
             var rtn = new List<string>();
 
-            var list = this.FindAll((d) => (d.User.Id == userId_));
+            var list = this.FindAll((d) => (d.UserAddress == mailAddress_));
             foreach (var member in list)
             {
-                rtn.Add(member.Group.Name);
+                rtn.Add(member.GroupName);
             }
             return rtn;
         }
@@ -58,18 +61,23 @@ namespace BoxNestGroup.Views
         /// <param name="userId_">ユーザーID</param>
         /// <param name="listAdd_">追加したいリストを指定する場合のグループ名一覧</param>
         /// <returns>ユーザーとグループの紐づけ一覧</returns>
-        public IList<BoxGroupMembership> ListGroupMembershipFromUserId(string userId_, IList<string>? listAdd_ = null)
+        //public IList<BoxGroupMembership> ListGroupMembershipFromUserId(string userId_, IList<string>? listAdd_ = null)
+        public IList<MembershipGroupNameMailView> ListGroupMembershipFromUserAddress(string userAddress_, IList<string>? listAdd_ = null)
         {
             //Debug.WriteLine(string.Format("■ListGroupMembershipFromUserId id  [{0}]", userId_));
 
-            var rtn = this.FindAll((d) => (d.User.Id == userId_));
+            var rtn = this.FindAll((d) => (d.UserAddress == userAddress_));
             if (listAdd_ != null)
             {
-                return rtn.FindAll((d) => (listAdd_.Contains(d.Group.Name)) == true);
+                return rtn.FindAll((d) => (listAdd_.Contains(d.GroupName)) == true);
             }
 
             return rtn;
         }
+
+        public void UpdateGroupName(string oldName_, string newName_)
+        {
+            this.FindAll( m => m.GroupName == oldName_)?.ForEach(m => m.GroupName = newName_);  
+        }
     }
-*/
 }

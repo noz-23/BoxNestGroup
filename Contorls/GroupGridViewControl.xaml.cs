@@ -1,4 +1,5 @@
-﻿using BoxNestGroup;
+﻿using Box.V2.Models;
+using BoxNestGroup;
 using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using System.Diagnostics;
@@ -23,8 +24,48 @@ namespace BoxNestGroup.Contorls
         /// <summary>
         /// 「グループ作成」ボタン操作
         /// </summary>
-        private async void _buttonMakeGroupButtonClick(object sender, RoutedEventArgs e)
+        private async void _buttonMakeAndRenewGroupButtonClick(object sender, RoutedEventArgs e)
         {
+            List< GroupDataGridView > delList = new List< GroupDataGridView >();
+            List<GroupDataGridView> addList = new List<GroupDataGridView>();
+            foreach (var group in SettingManager.Instance.ListGroupDataGridView)
+            {
+                if (string.IsNullOrEmpty(group.GroupId) == true)
+                {
+                    // 新規
+                    if(BoxManager.Instance.IsOnlne)
+                    {
+                        var boxGroup = await BoxManager.Instance.CreateGroup(group.GroupName);
+                        delList.Add(group);
+                        addList.Add(new GroupDataGridView(boxGroup));
+                    }
+
+                    if (FolderManager.Instance.Contains(group.GroupName) == false)
+                    {
+                        FolderManager.Instance.CreateFolder(group.GroupName);
+                    }
+                    continue;
+                }
+                if (group.GroupId == GroupDataGridView.OFFLINE_GROUP_ID)
+                {
+                    if( group.IsSameOldGroupName==false)
+                    {
+                        FolderManager.Instance.UpdateGroupName(group.OldGroupName, group.GroupName);
+                        SettingManager.Instance.ListMembershipGroupNameMail.UpdateGroupName(group.OldGroupName, group.GroupName);
+                        SettingManager.Instance.ListUserDataGridView.UpdateGroupName(group.OldGroupName, group.GroupName);
+
+
+
+                        delList.Add(group);
+                        addList.Add(new GroupDataGridView(group.GroupName));
+                    }
+                }
+            }
+
+            delList.ForEach(del => SettingManager.Instance.ListGroupDataGridView.Remove(del));
+            addList.ForEach(add => SettingManager.Instance.ListGroupDataGridView.Add(add));
+
+/*
             Debug.WriteLine("■makeGroupButtonClick : {0} {1}", sender, e);
 
             var list = _dataGridGroup.ItemsSource as BoxGroupDataGridModel;
@@ -77,6 +118,7 @@ namespace BoxNestGroup.Contorls
             }
             //Debug.WriteLine("　makeGroupButtonClick box:{0}", box);
             //await setView();
+*/
         }
 
         /// <summary>
@@ -86,7 +128,7 @@ namespace BoxNestGroup.Contorls
         /// <param name="e"></param>
         private async void _dataGridGroupCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            Debug.WriteLine("■_dataGridGroupCellEditEnding : {0} {1}", sender, e);
+/*            Debug.WriteLine("■_dataGridGroupCellEditEnding : {0} {1}", sender, e);
 
             var editBox = e.EditingElement as System.Windows.Controls.TextBox;
             if (editBox == null)
@@ -121,7 +163,7 @@ namespace BoxNestGroup.Contorls
 
             var rtn = BoxManager.Instance.UpdateGroupName(oldGroup.GroupId, newGroupName);
             FolderManager.Instance.UpdateFolder(oldGroup.NowGroupName, newGroupName);
-/*
+
             //await BoxManager.Instance.ListGroupData();
 
             _dataGridUser.ItemsSource = _dataGridUser.ItemsSource;

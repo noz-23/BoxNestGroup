@@ -21,8 +21,7 @@ namespace BoxNestGroup.Managers
         /// </summary>
         public string CommonGroupFolderPath { get; private set; } = Directory.GetCurrentDirectory() + @"\" + Settings.Default.CommonGroupFolder;
 
-
-        private FileSystemWatcher _watcher = null;
+        //private FileSystemWatcher _watcher = null;
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -42,6 +41,7 @@ namespace BoxNestGroup.Managers
             ////ListFolderTree =ListFolderTree.OrderBy(x => x.GroupName);
             //list.Sort((a, b) => string.Compare(a.GroupName,b.GroupName));
             //ListFolderTree = new ObservableCollection<FolderGroupTreeView>(list);
+/*
             _watcher = new FileSystemWatcher(CommonGroupFolderPath)
             {
                 NotifyFilter = System.IO.NotifyFilters.DirectoryName | System.IO.NotifyFilters.CreationTime | System.IO.NotifyFilters.LastWrite,
@@ -50,24 +50,26 @@ namespace BoxNestGroup.Managers
             _watcher.Changed += new System.IO.FileSystemEventHandler((source_, e_) =>  Reload());
             _watcher.Created += new System.IO.FileSystemEventHandler((source_, e_) =>  Reload());
             _watcher.Renamed += new System.IO.RenamedEventHandler((source_, e_) =>  Reload());
-
+*/
             Reload();
         }
 
         public void Reload()
         {
-            _watcher.EnableRaisingEvents = false;
+
+            //_watcher.EnableRaisingEvents = false;
             var commonDirInfo = new DirectoryInfo(CommonGroupFolderPath);
 
             var list = new List<FolderGroupTreeView>();
             foreach (var info in commonDirInfo.GetDirectories())
             {
-                list.Add(new FolderGroupTreeView(info));
+                list.Add(new FolderGroupTreeView(info,null));
             }
             list.Sort((a, b) => string.Compare(a.GroupName, b.GroupName));
             ListFolderTree = new ObservableCollection<FolderGroupTreeView>(list);
 
-            _watcher.EnableRaisingEvents = true;
+            //_watcher.EnableRaisingEvents = true;
+
         }
 
         /// <summary>
@@ -115,7 +117,7 @@ namespace BoxNestGroup.Managers
 
 
 
-        private bool _contains(string name_)
+        public bool Contains(string name_)
         {
             foreach (var view in ListFolderTree)
             {
@@ -142,7 +144,7 @@ namespace BoxNestGroup.Managers
         /// <param name="boxGroup_">グループ名</param>
         public void CreateFolder(string name_) 
         {
-            if (_contains(name_) == true)
+            if (Contains(name_) == true)
             {
                 // すでにある場合は作らない
                 return;
@@ -162,7 +164,7 @@ namespace BoxNestGroup.Managers
         /// </summary>
         /// <param name="oldName_">古いフォルダ(グループ)名</param>
         /// <param name="newName_">新しいフォルダ(グループ)名</param>
-        public void UpdateFolder(string oldName_, string newName_)
+        public void UpdateGroupName(string oldName_, string newName_)
         {
             Debug.WriteLine("■UpdateFolder old [{0}] new [{1}]", oldName_, newName_);
             //var list = ListPathFindFolderName(oldName_);
@@ -205,7 +207,7 @@ namespace BoxNestGroup.Managers
         //        var addData = new FolderGroupTreeView();
 
         //        addData.GroupName = System.IO.Path.GetFileName(folderPath);
-        //        addData.ListNestGroup = listFolder(folderPath, list);
+        //        addData.ListChild = listFolder(folderPath, list);
 
         //        list_.Add(addData);
 
@@ -237,7 +239,7 @@ namespace BoxNestGroup.Managers
         /// </summary>
         /// <param name="listGroupName_">ネスト前のグループ名一覧</param>
         /// <returns>全フォルダ(グループ)名一覧</returns>
-        public IList<string> ListUniqueGroup(IList<string> listGroupName_) 
+        public IList<string> ListUniqueGroup(ICollection<string> listGroupName_) 
         {
             var rtn = new HashSet<string>();
 
@@ -288,7 +290,7 @@ namespace BoxNestGroup.Managers
         //    return new List<string>(rtn);
         //}
         //public IList<string> ListMinimumGroup(string userId_ )
-        public IList<string> ListMinimumGroup(IList<string> listGroupName_)
+        public IList<string> ListMinimumGroup(ICollection<string> listGroupName_)
         {
             //var listGroupName = SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(userId_);
             var listNest = new HashSet<string>();

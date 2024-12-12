@@ -20,6 +20,12 @@
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Button
+            x:Name="_buttonMakeGroup"
+            Content="作成/更新"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Margin="1,1,1,1"
+            Click="_buttonMakeAndRenewGroupButtonClick"/>
 
         <Label x:Name="labelDescriptionGroup" Content="グループIDがない場合は未作成"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" />
         <DataGrid
@@ -31,12 +37,23 @@
             CellEditEnding="_dataGridGroupCellEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn 
-                    Header="現在[グループ名]"
-                    Binding="{Binding NowGroupName, Mode=OneWay}"
+                    Header="グループ名"
+                    Binding="{Binding GroupName, Mode=OneWay}"
                     Width="3*"
                     IsReadOnly="True"
                     Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"
-                />
+                >
+                    <DataGridColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="Aquamarine"/>
+                        </Style>
+                    </DataGridColumn.HeaderStyle>
+                    <DataGridColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="Aquamarine"/>
+                        </Style>
+                    </DataGridColumn.CellStyle>
+                </DataGridTextColumn>
                 <!-- 
                 <DataGridTextColumn Binding="{Binding ModGroupName}" Width="3*">
                     <DataGridColumn.HeaderStyle>
@@ -56,41 +73,35 @@
                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                                 Text="{x:Static local:MainWindow.MENU_GROUP_NAME}"
                                                 />
-                                <Button
-                                                x:Name="_buttonMakeGroup"
-                                                Grid.Row="0"  Content="作成/更新"
-                                                HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                Margin="1,1,1,1"
-                                                Click="_buttonMakeGroupButtonClick"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridColumn.HeaderTemplate>
                 </DataGridTextColumn>
                 -->
                 <DataGridTextColumn 
-                                Header="{x:Static local:MainWindow.MENU_GROUP_ID}"
-                                Binding="{Binding GroupId, Mode=OneWay}"
-                                Width="2*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"/>
+                    Header="{x:Static local:MainWindow.MENU_GROUP_ID}"
+                    Binding="{Binding GroupId, Mode=OneWay}"
+                    Width="2*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <DataGridTextColumn 
-                                Header="{x:Static local:MainWindow.MENU_GROUP_NEST_MAX}"
-                                Binding="{Binding MaxNestCount, Mode=OneWay}"
-                                Width="*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupNestMax, Converter={StaticResource BoolVisibilityConverter}}"/>
+                    Header="{x:Static local:MainWindow.MENU_GROUP_NEST_MAX}"
+                    Binding="{Binding MaxNestCount, Mode=OneWay}"
+                    Width="*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupNestMax, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <DataGridTextColumn 
-                                Header="{x:Static local:MainWindow.MENU_GROUP_FOLDER_NUM}"
-                                Binding="{Binding FolderCount, Mode=OneWay}"
-                                Width="*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupFolderCount, Converter={StaticResource BoolVisibilityConverter}}"/>
+                    Header="{x:Static local:MainWindow.MENU_GROUP_FOLDER_NUM}"
+                    Binding="{Binding FolderCount, Mode=OneWay}"
+                    Width="*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupFolderCount, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <DataGridTextColumn 
-                                Header="{x:Static local:MainWindow.MENU_GROUP_USER_NUM}"
-                                Binding="{Binding UserCount, Mode=OneWay}"
-                                Width="*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupUserCount, Converter={StaticResource BoolVisibilityConverter}}"/>
+                    Header="{x:Static local:MainWindow.MENU_GROUP_USER_NUM}"
+                    Binding="{Binding UserCount, Mode=OneWay}"
+                    Width="*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupUserCount, Converter={StaticResource BoolVisibilityConverter}}"/>
             </DataGrid.Columns>
         </DataGrid>
 

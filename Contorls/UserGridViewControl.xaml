@@ -23,13 +23,12 @@
         <DockPanel Grid.Row="0" Grid.Column="0" Margin="1,1,1,1">
             <Button
                 x:Name="_buttonAddUserGroup"
-                HorizontalAlignment="Right" VerticalAlignment="Top"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
                 Margin="1,1,1,1"
-                Content="追加" 
-                Click="_buttonAddUserGroupClick"
+                Content="作成/更新"
+                Click="_buttonMakeAndRenewUserGroupClick"
              />
             <Button x:Name="_buttonMakeUser" Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="_buttonMakeUserButtonClick" Visibility="Collapsed" />
-            <Label x:Name="_labelDescriptionUser" Content="グループの改行「Shift+Enter」"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" />
             <Button x:Name="_buttonSaveExcel" Content="Excel保存"   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" Click="saveExcelButtonClick"/>
         </DockPanel>
         <DataGrid
@@ -48,8 +47,8 @@
             </DataGrid.RowHeaderStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn 
-                                Binding="{Binding UserName, Mode=TwoWay}"
-                                Width="4*" >
+                    Binding="{Binding UserName, Mode=TwoWay}"
+                    Width="4*" >
                     <DataGridColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Aquamarine"/>
@@ -71,10 +70,10 @@
                     </DataGridColumn.HeaderTemplate>
                 </DataGridTextColumn>
                 <DataGridTextColumn
-                                Header="{x:Static local:MainWindow.MENU_USER_MAIL}"
-                                Binding="{Binding UserMailAddress, Mode=TwoWay}" 
-                                Width="4*" 
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserMail, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}">
+                    Header="{x:Static local:MainWindow.MENU_USER_MAIL}"
+                    Binding="{Binding UserMailAddress, Mode=TwoWay}" 
+                    Width="4*" 
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserMail, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}">
                     <DataGridColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Aquamarine"/>
@@ -97,8 +96,7 @@
                     Binding="{Binding ListNowGroup, Mode=OneWay}"
                     Width="4*"
                     IsReadOnly="True"
-                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"
-                >
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}">
                     <DataGridColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Aquamarine"/>
@@ -154,20 +152,18 @@
                                 Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserNestGroup, Converter={StaticResource BoolVisibilityConverter}}"/>
                 -->
                 <DataGridTextColumn
-                                Header="{x:Static local:MainWindow.MENU_USER_USED}"
-                                Binding="{Binding UserSpaceUsed}"
-                                Width="*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserUsed, Converter={StaticResource BoolVisibilityConverter}}"/>
+                    Header="{x:Static local:MainWindow.MENU_USER_USED}"
+                    Binding="{Binding UserSpaceUsed}"
+                    Width="*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserUsed, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <DataGridTextColumn
-                                Header="{x:Static local:MainWindow.MENU_USER_COLABO}"
-                                Binding="{Binding UserExternalCollaborate}"
-                                Width="*"
-                                IsReadOnly="True"
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserColabo, Converter={StaticResource BoolVisibilityConverter}}"/>
+                    Header="{x:Static local:MainWindow.MENU_USER_COLABO}"
+                    Binding="{Binding UserExternalCollaborate}"
+                    Width="*"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowUserColabo, Converter={StaticResource BoolVisibilityConverter}}"/>
             </DataGrid.Columns>
-
         </DataGrid>
-
     </Grid>
 </UserControl>

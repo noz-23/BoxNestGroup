@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace BoxNestGroup.Views
 {
-    public class BoxUserDataGridView : INotifyPropertyChanged
+    public class UserDataGridView : INotifyPropertyChanged
     {
         public const string BOX_UNLIMITED = "unlimited";
         public const string APP_UNLIMITED = "無制限";
@@ -125,11 +125,14 @@ namespace BoxNestGroup.Views
                 return string.Join("\n", _listNowAllGroup);
                 //return string.Join("\n", SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
             }
-            //set 
-            //{
-            //    _listAllGroup.Clear();
-            //    _listAllGroup.AddRange(value.Split("\n"));
-            //}               
+            set 
+            {
+                _listNowAllGroup.Clear();
+                _listNowAllGroup.AddRange(value.Split("\n"));
+                _listNowAllGroup.Sort();
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("ListNowGroup");
+            }
         }
 
         /// <summary>
@@ -198,14 +201,14 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public BoxUserDataGridView()
+        public UserDataGridView()
         {
         }
         /// <summary>
         /// オンライン時のコンストラクタ
         /// </summary>
         /// <param name="user_">Boxユーザー</param>
-        public BoxUserDataGridView(BoxUser user_)
+        public UserDataGridView(BoxUser user_)
         {
             _userBox = user_;
 
@@ -217,7 +220,7 @@ namespace BoxNestGroup.Views
             //_listAllGroup.AddRange(SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
 
             _listNowAllGroup.Clear();
-            _listNowAllGroup.AddRange(SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(user_.Id));
+            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameMail.ListGroupNameInUser(user_.Address));
 
 
             UserSpaceUsed = (user_.SpaceUsed == -1) ? APP_UNLIMITED : user_.SpaceUsed.ToString();
@@ -233,7 +236,7 @@ namespace BoxNestGroup.Views
         /// <param name="listGroup_">所属グループ</param>
         /// <param name="strage_">容量制限</param>
         /// <param name="colabo_">外部コラボ制限</param>
-        public BoxUserDataGridView(string name_, string mail_, IList<string> listGroup_, string strage_, string colabo_)
+        public UserDataGridView(string name_, string mail_, IList<string> listGroup_, string strage_, string colabo_)
         {
             Debug.WriteLine("■BoxUserDataGridView name_[{0}] mail_[{1}] listGroup_[{2}] strage_[{3}] colabo_[{4}]", name_, mail_,string.Join(",", listGroup_), strage_,colabo_);
             UserName = name_;
@@ -247,6 +250,17 @@ namespace BoxNestGroup.Views
             UserExternalCollaborate = (colabo_.Contains( "disabled") ==true) ? "許　可" : "不許可";
 
             //_listAllGroup.AddRange ( listGroup_);
+        }
+
+        public void UpdateGroupName(string oldName_, string newName_)
+        {
+
+            if (_listNowAllGroup.Contains(oldName_) == true) 
+            {
+                _listNowAllGroup.Remove(oldName_);
+                _listNowAllGroup.Add(newName_);
+            }
+            _listNowAllGroup.Sort();
         }
     }
 }

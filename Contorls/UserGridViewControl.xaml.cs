@@ -1,5 +1,6 @@
 ﻿using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
+using BoxNestGroup.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,6 @@ namespace BoxNestGroup.Contorls
     /// <summary>
     /// UserGridViewControl.xaml の相互作用ロジック
     /// </summary>
-
     public partial class UserGridViewControl : System.Windows.Controls.UserControl
     {
         public ReNewDelegate Renew = null;
@@ -127,7 +127,7 @@ namespace BoxNestGroup.Contorls
         /// 「追加」ボタン操作
         ///  About画面の表示
         /// </summary>
-        private void _buttonAddUserGroupClick(object sender, RoutedEventArgs e)
+        private void _buttonMakeAndRenewUserGroupClick(object sender, RoutedEventArgs e)
         {
             /*
                         Debug.WriteLine("■addUserGroupClick : {0} {1}", sender, e);
@@ -156,7 +156,7 @@ namespace BoxNestGroup.Contorls
                             if (selectGroup.GroupName == Settings.Default.ClearGroupName)
                             {
                                 // クリア設定の場合はクリア
-                                //user.ListNestGroup = string.Empty;
+                                //user.ListChild = string.Empty;
                                 user.ListModGroup = selectGroup.GroupName;
                                 continue;
                             }
@@ -175,7 +175,7 @@ namespace BoxNestGroup.Contorls
                             // 重複はHashSetで消えるから、そのまま追加
                             addList.AddRange(FolderManager.Instance.ListUniqueGroup(addList));
 
-                            //user.ListNestGroup = string.Join("\n", new HashSet<string>(addList));
+                            //user.ListChild = string.Join("\n", new HashSet<string>(addList));
                         }
 
                         //dataGridUser.ItemsSource = new List<BoxUserDataGridView>(listUser);
@@ -211,28 +211,35 @@ namespace BoxNestGroup.Contorls
             Debug.WriteLine("■_dataGridUserMouseDoubleClick : {0} {1}", sender, e);
             // https://qiita.com/kabosu/items/2e905a532632c1512e65
             var elem = e.MouseDevice.DirectlyOver as FrameworkElement;
-            if (elem != null)
+            if (elem == null)
             {
-                DataGridCell cell = elem.Parent as DataGridCell;
-                if (cell == null)
-                {
-                    // ParentでDataGridCellが拾えなかった時はTemplatedParentを参照
-                    // （Borderをダブルクリックした時）
-                    cell = elem.TemplatedParent as DataGridCell;
-                }
-                if (cell != null)
-                {
-                    // ここでcellの内容を処理
-                    // （cell.DataContextにバインドされたものが入っているかと思います）
+                return;
+            }
+            // ParentでDataGridCellが拾えなかった時はTemplatedParentを参照
+            // （Borderをダブルクリックした時）
+            var cell = (elem.Parent as DataGridCell)?? elem.TemplatedParent as DataGridCell;
+            if (cell == null)
+            {
+                return;
+            }
+            // ここでcellの内容を処理
+            // （cell.DataContextにバインドされたものが入っているかと思います）
+            if (cell.Column.Header.ToString() != MainWindow.MENU_USER_NOW)
+            {
+                return;
+            }
+            var data = cell.DataContext as UserDataGridView;
+            if (data == null)
+            {
+                return;
+            }
+            Debug.WriteLine("■_dataGridUserMouseDoubleClick Cell : {0} {1}", data.ListNowGroup, data.ListNowAllGroup);
 
-                    if (cell.Column.Header.ToString() == MainWindow.MENU_USER_NOW)
-                    {
-                        var data = cell.DataContext as BoxUserDataGridView;
+            var selectGroupWin = new SelectGroupWindows(data.ListNowGroup);
 
-                        Debug.WriteLine("■_dataGridUserMouseDoubleClick Cell : {0} {1}", data.ListNowGroup, data.ListNowGroup);
-
-                    }
-                }
+            if (selectGroupWin.ShowDialog() == true)
+            {
+                data.ListNowAllGroup = selectGroupWin.ListSelectGroup;
             }
         }
     }
