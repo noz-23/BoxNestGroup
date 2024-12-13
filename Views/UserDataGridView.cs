@@ -220,7 +220,8 @@ namespace BoxNestGroup.Views
             //_listAllGroup.AddRange(SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
 
             _listNowAllGroup.Clear();
-            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameMail.ListGroupNameInUser(user_.Address));
+            //_listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameMail.ListGroupNameInUser(user_.Address));
+            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameMail.ListGroupNameInUser(user_.Login));
 
 
             UserSpaceUsed = (user_.SpaceUsed == -1) ? APP_UNLIMITED : user_.SpaceUsed.ToString();

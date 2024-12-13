@@ -33,7 +33,7 @@ namespace BoxNestGroup
         {
             Settings.Default.ClientID = textBoxClientID.Text;
             Settings.Default.SecretID = textBoxSecretID.Text;
-            Settings.Default.PortNumber = Convert.ToUInt16(this.textBoxPortNumber.Text);
+            Settings.Default.PortNumber = Convert.ToUInt16(textBoxPortNumber.Text);
 
             Settings.Default.AccessToken = textBoxAccess.Text;
             Settings.Default.RefreshToken = textBoxRefresh.Text;

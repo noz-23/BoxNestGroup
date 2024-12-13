@@ -34,7 +34,7 @@
             HorizontalAlignment="Left" VerticalAlignment="Top"
             Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
             ItemsSource="{Binding ListGroupDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
-            CellEditEnding="_dataGridGroupCellEditEnding">
+            >
             <DataGrid.Columns>
                 <DataGridTextColumn 
                     Header="グループ名"

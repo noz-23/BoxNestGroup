@@ -26,8 +26,8 @@ namespace BoxNestGroup.Contorls
         /// </summary>
         private async void _buttonMakeAndRenewGroupButtonClick(object sender, RoutedEventArgs e)
         {
-            List< GroupDataGridView > delList = new List< GroupDataGridView >();
-            List<GroupDataGridView> addList = new List<GroupDataGridView>();
+            var delList = new List< GroupDataGridView >();
+            var addList = new List<GroupDataGridView>();
             foreach (var group in SettingManager.Instance.ListGroupDataGridView)
             {
                 if (string.IsNullOrEmpty(group.GroupId) == true)
@@ -53,8 +53,6 @@ namespace BoxNestGroup.Contorls
                         FolderManager.Instance.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListMembershipGroupNameMail.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListUserDataGridView.UpdateGroupName(group.OldGroupName, group.GroupName);
-
-
 
                         delList.Add(group);
                         addList.Add(new GroupDataGridView(group.GroupName));
@@ -120,7 +118,7 @@ namespace BoxNestGroup.Contorls
             //await setView();
 */
         }
-
+/*
         /// <summary>
         /// グループ名の編集
         /// </summary>
@@ -128,7 +126,7 @@ namespace BoxNestGroup.Contorls
         /// <param name="e"></param>
         private async void _dataGridGroupCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-/*            Debug.WriteLine("■_dataGridGroupCellEditEnding : {0} {1}", sender, e);
+            Debug.WriteLine("■_dataGridGroupCellEditEnding : {0} {1}", sender, e);
 
             var editBox = e.EditingElement as System.Windows.Controls.TextBox;
             if (editBox == null)
@@ -168,8 +166,8 @@ namespace BoxNestGroup.Contorls
 
             _dataGridUser.ItemsSource = _dataGridUser.ItemsSource;
             //await setView();
- */
         }
+ */
 
     }
  }

@@ -3,13 +3,14 @@ using BoxNestGroup.Managers;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
-    public class MembershipGroupNameMailModel:List <MembershipGroupNameMailView>
+    public class MembershipGroupNameMailModel: ObservableCollection<MembershipGroupNameMailView>
     {
         /// <summary>
         ///  Box でのグループとユーザーの紐づけ管理にデータ追加
@@ -21,7 +22,8 @@ namespace BoxNestGroup.Views
             var list = await BoxManager.Instance.ListMemberIdFromGroup(groupId_);
             foreach (var item in list.Entries)
             {
-                this.Add(new MembershipGroupNameMailView(item.Group.Name,item.User.Address));
+                //this.Add(new MembershipGroupNameMailView(item.Group.Name,item.User.Address));
+                this.Add(new MembershipGroupNameMailView(item.Group.Name, item.User.Login));
             }
         }
 
@@ -34,7 +36,7 @@ namespace BoxNestGroup.Views
         //public int CountBoxGroupMemberShip(string groupId_)
         public int CountBoxUserInGroupName(string groupName_)
         {
-            var list = this.FindAll((d) => (d.GroupName == groupName_));
+            var list = this.ToList().FindAll((d) => (d.GroupName == groupName_));
             return list.Count;
         }
 
@@ -48,7 +50,7 @@ namespace BoxNestGroup.Views
             //Debug.WriteLine(string.Format("■ListGroupNameInUser id  [{0}]", userId_));
             var rtn = new List<string>();
 
-            var list = this.FindAll((d) => (d.UserAddress == mailAddress_));
+            var list = this.ToList().FindAll((d) => (d.UserAddress == mailAddress_));
             foreach (var member in list)
             {
                 rtn.Add(member.GroupName);
@@ -66,7 +68,7 @@ namespace BoxNestGroup.Views
         {
             //Debug.WriteLine(string.Format("■ListGroupMembershipFromUserId id  [{0}]", userId_));
 
-            var rtn = this.FindAll((d) => (d.UserAddress == userAddress_));
+            var rtn = this.ToList().FindAll((d) => (d.UserAddress == userAddress_));
             if (listAdd_ != null)
             {
                 return rtn.FindAll((d) => (listAdd_.Contains(d.GroupName)) == true);
@@ -77,7 +79,7 @@ namespace BoxNestGroup.Views
 
         public void UpdateGroupName(string oldName_, string newName_)
         {
-            this.FindAll( m => m.GroupName == oldName_)?.ForEach(m => m.GroupName = newName_);  
+            this.ToList().FindAll( m => m.GroupName == oldName_)?.ForEach(m => m.GroupName = newName_);  
         }
     }
 }

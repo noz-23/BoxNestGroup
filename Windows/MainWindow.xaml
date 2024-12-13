@@ -104,6 +104,13 @@
                         x:Name="_groupGridViewControl"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="メンバシップ" Margin="1,1,1,1" HorizontalAlignment="Left">
+                <Grid >
+                    <controls:MembershipGroupNameMailControl 
+                        x:Name="_membershipGridViewControl"/>
+                </Grid>
+            </TabItem>
+
             <!--
             <TabItem Header="ユーザー名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Grid >

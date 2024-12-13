@@ -101,12 +101,13 @@ namespace BoxNestGroup.Managers
         {
             get
             {
-                var clientID = Settings.Default.ClientID.Trim();
-                Debug.WriteLine("■BoxManager IsHaveClientID:{0}", IsHaveClientID);
+                var clientID = Settings.Default.ClientID?.Trim()??string.Empty;
+                Debug.WriteLine("■BoxManager IsHaveClientID:{0}", clientID);
 
                 switch (clientID)
                 {
                     case "N/A":
+                    case "Please Input":
                     case "":
                         return false;
                 }
@@ -117,12 +118,13 @@ namespace BoxNestGroup.Managers
         {
             get
             {
-                var secretID = Settings.Default.SecretID.Trim();
+                var secretID = Settings.Default.SecretID?.Trim() ?? string.Empty;
                 Debug.WriteLine("■BoxManager IsSecretID:{0}", secretID);
 
                 switch (secretID)
                 {
                     case "N/A":
+                    case "Please Input":
                     case "":
                         return false;
                 }
