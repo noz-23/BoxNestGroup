@@ -31,7 +31,6 @@ namespace BoxNestGroup.Views
         {
             var group = this.ToList().Find((d) => (d.GroupName == groupName_));
             return (group == null) ? string.Empty : group.GroupId;
-
         }
 
         /// <summary>

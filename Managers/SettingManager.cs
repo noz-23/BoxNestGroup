@@ -56,12 +56,14 @@ namespace BoxNestGroup.Managers
             }               
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DictionaryGroupIdName ListGroupIdName { get; private set; } = new DictionaryGroupIdName();
         
         /// <summary>
         /// グループビュー
         /// </summary>
-        //public ObservableCollection<BoxGroupDataGridView> ListGroupDataGridRow { get; private set; } = new ObservableCollection<BoxGroupDataGridView>();
         public GroupDataGridModel ListGroupDataGridView { get; private set; } = new GroupDataGridModel();
 
         /// <summary>
@@ -73,78 +75,7 @@ namespace BoxNestGroup.Managers
         ///  Box でのグループとユーザーの紐づけ管理
         ///  グループとユーザーの両方でカウントありのためBoxGroupMembershipを登録
         /// </summary>
-        //public ListBoxMembership ListBoxGroupMembership { get; private set; }= new ListBoxMembership();
         public MembershipGroupNameMailModel ListMembershipGroupNameMail { get; private set; } = new MembershipGroupNameMailModel();
-        /// <summary>
-        /// オフラインでのグループとユーザーの紐づけ管理
-        /// </summary>
-        //public List<KeyValuePair<string,string>> _listOffGroupMembership =new List<KeyValuePair<string,string>>(); // ユーザ名 - グループ名
-
-        /// <summary>
-        /// Boxグループとフォルダのチェック処理
-        /// 　新しいフォルダ名への更新
-        /// </summary>
-        /// <param name="group_">Boxグループ</param>
-//        public void CheckFolderName(BoxGroup? group_)
-//        {
-//            if (group_ == null)
-//            {
-//                return;
-//            }
-///*
-//            //Debug.WriteLine(string.Format("■CheckFolderName Id[{0}] Name[{1}]", group_.Id, group_.Name));
-//            string path = GroupSettingData.PathGroupSetting(group_.Id);
-//            //Debug.WriteLine(string.Format("\tCheckFolderName path[{0}]", path));
-
-
-//            if (File.Exists(path) == true)
-//            {
-//                var name =GroupSettingData.ReadGroupName(path);
-
-//                if (name == group_.Name) 
-//                {
-//                    return;
-//                }
-//                FolderManager.Instance.UpdateFolder(name, group_.Name);
-
-//            }
-//            GroupSettingData.WriteGroupName(path, group_.Name);
-//  */
-//            FolderManager.Instance.CreateFolder(group_.Name);
-//        }
-
-        /// <summary>
-        /// 設定データからのグループID取得
-        /// </summary>
-        /// <param name="groupName_">グループ名</param>
-        /// <returns>グループID</returns>
-//        public string GetGroupIdFromSttingData(string groupName_)
-//        {
-///*
-//            var listFile = GroupSettingData.ListAllGroupSettingData();
-//            foreach (var path in listFile)
-//            {
-//                var name = GroupSettingData.ReadGroupName(path);
-
-//                if (name == groupName_)
-//                {
-//                    return GroupSettingData.GetGroupId(path);
-//                }
-//            }
-//*/
-//            return string.Empty;
-//        }
-
-        /// <summary>
-        /// 設定データからのグループ所属人数を取得
-        /// </summary>
-        /// <param name="groupName_">所属人数</param>
-        /// <returns>グループの所属数</returns>
-        //public int CountGroupMemberShipFromSettingData(string groupName_)
-        //{
-        //    var list = _listOffGroupMembership.FindAll((d) => (d.Value == groupName_));
-        //    return list.Count;
-        //}
 
         /// <summary>
         /// エクセルのシート読み込み処理
@@ -173,23 +104,16 @@ namespace BoxNestGroup.Managers
                 {
                     break;
                 }
-                //listDataGridRow.Add(add);
-                
-                //ListUserDataGridRow.Add(add);
                 ListUserDataGridView.Add(add);
 
                 foreach (var groupName in listGroup) 
                 {
-                    //_listOffGroupMembership.Add( new KeyValuePair<string, string>(userName, groupName));
                     SettingManager.Instance.ListMembershipGroupNameMail.Add(new MembershipGroupNameMailView(groupName, userMail));
                 }
             }
 
             foreach (var groupName in listGroup)
             {
-                //var add =new BoxGroupDataGridView(groupName);
-                //await add.Inital();
-                //ListGroupDataGridRow.Add(add);
                 ListGroupDataGridView.Add(new GroupDataGridView(groupName));
             }
         }
@@ -211,7 +135,7 @@ namespace BoxNestGroup.Managers
                 worksheet.Cell(row, INDEX_STRAGE).Value = "ストレージ";
                 worksheet.Cell(row, INDEX_COLABO).Value = "外部コラボレーション制限";
                 row++;
-                //foreach (var user in SettingManager.Instance.ListUserDataGridRow)
+
                 foreach (var user in SettingManager.Instance.ListUserDataGridView)
                 {
                     if (user.ListModAllGroup == string.Empty)
@@ -229,7 +153,6 @@ namespace BoxNestGroup.Managers
                 }
 
                 workbook.SaveAs(path_);
-
             }
         }
     }

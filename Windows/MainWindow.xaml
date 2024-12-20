@@ -11,7 +11,9 @@
         x:Class="BoxNestGroup.MainWindow"
         mc:Ignorable="d"
         Title="BoxNestGroup" Height="768" Width="1024"
-        >
+        Loaded="_windowLoaded"
+        Closing="_windowClosing"
+    >
     <Window.Resources>
         <Style TargetType="TextBox" x:Key="_dataGridUserTextBoxStyle">
             <EventSetter Event="KeyDown" Handler="_dataGridUserTextColumnKeyDown" />
@@ -78,9 +80,6 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Margin="1,1,1,1"
             ItemsSource="{Binding ListFolderTree ,Source={x:Static managers:FolderManager.Instance}, Mode=OneWay}"
-            PreviewMouseDown="_treeViewFolderPreviewMouseDown"
-            MouseMove="_treeViewFolderMouseMove"
-            Drop="_treeViewFolderDrop"
             >
             <TreeView.ItemTemplate >
                 <HierarchicalDataTemplate DataType="{x:Type views:FolderGroupTreeView}" ItemsSource="{Binding ListChild}">

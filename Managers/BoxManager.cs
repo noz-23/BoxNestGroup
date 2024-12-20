@@ -4,6 +4,7 @@ using Box.V2.Config;
 using Box.V2.Models;
 using Box.V2.Models.Request;
 using BoxNestGroup.Views;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -49,13 +50,7 @@ namespace BoxNestGroup.Managers
         /// <summary>
         /// 承認の URL
         /// </summary>
-        public string AuthorizationUrl
-        { 
-            get
-            { 
-                return (_config !=null) ?_config.AuthCodeUri.ToString():string.Empty;
-            }
-        }
+        public string AuthorizationUrl{ get=> (_config !=null) ?_config.AuthCodeUri.ToString():string.Empty;}
 
 
         /// <summary>
@@ -172,13 +167,7 @@ namespace BoxNestGroup.Managers
             }
         }
 
-        public bool IsOnlne
-        {
-            get 
-            {
-                return _client!=null;
-            }
-        }
+        public bool IsOnlne { get => _client != null; }
 
         /// <summary>
         /// 承認接続処理
@@ -236,7 +225,7 @@ namespace BoxNestGroup.Managers
         /// </summary>
         /// <returns>ユーザ名</returns>
         //public async Task<string> LoginUserName()
-        public async Task LoginUserName()
+        public async Task GetLoginUser()
         {
             if (_client != null) 
             {
@@ -259,32 +248,27 @@ namespace BoxNestGroup.Managers
         /// <summary>
         /// グループデータの取得
         /// </summary>
-        /// <returns>全グループの取得(データービュー)</returns>
-        //public async Task<ObservableCollection<BoxGroupDataGridView>> ListGroupData()
-        public async Task ListGroupData()
+        public async Task GetListGroupData()
         {
-            Debug.WriteLine("■BoxManager ListGroupData");
+            Debug.WriteLine("■GetListGroupData");
             if (_client != null)
             {
                 try
                 {
-                    var listGroup = await _client.GroupsManager.GetAllGroupsAsync();
-
-                    //var list = listGroup.Entries;
-
-                    //return await listGroupData(list);
                     SettingManager.Instance.ListGroupDataGridView.Clear();
                     SettingManager.Instance.ListMembershipGroupNameMail.Clear();
 
+                    // Boxからグループデータ取得
+                    var listGroup = await _client.GroupsManager.GetAllGroupsAsync();
                     foreach (var group in listGroup.Entries)
                     {
-                        await SettingManager.Instance.ListMembershipGroupNameMail.AddMemberShipGroupId(group.Id);
-
-                        //var add = new BoxGroupDataGridView(group);
-                        //await add.Inital();
-
                         SettingManager.Instance.ListGroupDataGridView.Add(new GroupDataGridView(group));
-                        //Debug.WriteLine("■BoxManager listGroupData add : name[{0}] id[{1}]", add.GroupName, add.GroupId);
+
+                        //await SettingManager.Instance.ListMembershipGroupNameMail.AddMemberShipGroupId(group.Id);
+                        // Boxからメンバシップ取得
+                        var listMembership = await BoxManager.Instance.GetListMemberIdFromGroup(group.Id);
+
+                        listMembership.Entries?.ForEach(membership => SettingManager.Instance.ListMembershipGroupNameMail.Add(new MembershipGroupNameMailView(membership.Group.Name, membership.User.Login));
                     }
                 }
                 catch (Exception ex_)
@@ -292,28 +276,7 @@ namespace BoxNestGroup.Managers
                     Debug.WriteLine("　ListGroupData:" + ex_.ToString());
                 }
             }
-            //return new ObservableCollection<BoxGroupDataGridView>();
         }
-        /// <summary>
-        /// グループデータの取得 Box から View 変換
-        /// </summary>
-        /// <param name="listGroup_"></param>
-        /// <returns>データービューでのグループデータ</returns>
-        //private async Task<ObservableCollection<BoxGroupDataGridView>> listGroupData(List<BoxGroup> listGroup_)
-        //{
-        //    SettingManager.Instance.ListGroupDataGridRow.Clear();
-        //    foreach (var group in listGroup_)
-        //    {
-        //        var add = new BoxGroupDataGridView(group);
-        //        await add.Inital();
-
-        //        SettingManager.Instance.ListGroupDataGridRow.Add(add);
-        //        Debug.WriteLine("■BoxManager listGroupData add : name[{0}] id[{1}]", add.GroupName, add.GroupId);
-
-        //    }
-        //    return SettingManager.Instance.ListGroupDataGridRow;
-        //}
-
         /// <summary>
         /// Boxにグループを作成
         /// </summary>
@@ -335,7 +298,7 @@ namespace BoxNestGroup.Managers
                     Debug.WriteLine("　BoxManager CreateGroup:" + ex_.ToString());
                 }
             }
-            return new BoxGroup();
+            return null;
         }
 
         // グループの更新
@@ -347,7 +310,7 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public async Task<BoxGroup> UpdateGroupName(string groupId_, string groupName_)
         {
-            //Debug.WriteLine(string.Format("■UpdateGroupName : id[{0}] name[{0}]", groupId_, groupName_));
+            Debug.WriteLine(string.Format("■UpdateGroupName : id[{0}] name[{0}]", groupId_, groupName_));
             if (_client != null)
             {
                 try
@@ -361,7 +324,7 @@ namespace BoxNestGroup.Managers
                 }
             }
 
-            return new BoxGroup();
+            return null;
         }
 
         /// <summary>
@@ -369,9 +332,8 @@ namespace BoxNestGroup.Managers
         /// </summary>
         /// <param name="gorupId_">グループID</param>
         /// <returns>所属するメンバシップ(グループとユーザの紐付け)の取得</returns>
-        public async Task<BoxCollection<BoxGroupMembership>> ListMemberIdFromGroup(string gorupId_)
+        public async Task<BoxCollection<BoxGroupMembership>> GetListMemberIdFromGroup(string gorupId_)
         {
-            //Debug.WriteLine(string.Format("■BoxManager ListMemberIdFromGroup : [{0}]", gorupId_));
             if (_client != null)
             {
                 try
@@ -383,57 +345,32 @@ namespace BoxNestGroup.Managers
                     Debug.WriteLine(string.Format("\tBoxManager ListMemberIdFromGroup{0}" , ex_.ToString()));
                 }
             }
-            return new BoxCollection<BoxGroupMembership>();
+            return null;
         }
 
         /// <summary>
         /// ユーザーデータの取得
         /// </summary>
         /// <returns>全ユーザーの取得(データービュー)</returns>
-        //public async Task<ObservableCollection<BoxUserDataGridView>> ListUserData()
-        public async Task ListUserData()
+        public async Task GetListUserData()
         {
-            Debug.WriteLine("■BoxManager ListUserData");
+            Debug.WriteLine("■BoxManager GetListUserData");
             if (_client != null)
             {
                 try
                 {
                     var listUser = await _client.UsersManager.GetEnterpriseUsersAsync();
 
-                    //var list = listUser.Entries;
-                    //return listUserData(list);
                     SettingManager.Instance.ListUserDataGridView.Clear();
-                    foreach (var user in listUser.Entries)
-                    {
-                        SettingManager.Instance.ListUserDataGridView.Add(new UserDataGridView(user));
-                        //Debug.WriteLine("■BoxManager listUserData add : name[{0}] id[{1}]", add.UserName, add.UserId);
-                    }
+
+                    listUser.Entries?.ForEach(user => SettingManager.Instance.ListUserDataGridView.Add(new UserDataGridView(user)));
                 }
                 catch (Exception ex_)
                 {
                     Debug.WriteLine("　ListUserData:" + ex_.ToString());
                 }
             }
-            //return new ObservableCollection<BoxUserDataGridView>();
         }
-
-        /// <summary>
-        /// ユーザー情報の取得 Box から Viewへ変換
-        /// </summary>
-        /// <param name="listUser_">ユーザーリスト</param>
-        /// <returns>全ユーザーの取得(データービュー)</returns>
-        //private ObservableCollection<BoxUserDataGridView> listUserData(List<BoxUser> listUser_)
-        //{
-        //    SettingManager.Instance.ListUserDataGridRow.Clear();
-        //    foreach (var user in listUser_)
-        //    {
-        //        var add = new BoxUserDataGridView(user);
-        //        SettingManager.Instance.ListUserDataGridRow.Add(add);
-        //        Debug.WriteLine("■BoxManager listUserData add : name[{0}] id[{1}]", add.UserName, add.UserId);
-
-        //    }
-        //    return SettingManager.Instance.ListUserDataGridRow;
-        //}
 
         /// <summary>
         /// グループへユーザを追加

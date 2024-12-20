@@ -14,55 +14,14 @@ namespace BoxNestGroup.Views
         public const string BOX_ENABLED = "enabled";
         public const string BOX_DISABLED = "disabled";
 
-        public const string APP_ENABLED = "制　限";
-        public const string APP_DISABLED = "しない";
+        public const string APP_ENABLED = "制限あり";
+        public const string APP_DISABLED = "制限なし";
 
-
-        ///// <summary>
-        ///// 選択
-        ///// </summary>
-        //private bool _selected = false;
-        //public bool Selected 
-        //{
-        //    get { return _selected; }
-
-        //    set
-        //    {
-        //        if ((string.IsNullOrEmpty(_userName) == false)
-        //         && (string.IsNullOrEmpty(_userMailAddress) == false)
-        //         && (string.IsNullOrEmpty(UserSpaceUsed)==false)) // 初期化中はEmpty
-        //        {
-        //            _selected = value;
-        //            NotifyPropertyChanged();
-        //        }
-        //    }
-        //}
-        private enum StatusView
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
         {
-            NONE,
-            ADD,
-            MOD,
-        };
-        private StatusView status = StatusView.NONE;
-
-        public string Status
-        {
-            get 
-            {
-                switch (status)
-                {
-                    case StatusView.ADD:
-                        return "追加";
-                    case StatusView.MOD:
-                        return "変更";
-                    default:
-                    case StatusView.NONE:
-                        break;
-                }
-                return "　　";
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
         }
-
 
         /// <summary>
         /// ユーザー名
@@ -76,8 +35,6 @@ namespace BoxNestGroup.Views
             {
                 _userName = value;
                 NotifyPropertyChanged();
-                //
-                //Selected = true;
             }
         }
         /// <summary>
@@ -92,8 +49,6 @@ namespace BoxNestGroup.Views
             {
                 _userMailAddress = value;
                 NotifyPropertyChanged();
-                //
-                //Selected = true;
             }
         }
 
@@ -104,15 +59,7 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 現在所属の最小表示(ネスト分引く)
         /// </summary>
-        public string ListNowGroup
-        {
-            get
-            {
-                //return string.Join("\n",FolderManager.Instance.ListMinimumGroup(_listAllGroup));
-                //return string.Join("\n", FolderManager.Instance.ListMinimumGroup(UserId));
-                return string.Join("\n", FolderManager.Instance.ListMinimumGroup(_listNowAllGroup));                
-            }
-        }
+        public string ListNowGroup{get=>string.Join("\n", FolderManager.Instance.ListMinimumGroup(_listNowAllGroup));}
 
         /// <summary>
         /// 現在所属の全所属
@@ -120,11 +67,7 @@ namespace BoxNestGroup.Views
         private List<string> _listNowAllGroup =new List<string>();
         public string ListNowAllGroup
         {
-            get
-            {
-                return string.Join("\n", _listNowAllGroup);
-                //return string.Join("\n", SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
-            }
+            get=> string.Join("\n", _listNowAllGroup);
             set 
             {
                 _listNowAllGroup.Clear();
@@ -141,56 +84,27 @@ namespace BoxNestGroup.Views
         private List<string> _listModGroup = new List<string>();
         public string ListModGroup
         {
-            get
-            {
-                return string.Join("\n", _listModGroup);
-            }
+            get=> string.Join("\n", _listModGroup);
             set
             {
                 _listModGroup.Clear();
                 _listModGroup.AddRange(value.Split("\n"));
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("ListModAllGroup");
-                //
-                //Selected = true;
             }
         }
         /// <summary>
         /// 変更後の前所属(ネスト後)
         /// </summary>
-        //private List<string> _listNestGroup = new List<string>();
-
-        public string ListModAllGroup
-        {
-            //get
-            //{
-            //    return string.Join("\n", _listNestGroup);
-            //}
-            //set
-            //{
-            //    _listNestGroup.Clear();
-            //    _listNestGroup.AddRange(value.Split("\n"));
-            //}
-            get
-            {
-                return string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listModGroup)); 
-            }
-        }
+        public string ListModAllGroup{get=> string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listModGroup));}
         /// <summary>
         /// ユーザーの領域制限
         /// </summary>
-        public string UserSpaceUsed { get; set; } = string.Empty;
+        public string UserSpaceUsed { get; private set; } = string.Empty;
         /// <summary>
         /// 外部コラボ制限
         /// </summary>
-        public string UserExternalCollaborate { get; set; } = string.Empty;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
-        }
-
+        public string UserExternalCollaborate { get; private set; } = string.Empty;
 
         /// <summary>
         /// Boxのユーザー(オンライン時)
@@ -201,7 +115,7 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public UserDataGridView()
+        private UserDataGridView()
         {
         }
         /// <summary>
@@ -216,13 +130,8 @@ namespace BoxNestGroup.Views
             UserMailAddress = user_.Login;
             UserId = user_.Id;
 
-            //_listAllGroup.Clear();
-            //_listAllGroup.AddRange(SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(UserId));
-
             _listNowAllGroup.Clear();
-            //_listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameMail.ListGroupNameInUser(user_.Address));
             _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameMail.ListGroupNameInUser(user_.Login));
-
 
             UserSpaceUsed = (user_.SpaceUsed == -1) ? APP_UNLIMITED : user_.SpaceUsed.ToString();
             UserExternalCollaborate = (user_.IsExternalCollabRestricted ==true) ? APP_ENABLED : APP_DISABLED;
@@ -243,14 +152,11 @@ namespace BoxNestGroup.Views
             UserName = name_;
             UserMailAddress = mail_;
 
-
             _listNowAllGroup.Clear();
             _listNowAllGroup.AddRange(listGroup_);
 
             UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) ==true) ? APP_UNLIMITED : strage_;
-            UserExternalCollaborate = (colabo_.Contains( "disabled") ==true) ? "許　可" : "不許可";
-
-            //_listAllGroup.AddRange ( listGroup_);
+            UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) ==true) ? APP_ENABLED : APP_DISABLED;
         }
 
         public void UpdateGroupName(string oldName_, string newName_)

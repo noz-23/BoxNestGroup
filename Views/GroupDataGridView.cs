@@ -12,13 +12,18 @@ namespace BoxNestGroup.Views
     {
         public const string OFFLINE_GROUP_ID = "[OFFLINE]";
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
+        }
+
         /// <summary>
         /// グループ名
         /// </summary>
         public string GroupName { get; set; } = string.Empty;
 
         public bool IsSameOldGroupName { get => GroupName == OldGroupName; }
-
 
         public string OldGroupName { get; private set; } = string.Empty;
         /// <summary>
@@ -45,16 +50,11 @@ namespace BoxNestGroup.Views
         /// </summary>
         //private BoxGroup? _groupBox =null;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
-        }
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public GroupDataGridView()
+        private GroupDataGridView()
         {
         }
 
@@ -79,11 +79,6 @@ namespace BoxNestGroup.Views
             {
                 FolderManager.Instance.CreateFolder(GroupName);
             }
-
-            //_inital();
-            //var list = FolderManager.Instance.ListPathFindFolderName(GroupName);
-            //FolderCount = list.Count;
-            //MaxNestCount = maxNestCount(list);
         }
 
         /// <summary>
@@ -93,7 +88,6 @@ namespace BoxNestGroup.Views
         public GroupDataGridView(BoxGroup group_)
         {
             //_groupBox = group_;
-
             GroupName = group_.Name;
             OldGroupName = group_.Name;
             GroupId = group_.Id;
@@ -101,7 +95,7 @@ namespace BoxNestGroup.Views
             // Boxから取得
             UserCount = SettingManager.Instance.ListMembershipGroupNameMail.CountBoxUserInGroupName(GroupName);
 
-            //
+            // グループ名の変更された場合の処理
             string name = string.Empty;
             if (SettingManager.Instance.ListGroupIdName.TryGetValue(GroupId, out name) == true)
             {
@@ -120,44 +114,7 @@ namespace BoxNestGroup.Views
                 FolderManager.Instance.CreateFolder(GroupName);
             }
             SettingManager.Instance.ListGroupIdName[GroupId] = GroupName;
-
-            //_inital();
-            //var list = FolderManager.Instance.ListPathFindFolderName(GroupName);
-            //FolderCount = list.Count;
-            //MaxNestCount = maxNestCount(list);
         }
-
-        /// <summary>
-        /// 初期化処理
-        /// </summary>
-        //public async Task Inital()
-        //private void _inital()
-        //{
-        //    // 設定関係を優先
-        //    if (GroupId != string.Empty)
-        //    {
-        //        SettingManager.Instance.CheckFolderName(_groupBox);
-        //    }
-        //    else 
-        //    {
-        //        // データ(ファイル)から取得
-        //        GroupId = SettingManager.Instance.GetGroupIdFromSttingData(NowGroupName);
-
-        //        UserCount = SettingManager.Instance.CountGroupMemberShipFromSettingData(NowGroupName);
-
-        //        FolderManager.Instance.CreateFolder(NowGroupName);
-        //        //if (FolderManager.Instance.Contains(GroupName) == false)
-        //        //{
-        //        //    // フォルダがない場合は作成
-        //        //    FolderManager.Instance.CreateFolder(GroupName);
-        //        //}
-        //    }
-
-        //    var list = FolderManager.Instance.ListPathFindFolderName(NowGroupName);
-        //    FolderCount = list.Count;
-
-        //    MaxNestCount = maxNestCount(list);
-        //}
 
         /// <summary>
         /// 最大のネスト数の取得
@@ -167,12 +124,13 @@ namespace BoxNestGroup.Views
 
         private int maxNestCount(IList<string> list_)
         {
-            int count = 1;
-            foreach (var path in list_)
-            {
-                count = Math.Max(count, path.Length - path.Replace(@"\", "").Length);
-            }
-            return count;
+            //int count = 1;
+            //foreach (var path in list_)
+            //{
+            //    count = Math.Max(count, path.Length - path.Replace(@"\", "").Length);
+            //}
+            //return count;
+            return list_.Max(path => (path.Length - path.Replace(@"\", "").Length));
         }
     }
 }

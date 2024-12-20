@@ -12,6 +12,12 @@ namespace BoxNestGroup.Views
     /// </summary>
     public class FolderGroupTreeView : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
+        }
+
         private DirectoryInfo? _info =null;
         /// <summary>
         /// グループ名(フォルダ名)
@@ -30,21 +36,13 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// ツリービュー表示用
         /// </summary>
-        //public List<FolderGroupTreeView> ListViewGroup { get { return ListChild.ToList(); } }
         public bool Checked { get; set; } = false;
         public FolderGroupTreeView Parent { get; private set; } = null;
-
 
         /// <summary>
         /// サブフォルダリスト
         /// </summary>
         public ObservableCollection<FolderGroupTreeView> ListChild { get; private set; }= new ObservableCollection<FolderGroupTreeView>();
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
-        }
 
         public FolderGroupTreeView()
         {
@@ -56,10 +54,7 @@ namespace BoxNestGroup.Views
             _info = info_;
             Parent = parent_;
 
-            foreach (var info in info_.GetDirectories())
-            {
-                ListChild.Add(new FolderGroupTreeView(info,this));
-            }
+            info_.GetDirectories().ToList().ForEach(info => ListChild.Add(new FolderGroupTreeView(info, this)));
         }
 
         public bool Contains(string name_)
@@ -69,14 +64,8 @@ namespace BoxNestGroup.Views
                 return true;
             }
 
-            foreach (var view in ListChild)
-            {
-                if (view.Contains(name_) == true)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return ListChild?.ToList()?.Find(view=> view.Contains(name_))!=null;
+
         }
 
         public IList<FolderGroupTreeView> Find(string name_)
