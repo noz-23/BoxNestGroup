@@ -7,7 +7,7 @@ using BoxNestGroup.Views;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-
+using System.Runtime.CompilerServices;
 
 /*
  * https://github.com/box/box-windows-sdk-v2
@@ -23,7 +23,7 @@ namespace BoxNestGroup.Managers
         /// <summary>
         ///  シングルトン
         /// </summary>
-        static public BoxManager Instance { get; } = new BoxManager();
+        static public BoxManager Instance { get; private set; } = new BoxManager();
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -92,80 +92,25 @@ namespace BoxNestGroup.Managers
             SetTokens(_client.Auth.Session.AccessToken, _client.Auth.Session.RefreshToken);
         }
 
-        public bool IsHaveClientID
-        {
-            get
-            {
-                var clientID = Settings.Default.ClientID?.Trim()??string.Empty;
-                Debug.WriteLine("■BoxManager IsHaveClientID:{0}", clientID);
-
-                switch (clientID)
-                {
-                    case "N/A":
-                    case "Please Input":
-                    case "":
-                        return false;
-                }
-                return true;
-            }
-        }
-        public bool IsSecretID
-        {
-            get
-            {
-                var secretID = Settings.Default.SecretID?.Trim() ?? string.Empty;
-                Debug.WriteLine("■BoxManager IsSecretID:{0}", secretID);
-
-                switch (secretID)
-                {
-                    case "N/A":
-                    case "Please Input":
-                    case "":
-                        return false;
-                }
-                return true;
-            }
-        }
+        /// <summary>
+        /// クライアントIDがあるか
+        /// </summary>
+        public bool IsHaveClientID { get => IsNoData(Settings.Default.ClientID?.Trim() ?? string.Empty); }
+        /// <summary>
+        /// シークレットがあるか
+        /// </summary>
+        public bool IsSecretID { get => IsNoData(Settings.Default.SecretID?.Trim() ?? string.Empty); }
 
         /// <summary>
         /// アクセストークンを取得済みか(true:取得済み)
         /// </summary>
-        public bool IsHaveAccessToken
-        {
-            get
-            {
-                var userToken = Settings.Default.AccessToken.Trim();
-                Debug.WriteLine("■BoxManager IsHaveAccessToken:{0}", userToken);
-    
-                switch (userToken)
-                {
-                    case "N/A":
-                    case "":
-                        return false;
-                }
-                return true;
-            }
-        }
+        public bool IsHaveAccessToken { get => IsNoData(Settings.Default.AccessToken?.Trim() ?? string.Empty); }
 
         /// <summary>
         /// リフレッシュトークンを取得済みか(true:取得済み)
         /// </summary>
-        public bool IsHaveRefreshToken
-        {
-            get
-            {
-                var refreshToken = Settings.Default.RefreshToken.Trim();
-                Debug.WriteLine("■BoxManager IsHaveRefreshToken:{0}", refreshToken);
+        public bool IsHaveRefreshToken { get=> IsNoData(Settings.Default.RefreshToken?.Trim() ?? string.Empty); }
 
-                switch (refreshToken)
-                {
-                    case "N/A":
-                    case "":
-                        return false;
-                }
-                return true;
-            }
-        }
 
         public bool IsOnlne { get => _client != null; }
 
@@ -256,7 +201,7 @@ namespace BoxNestGroup.Managers
                 try
                 {
                     SettingManager.Instance.ListGroupDataGridView.Clear();
-                    SettingManager.Instance.ListMembershipGroupNameMail.Clear();
+                    SettingManager.Instance.ListMembershipGroupNameLogin.Clear();
 
                     // Boxからグループデータ取得
                     var listGroup = await _client.GroupsManager.GetAllGroupsAsync();
@@ -264,11 +209,11 @@ namespace BoxNestGroup.Managers
                     {
                         SettingManager.Instance.ListGroupDataGridView.Add(new GroupDataGridView(group));
 
-                        //await SettingManager.Instance.ListMembershipGroupNameMail.AddMemberShipGroupId(group.Id);
+                        //await SettingManager.Instance.ListMembershipGroupNameLogin.AddMemberShipGroupId(group.Id);
                         // Boxからメンバシップ取得
                         var listMembership = await BoxManager.Instance.GetListMemberIdFromGroup(group.Id);
 
-                        listMembership.Entries?.ForEach(membership => SettingManager.Instance.ListMembershipGroupNameMail.Add(new MembershipGroupNameMailView(membership.Group.Name, membership.User.Login));
+                        listMembership.Entries?.ForEach(membership => SettingManager.Instance.ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(membership.Group.Name, membership.User.Login)));
                     }
                 }
                 catch (Exception ex_)
@@ -287,7 +232,6 @@ namespace BoxNestGroup.Managers
             Debug.WriteLine("■BoxManager CreateGroup [{0}]", groupName_);
             if (_client != null)
             {
-
                 try
                 {
                     var request = new BoxGroupRequest() { Name = groupName_ };
@@ -377,22 +321,24 @@ namespace BoxNestGroup.Managers
         /// </summary>
         /// <param name="userId_">追加するユーザーID</param>
         /// <param name="listGroupId_">追加するグループIDのリスト</param>
-        public async Task AddGroupUser(string userId_, IList<string> listGroupId_) 
+        public async Task AddGroupUserFromId(BoxUser user_, IList<string> listGroupId_) 
         {
-            Debug.WriteLine(string.Format("■BoxManager AddGroupUser userId_[{0}] listGroupId_[{1}]", userId_,string.Join(",", listGroupId_)));
+            Debug.WriteLine(string.Format("■BoxManager AddGroupUser userId_[{0}] listGroupId_[{1}]", user_.Id, string.Join(",", listGroupId_)));
             if (_client != null)
             {
                 foreach (var groupId in listGroupId_)
                 {
                     var request = new BoxGroupMembershipRequest()
                     {
-                        User = new BoxRequestEntity() { Id = userId_ },
+                        User = new BoxRequestEntity() { Id = user_.Id },
                         Group = new BoxGroupRequest() { Id = groupId }
                     };
 
                     try
                     {
                         await _client.GroupsManager.AddMemberToGroupAsync(request);
+
+                        SettingManager.Instance.ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(groupId,user_.Login));
                     }
                     catch (Exception ex_)
                     {
@@ -401,6 +347,20 @@ namespace BoxNestGroup.Managers
                 }
             }
         }
+
+        /// <summary>
+        /// グループ名に対しユーザーを追加
+        /// </summary>
+        /// <param name="userId_"></param>
+        /// <param name="listGroupName_"></param>
+        /// <returns></returns>
+        public async Task AddGroupUserFromName(BoxUser user_, IList<string> listGroupName_)
+        {
+            Debug.WriteLine(string.Format("■BoxManager AddGroupUser userId_[{0}] listGroupName_[{1}]", user_.Id, string.Join(",", listGroupName_)));
+            // グループ名からグループIDに変換
+            await AddGroupUserFromId(user_, SettingManager.Instance.ConvertGroupNameToId(listGroupName_));
+        }
+
         /// <summary>
         /// メンバシップ(グループとユーザーの紐付け)削除
         /// </summary>
@@ -425,5 +385,91 @@ namespace BoxNestGroup.Managers
             }
         }
 
+        public async Task UpDateGroupUserFromName(BoxUser user_, IList<string> listGroupName_)
+        {
+            var listGroupIdAll = SettingManager.Instance.ListGroupDataGridView.Select(g_ => g_.GroupId);
+            var listMembership =new List<BoxGroupMembership>();
+            foreach (var groupId in listGroupIdAll)
+            {
+                var list = await GetListMemberIdFromGroup(groupId);
+                foreach (var membership in list.Entries)
+                {
+                    if (membership.User.Id != user_.Id)
+                    {
+                        continue;
+                    }
+                    listMembership.Add(membership);
+                }              
+            }
+            await DeleteGroupUser(listMembership);
+            await AddGroupUserFromName(user_, listGroupName_);
+
+            var listGroupId = SettingManager.Instance.ConvertGroupNameToId(listGroupName_);
+        }
+
+        public async Task<BoxUser> CreateUser(string userName_, string userLogin_)
+        {
+            Debug.WriteLine($"■BoxManager CreateUser [{userName_}][{userLogin_}]");
+            if (_client != null)
+            {
+                try
+                {
+                    var request = new BoxUserRequest()
+                    { 
+                        Name = userName_,
+                        Login = userLogin_,
+                    };
+                    return await _client.UsersManager.CreateEnterpriseUserAsync(request);
+                }
+                catch (Exception ex_)
+                {
+                    Debug.WriteLine("　BoxManager CreateUser:" + ex_.ToString());
+                }
+            }
+            return null;
+        }
+
+        public async Task<BoxUser> UpdateUser(string userId_,string userName_, string userLogin_)
+        {
+            Debug.WriteLine($"■BoxManager UpdateUser [{userId_}][{userName_}][{userLogin_}]");
+            if (_client != null)
+            {
+                try
+                {
+                    var request = new BoxUserRequest()
+                    {
+                        Id = userId_,
+                        Name = userName_,
+                        Login = userLogin_,
+                    };
+                    return await _client.UsersManager.UpdateUserInformationAsync(request);
+                }
+                catch (Exception ex_)
+                {
+                    Debug.WriteLine("　UpdateUser CreateUser:" + ex_.ToString());
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// IDデータの有無
+        /// </summary>
+        /// <param name="data_"></param>
+        /// <param name="propertyName_"></param>
+        /// <returns></returns>
+        private bool IsNoData(string data_, [CallerMemberName] string propertyName_="")
+        {
+            Debug.WriteLine($"■BoxManager {propertyName_} : {data_}");
+
+            switch (data_)
+            {
+                case "N/A":
+                case "Please Input":
+                case "":
+                    return false;
+            }
+            return true;
+        }
     }
 }

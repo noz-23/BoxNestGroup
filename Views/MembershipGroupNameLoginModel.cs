@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
-    public class MembershipGroupNameMailModel: ObservableCollection<MembershipGroupNameMailView>
+    public class MembershipGroupNameLoginModel: ObservableCollection<MembershipGroupNameLoginView>
     {
         /// <summary>
         ///  グループに所属する人数の取得
@@ -29,17 +29,11 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="userId__">BoxユーザーID</param>
         /// <returns>グループ名の一覧</returns>
-        public IList<string> ListGroupNameInUser(string mailAddress_)
+        public IList<string> ListGroupNameInUser(string userLogin_)
         {
-            //Debug.WriteLine(string.Format("■ListGroupNameInUser id  [{0}]", userId_));
             var rtn = new List<string>();
 
-            //var list = this.ToList().FindAll((d) => (d.UserAddress == mailAddress_));
-            //foreach (var member in list)
-            //{
-            //    rtn.Add(member.GroupName);
-            //}
-            this.ToList().FindAll((d) => (d.UserAddress == mailAddress_))?.ForEach(member=> rtn.Add(member.GroupName));
+            this.ToList().FindAll((d) => (d.UserLogin == userLogin_))?.ForEach(member=> rtn.Add(member.GroupName));
 
             return rtn;
         }
@@ -50,9 +44,9 @@ namespace BoxNestGroup.Views
         /// <param name="listAdd_">追加したいリストを指定する場合のグループ名一覧</param>
         /// <returns>ユーザーとグループの紐づけ一覧</returns>
         //public IList<BoxGroupMembership> ListGroupMembershipFromUserId(string userId_, IList<string>? listAdd_ = null)
-        public IList<MembershipGroupNameMailView> ListGroupMembershipFromUserAddress(string userAddress_, IList<string>? listAdd_ = null)
+        public IList<MembershipGroupNameLoginView> ListGroupMembershipFromUserAddress(string userAddress_, IList<string>? listAdd_ = null)
         {
-            var rtn = this.ToList().FindAll((d) => (d.UserAddress == userAddress_));
+            var rtn = this.ToList().FindAll((d) => (d.UserLogin == userAddress_));
             if (listAdd_ != null)
             {
                 return rtn.FindAll((d) => (listAdd_.Contains(d.GroupName)) == true);

@@ -1,21 +1,10 @@
 ﻿using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using BoxNestGroup.Windows;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BoxNestGroup.Contorls
 {
@@ -24,19 +13,12 @@ namespace BoxNestGroup.Contorls
     /// </summary>
     public partial class UserGridViewControl : System.Windows.Controls.UserControl
     {
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public UserGridViewControl()
         {
             InitializeComponent();
-        }
-
-
-        /// <summary>
-        /// 「ユーザー作成」ボタン操作
-        ///  About画面の表示
-        /// </summary>
-        private void _buttonMakeUserButtonClick(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("■makeUserButtonClick : {0} {1}", sender, e);
         }
 
         /// <summary>
@@ -45,6 +27,48 @@ namespace BoxNestGroup.Contorls
         /// </summary>
         private async void _buttonMakeAndRenewUserGroupClick(object sender, RoutedEventArgs e)
         {
+            // 更新は削除と追加で行う
+            var delList = new List<UserDataGridView>();
+            var addList = new List<UserDataGridView>();
+            foreach (var user in SettingManager.Instance.ListUserDataGridView)
+            {
+                if (BoxManager.Instance.IsOnlne == false)
+                {
+                    continue;
+                }
+
+                //if (string.IsNullOrEmpty(user.UserId) == true)
+                if(user.StatudData == UserDataGridView.Status.NEW)
+                {
+                    // 新規
+                    var boxUser = await BoxManager.Instance.CreateUser(user.UserName, user.UserLogin);
+                    if (boxUser != null)
+                    {
+                        delList.Add(user);
+                        addList.Add(new UserDataGridView(boxUser));
+
+                        await BoxManager.Instance.AddGroupUserFromName(boxUser, user.ListModAllGroup.Split('\n'));
+                    }
+                    continue;
+                }
+                if (user.StatudData == UserDataGridView.Status.MOD)
+                {
+                    var boxUser = await BoxManager.Instance.UpdateUser(user.UserId, user.UserName, user.UserLogin);
+                    if (boxUser != null)
+                    {
+                        delList.Add(user);
+                        addList.Add(new UserDataGridView(boxUser));
+
+                        await BoxManager.Instance.UpDateGroupUserFromName(boxUser, user.ListModAllGroup.Split('\n'));
+                    }
+                    continue;
+                }
+                // オフライン
+
+            }
+            // その場で処理するとエラーになるため
+            delList.ForEach(del => SettingManager.Instance.ListUserDataGridView.Remove(del));
+            addList.ForEach(add => SettingManager.Instance.ListUserDataGridView.Add(add));
         }
 
         /// <summary>

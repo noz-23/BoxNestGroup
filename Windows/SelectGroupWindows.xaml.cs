@@ -20,19 +20,19 @@ namespace BoxNestGroup.Windows
 {
     /// <summary>
     /// SelectGroupWindows.xaml の相互作用ロジック
+    /// グループ選択画面
     /// </summary>
     public partial class SelectGroupWindows : Window
     {
-        //private ObservableCollection<string> _listGroup = null;
         private HashSet<string> _listSelect  = null;
-
-        public string ListSelectGroup
-        {
-            get
-            {
-                return string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listSelect));
-            }
-        }
+        /// <summary>
+        /// 選択されたグループリスト
+        /// </summary>
+        public string ListSelectGroup { get => string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listSelect)); }
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="groups"></param>
         public SelectGroupWindows( string groups)
         {
             InitializeComponent();
@@ -40,6 +40,10 @@ namespace BoxNestGroup.Windows
             _listSelect = new HashSet<string>( groups.Split("\n"));
             _setCheckedItem(_treeBoxGroup.ItemsSource as ObservableCollection<FolderGroupTreeView>);
         }
+        /// <summary>
+        /// チェックボックスの状態を設定
+        /// </summary>
+        /// <param name="list_"></param>
         private void _setCheckedItem(ObservableCollection<FolderGroupTreeView> list_)
         {
             if (list_ != null)
@@ -52,6 +56,10 @@ namespace BoxNestGroup.Windows
             }
         }
 
+        /// <summary>
+        /// チェックされたアイテムを取得
+        /// </summary>
+        /// <param name="list_"></param>
         private void _getCheckItem(ObservableCollection<FolderGroupTreeView> list_)
         {
             if (list_ != null)
@@ -67,12 +75,22 @@ namespace BoxNestGroup.Windows
             }
         }
 
-
+        /// <summary>
+        /// キャンセルボタンクリック
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _canselButtonClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
             Close();
         }
+
+        /// <summary>
+        /// OKボタンクリック
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _okButtonClick(object sender, RoutedEventArgs e)
         {
             _listSelect.Clear();

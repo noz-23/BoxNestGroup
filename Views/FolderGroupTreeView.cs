@@ -44,7 +44,10 @@ namespace BoxNestGroup.Views
         /// </summary>
         public ObservableCollection<FolderGroupTreeView> ListChild { get; private set; }= new ObservableCollection<FolderGroupTreeView>();
 
-        public FolderGroupTreeView()
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        private FolderGroupTreeView()
         {
             _info = null;
         }
@@ -56,28 +59,32 @@ namespace BoxNestGroup.Views
 
             info_.GetDirectories().ToList().ForEach(info => ListChild.Add(new FolderGroupTreeView(info, this)));
         }
-
-        public bool Contains(string name_)
+        /// <summary>
+        /// グループ名が含まれているか
+        /// </summary>
+        /// <param name="groupName_"></param>
+        /// <returns></returns>
+        public bool Contains(string groupName_)
         {
-            if (GroupName == name_)
+            if (GroupName == groupName_)
             {
                 return true;
             }
 
-            return ListChild?.ToList()?.Find(view=> view.Contains(name_))!=null;
+            return ListChild?.ToList()?.Find(view=> view.Contains(groupName_))!=null;
 
         }
 
-        public IList<FolderGroupTreeView> Find(string name_)
+        public IList<FolderGroupTreeView> Find(string groupName_)
         {
             var list = new List<FolderGroupTreeView>();
-            if (GroupName == name_)
+            if (GroupName == groupName_)
             {
                 list.Add(this);
             }
             foreach (var view in ListChild)
             {
-                list.AddRange(view.Find(name_));
+                list.AddRange(view.Find(groupName_));
             }
 
             return list;

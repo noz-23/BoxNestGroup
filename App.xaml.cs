@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
 using System.Diagnostics;
+using BoxNestGroup.Managers;
 
 namespace BoxNestGroup
 {
@@ -9,6 +10,9 @@ namespace BoxNestGroup
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public App():base()
         {
             // ログ作成
@@ -36,6 +40,8 @@ namespace BoxNestGroup
                 Debug.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
             }
 
+
+            SettingManager.Instance.Create();
         }
         /// <summary>
         /// 初期化

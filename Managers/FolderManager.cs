@@ -14,7 +14,7 @@ namespace BoxNestGroup.Managers
         /// <summary>
         /// シングルトン
         /// </summary>
-        static public FolderManager Instance { get; } = new FolderManager();
+        static public FolderManager Instance { get; private set; } = new FolderManager();
 
         /// <summary>
         /// フォルダ管理パス
@@ -27,10 +27,13 @@ namespace BoxNestGroup.Managers
         /// </summary>
         private FolderManager()
         {
-            Reload();
+            Load();
         }
 
-        public void Reload()
+        /// <summary>
+        /// フォルダの読み込み
+        /// </summary>
+        public void Load()
         {
             var commonDirInfo = new DirectoryInfo(CommonGroupFolderPath);
 
@@ -106,7 +109,6 @@ namespace BoxNestGroup.Managers
             var rtn = new List<string>();
             foreach (var folderName in Directory.GetDirectories(CommonGroupFolderPath, groupName_, System.IO.SearchOption.AllDirectories))
             {
-                //Debug.WriteLine("　find:" + folderName);
                 rtn.Add(folderName.Replace(CommonGroupFolderPath, string.Empty));
             }
 
@@ -144,7 +146,6 @@ namespace BoxNestGroup.Managers
         /// <returns>最小のフォルダ(グループ)名一覧</returns>
         public IList<string> ListMinimumGroup(ICollection<string> listGroupName_)
         {
-            //var listGroupName = SettingManager.Instance.ListBoxGroupMembership.ListGroupNameInUser(userId_);
             var listNest = new HashSet<string>();
             var rtn = new HashSet<string>(listGroupName_);
 
@@ -165,7 +166,6 @@ namespace BoxNestGroup.Managers
             {
                 rtn.Remove(nest);
             }
-
             rtn.Remove(string.Empty);
             return new List<string>(rtn);
         }

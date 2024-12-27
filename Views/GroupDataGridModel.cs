@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
+    /// <summary>
+    /// グループの表示データビュー
+    /// </summary>
     public class GroupDataGridModel : ObservableCollection<GroupDataGridView>
     {
 
@@ -18,10 +22,9 @@ namespace BoxNestGroup.Views
         /// <returns>グループ名</returns>
         public string GetBoxGroupName(string groupId_)
         {
-            var group = this.ToList().Find((d) => (d.GroupId == groupId_));
-
-            return (group == null) ? string.Empty : group.GroupName;
+            return this.ToList().Find((d) => (d.GroupId == groupId_))?.GroupName??string.Empty;
         }
+
         /// <summary>
         /// グループ名からグループIDの取得
         /// </summary>
@@ -29,8 +32,7 @@ namespace BoxNestGroup.Views
         /// <returns>グループID</returns>
         public string GetBoxGroupId(string groupName_)
         {
-            var group = this.ToList().Find((d) => (d.GroupName == groupName_));
-            return (group == null) ? string.Empty : group.GroupId;
+            return this.ToList().Find((d) => (d.GroupName == groupName_))?.GroupId??string.Empty;
         }
 
         /// <summary>

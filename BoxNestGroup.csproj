@@ -39,7 +39,7 @@
   <ItemGroup>
     <PackageReference Include="Box.V2.Core" Version="5.8.0" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
   </ItemGroup>
 

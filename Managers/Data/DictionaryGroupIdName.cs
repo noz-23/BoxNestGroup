@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BoxNestGroup.Managers.Data
 {
+    /// <summary>
+    /// グループIDと名前の対応リスト
+    /// </summary>
     public class DictionaryGroupIdName: Dictionary<string, string>
     {
         /// <summary>
@@ -15,11 +18,17 @@ namespace BoxNestGroup.Managers.Data
         /// </summary>
         private static readonly string _commonGroupSettingPath = Directory.GetCurrentDirectory() + @"\" + Settings.Default.CommonGroupSetting+ @"\SettingGroupIdName.txt";
 
-        public DictionaryGroupIdName()
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public DictionaryGroupIdName():base()
         {
             _loadData();
         }
 
+        /// <summary>
+        /// データを読み込む
+        /// </summary>
         private void _loadData()
         {
             if (File.Exists(_commonGroupSettingPath) == true)
@@ -29,12 +38,19 @@ namespace BoxNestGroup.Managers.Data
 
                 foreach (var item in list)
                 {
+                    if (item.Contains(",") == false)
+                    {
+                        continue;
+                    }
                     var csv = item.Split(',');
                     this[csv[0]] = csv[1];
                 }
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void SavaData()
         {
             using (var fs = File.CreateText(_commonGroupSettingPath))

@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ModGroupName" xml:space="preserve">
-    <value>変更[グループ名]</value>
+  <data name="GroupName" xml:space="preserve">
+    <value>グループ名</value>
   </data>
-  <data name="NowGroupName" xml:space="preserve">
-    <value>現在[グループ名]</value>
+  <data name="UserDisabeld" xml:space="preserve">
+    <value>制限なし</value>
+  </data>
+  <data name="UserEnabled" xml:space="preserve">
+    <value>制限あり</value>
+  </data>
+  <data name="UserUnLimited" xml:space="preserve">
+    <value>無制限</value>
   </data>
 </root>

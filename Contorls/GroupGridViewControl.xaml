@@ -54,30 +54,6 @@
                         </Style>
                     </DataGridColumn.CellStyle>
                 </DataGridTextColumn>
-                <!-- 
-                <DataGridTextColumn Binding="{Binding ModGroupName}" Width="3*">
-                    <DataGridColumn.HeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="Aquamarine"/>
-                        </Style>
-                    </DataGridColumn.HeaderStyle>
-                    <DataGridColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="Aquamarine"/>
-                        </Style>
-                    </DataGridColumn.CellStyle>
-                    <DataGridColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical" >
-                                <TextBlock
-                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                                Text="{x:Static local:MainWindow.MENU_GROUP_NAME}"
-                                                />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridColumn.HeaderTemplate>
-                </DataGridTextColumn>
-                -->
                 <DataGridTextColumn 
                     Header="{x:Static local:MainWindow.MENU_GROUP_ID}"
                     Binding="{Binding GroupId, Mode=OneWay}"

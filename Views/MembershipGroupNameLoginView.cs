@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
-    public class MembershipGroupNameMailView : INotifyPropertyChanged
+    /// <summary>
+    /// メンバシップ(グループ名とユーザーログイン情報)の紐付き情報
+    /// </summary>
+    public class MembershipGroupNameLoginView : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
@@ -22,13 +25,19 @@ namespace BoxNestGroup.Views
         public string GroupName { get; set; } = string.Empty;
 
         /// <summary>
-        /// ユーザーメールアドレス
+        /// ユーザーログイン情報(メールアドレス)
         /// </summary>
-        public string UserAddress { get; private set; } = string.Empty;
-        public MembershipGroupNameMailView(string groupName_, string userAddress_)
+        public string UserLogin { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="groupName_"></param>
+        /// <param name="userLogin_"></param>
+        public MembershipGroupNameLoginView(string groupName_, string userLogin_)
         {
             GroupName = groupName_;
-            UserAddress = userAddress_;
+            UserLogin = userLogin_;
         }
 
     }

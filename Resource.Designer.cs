@@ -61,20 +61,38 @@ namespace BoxNestGroup {
         }
         
         /// <summary>
-        ///   変更[グループ名] に類似しているローカライズされた文字列を検索します。
+        ///   グループ名 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string ModGroupName {
+        internal static string GroupName {
             get {
-                return ResourceManager.GetString("ModGroupName", resourceCulture);
+                return ResourceManager.GetString("GroupName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   現在[グループ名] に類似しているローカライズされた文字列を検索します。
+        ///   制限なし に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string NowGroupName {
+        internal static string UserDisabeld {
             get {
-                return ResourceManager.GetString("NowGroupName", resourceCulture);
+                return ResourceManager.GetString("UserDisabeld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   制限あり に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string UserEnabled {
+            get {
+                return ResourceManager.GetString("UserEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   無制限 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string UserUnLimited {
+            get {
+                return ResourceManager.GetString("UserUnLimited", resourceCulture);
             }
         }
     }

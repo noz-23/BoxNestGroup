@@ -28,7 +28,6 @@
                 Content="作成/更新"
                 Click="_buttonMakeAndRenewUserGroupClick"
              />
-            <Button x:Name="_buttonMakeUser" Content="ユーザー作成" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,1,1,1" Click="_buttonMakeUserButtonClick" Visibility="Collapsed" />
             <Button x:Name="_buttonSaveExcel" Content="Excel保存"   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" Click="saveExcelButtonClick"/>
         </DockPanel>
         <DataGrid

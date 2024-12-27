@@ -21,7 +21,7 @@ namespace BoxNestGroup
         /// <summary>
         /// シングルトン
         /// </summary>
-        public static MainWindow Instance { get; } = new MainWindow(); // App.xaml の編集が必要
+        public static MainWindow Instance { get; private set; } = new MainWindow(); // App.xaml の編集が必要
 
         private MainWindow()
         {
@@ -71,7 +71,7 @@ namespace BoxNestGroup
 
             SettingManager.Instance.ListGroupDataGridView.Clear();
             SettingManager.Instance.ListUserDataGridView.Clear();
-            SettingManager.Instance.ListMembershipGroupNameMail.Clear();
+            SettingManager.Instance.ListMembershipGroupNameLogin.Clear();
             SettingManager.Instance.ListGroupIdName.Clear();
         }
 

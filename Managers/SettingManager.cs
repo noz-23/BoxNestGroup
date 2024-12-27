@@ -27,7 +27,7 @@ namespace BoxNestGroup.Managers
         /// <summary>
         /// シングルトン
         /// </summary>
-        static public SettingManager Instance { get; } = new SettingManager();
+        static public SettingManager Instance { get; private set; } = new SettingManager();
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -39,6 +39,15 @@ namespace BoxNestGroup.Managers
         {
             ListGroupIdName.SavaData();
         }
+
+        public void Create()
+        {
+            ListGroupIdName.Clear();
+            ListGroupDataGridView.Clear();
+            ListUserDataGridView.Clear();
+            ListMembershipGroupNameLogin.Clear();
+        }
+
 
         /// <summary>
         /// ログインネーム
@@ -57,7 +66,7 @@ namespace BoxNestGroup.Managers
         }
 
         /// <summary>
-        /// 
+        /// 保存したグループ名とIDのリスト
         /// </summary>
         public DictionaryGroupIdName ListGroupIdName { get; private set; } = new DictionaryGroupIdName();
         
@@ -75,7 +84,7 @@ namespace BoxNestGroup.Managers
         ///  Box でのグループとユーザーの紐づけ管理
         ///  グループとユーザーの両方でカウントありのためBoxGroupMembershipを登録
         /// </summary>
-        public MembershipGroupNameMailModel ListMembershipGroupNameMail { get; private set; } = new MembershipGroupNameMailModel();
+        public MembershipGroupNameLoginModel ListMembershipGroupNameLogin { get; private set; } = new MembershipGroupNameLoginModel();
 
         /// <summary>
         /// エクセルのシート読み込み処理
@@ -108,7 +117,7 @@ namespace BoxNestGroup.Managers
 
                 foreach (var groupName in listGroup) 
                 {
-                    SettingManager.Instance.ListMembershipGroupNameMail.Add(new MembershipGroupNameMailView(groupName, userMail));
+                    SettingManager.Instance.ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(groupName, userMail));
                 }
             }
 
@@ -144,16 +153,41 @@ namespace BoxNestGroup.Managers
                     }
 
                     worksheet.Cell(row, INDEX_NAME).Value = user.UserName;
-                    worksheet.Cell(row, INDEX_MAIL).Value = user.UserMailAddress;
+                    worksheet.Cell(row, INDEX_MAIL).Value = user.UserLogin;
                     worksheet.Cell(row, INDEX_GROUP).Value = user.ListModAllGroup.Replace("\n", ";");
-                    worksheet.Cell(row, INDEX_STRAGE).Value = (user.UserSpaceUsed == UserDataGridView.APP_UNLIMITED) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
-                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == UserDataGridView.APP_ENABLED) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
+                    worksheet.Cell(row, INDEX_STRAGE).Value = (user.UserSpaceUsed == Resource.UserUnLimited) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
+                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == Resource.UserEnabled) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
                     row++;
 
                 }
 
                 workbook.SaveAs(path_);
             }
+        }
+
+
+        /// <summary>
+        /// グループ名リストからグループIDリストへの変換
+        /// </summary>
+        /// <param name="listGroupName_"></param>
+        /// <returns></returns>
+        public List<string> ConvertGroupNameToId(IList<string> listGroupName_)
+        {
+            var rtn = new List<string>();
+
+            // グループ名からグループIDに変換
+            foreach (var groupName in listGroupName_)
+            {
+                var groupId = ListGroupDataGridView.GetBoxGroupName(groupName);
+
+                if (string.IsNullOrEmpty(groupId) == true)
+                {
+                    continue;
+                }
+                rtn.Add(groupId);
+            }
+
+            return rtn;
         }
     }
 }

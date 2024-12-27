@@ -33,6 +33,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Contorls\GroupGridViewControl.xaml">
       <SubType>Designer</SubType>
     </Page>

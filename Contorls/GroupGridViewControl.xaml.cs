@@ -1,10 +1,6 @@
-﻿using Box.V2.Models;
-using BoxNestGroup;
-using BoxNestGroup.Managers;
+﻿using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
-using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace BoxNestGroup.Contorls
 {
@@ -13,6 +9,9 @@ namespace BoxNestGroup.Contorls
     /// </summary>
     public partial class GroupGridViewControl : System.Windows.Controls.UserControl
     {
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public GroupGridViewControl()
         {
             InitializeComponent();
@@ -21,8 +20,9 @@ namespace BoxNestGroup.Contorls
         /// <summary>
         /// 「グループ作成」ボタン操作
         /// </summary>
-        private async void _buttonMakeAndRenewGroupButtonClick(object sender, RoutedEventArgs e)
+        private async void _buttonMakeAndRenewGroupButtonClick(object sender_, RoutedEventArgs e_)
         {
+            // 更新は削除と追加で行う
             var delList = new List< GroupDataGridView >();
             var addList = new List<GroupDataGridView>();
             foreach (var group in SettingManager.Instance.ListGroupDataGridView)
@@ -46,12 +46,13 @@ namespace BoxNestGroup.Contorls
                     }
                     continue;
                 }
+                // オフライン
                 if (group.GroupId == GroupDataGridView.OFFLINE_GROUP_ID)
                 {
                     if( group.IsSameOldGroupName==false)
                     {
                         FolderManager.Instance.UpdateGroupName(group.OldGroupName, group.GroupName);
-                        SettingManager.Instance.ListMembershipGroupNameMail.UpdateGroupName(group.OldGroupName, group.GroupName);
+                        SettingManager.Instance.ListMembershipGroupNameLogin.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListUserDataGridView.UpdateGroupName(group.OldGroupName, group.GroupName);
 
                         delList.Add(group);
@@ -59,10 +60,9 @@ namespace BoxNestGroup.Contorls
                     }
                 }
             }
-
+            // その場で処理するとエラーになるため
             delList.ForEach(del => SettingManager.Instance.ListGroupDataGridView.Remove(del));
             addList.ForEach(add => SettingManager.Instance.ListGroupDataGridView.Add(add));
-
         }
     }
  }

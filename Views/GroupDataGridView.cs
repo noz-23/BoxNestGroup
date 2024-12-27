@@ -46,12 +46,6 @@ namespace BoxNestGroup.Views
         public int UserCount { get; private set; } = 0;
 
         /// <summary>
-        /// Boxのグループ(オンライン時)
-        /// </summary>
-        //private BoxGroup? _groupBox =null;
-
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         private GroupDataGridView()
@@ -68,7 +62,7 @@ namespace BoxNestGroup.Views
             OldGroupName = groupName_;
             GroupId = OFFLINE_GROUP_ID;
 
-            UserCount = SettingManager.Instance.ListMembershipGroupNameMail.CountBoxUserInGroupName(GroupName);
+            UserCount = SettingManager.Instance.ListMembershipGroupNameLogin.CountBoxUserInGroupName(GroupName);
 
             //_inital();
             //
@@ -93,7 +87,7 @@ namespace BoxNestGroup.Views
             GroupId = group_.Id;
 
             // Boxから取得
-            UserCount = SettingManager.Instance.ListMembershipGroupNameMail.CountBoxUserInGroupName(GroupName);
+            UserCount = SettingManager.Instance.ListMembershipGroupNameLogin.CountBoxUserInGroupName(GroupName);
 
             // グループ名の変更された場合の処理
             string name = string.Empty;
@@ -124,12 +118,6 @@ namespace BoxNestGroup.Views
 
         private int maxNestCount(IList<string> list_)
         {
-            //int count = 1;
-            //foreach (var path in list_)
-            //{
-            //    count = Math.Max(count, path.Length - path.Replace(@"\", "").Length);
-            //}
-            //return count;
             return list_.Max(path => (path.Length - path.Replace(@"\", "").Length));
         }
     }
