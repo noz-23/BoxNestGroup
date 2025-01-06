@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GroupName" xml:space="preserve">
-    <value>グループ名</value>
+  <data name="OfflineName" xml:space="preserve">
+    <value>[OFFLINE]</value>
   </data>
   <data name="UserDisabeld" xml:space="preserve">
     <value>制限なし</value>

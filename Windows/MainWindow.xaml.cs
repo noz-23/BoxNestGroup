@@ -1,4 +1,5 @@
-﻿using BoxNestGroup.Managers;
+﻿using System.IO;
+using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -26,21 +27,34 @@ namespace BoxNestGroup
         private MainWindow()
         {
             InitializeComponent();
+
+            // https://tocsworld.wordpress.com/2014/08/13/%E5%A4%9A%E8%A8%80%E8%AA%9E%E5%AF%BE%E5%BF%9Cc%E3%80%81wpf%E7%B7%A8/
+            var dictionary = new ResourceDictionary();
+            //var uri= new Uri(Directory.GetCurrentDirectory()+ @"\Resources\StringResource.xaml", UriKind.Relative);
+            //var uri = new Uri(@"/Resources/StringResource.xaml", UriKind.Relative);
+            //var uri = new Uri(@"StringResource.xaml", UriKind.Relative);
+            //dictionary.Source = uri;
+
+            //this.Resources.MergedDictionaries.Add(dictionary);
+            //
+            //https://qiita.com/NumAniCloud/items/3d64199aee8876d53f67
+            //https://qiita.com/aonim/items/36d3894c5fe721d9ab49
+
         }
 
-        public const string MENU_USER_SEELCT = "変更";
-        public const string MENU_USER_NAME = "ユーザー名";
-        public const string MENU_USER_ID = "ユーザーID";
-        public const string MENU_USER_MAIL ="メールアドレス";
-        public const string MENU_USER_NOW = "現在[所　属]";
-        public const string MENU_USER_ALL = "現在[全所属]";
-        public const string MENU_USER_MOD = "変更[所　属]";
-        public const string MENU_USER_NEST = "変更[全所属]";
-        public const string MENU_USER_USED = "容量制限";
-        public const string MENU_USER_COLABO = "外部コラボ";
+        //public const string MENU_USER_SEELCT = "変更";
+        //public const string MENU_USER_NAME = "ユーザー名";
+        //public const string MENU_USER_ID = "ユーザーID";
+        //public const string MENU_USER_MAIL ="メールアドレス";
+        //public const string MENU_USER_NOW = "現在[所　属]";
+        //public const string MENU_USER_ALL = "現在[全所属]";
+        //public const string MENU_USER_MOD = "変更[所　属]";
+        //public const string MENU_USER_NEST = "変更[全所属]";
+        //public const string MENU_USER_USED = "容量制限";
+        //public const string MENU_USER_COLABO = "外部コラボ";
 
-        public const string MENU_GROUP_NAME = "グループ名";
-        public const string MENU_GROUP_ID = "グループID";
+        //public const string MENU_GROUP_NAME = "グループ名";
+        //public const string MENU_GROUP_ID = "グループID";
         public const string MENU_GROUP_NEST_MAX = "ネスト最大数";
         public const string MENU_GROUP_FOLDER_NUM = "フォルダ数";
         public const string MENU_GROUP_USER_NUM = "ユーザー数";

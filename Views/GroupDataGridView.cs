@@ -10,12 +10,48 @@ namespace BoxNestGroup.Views
     /// </summary>
     public class GroupDataGridView : INotifyPropertyChanged
     {
-        public const string OFFLINE_GROUP_ID = "[OFFLINE]";
-
+        public enum Status
+        {
+            NONE,
+            NEW,
+            MOD,
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
         {
+            if (_flgInital == true )
+            {
+                _statudData = (string.IsNullOrEmpty(GroupId) == true) ? Status.NEW : Status.MOD;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusName"));
+            }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
+        }
+        private bool _flgInital = false;
+
+        private Status _statudData = Status.NONE;
+        public Status StatudData
+        {
+            get => _statudData;
+            private set
+            {
+                _statudData = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string StatusName
+        {
+            get
+            {
+                switch (StatudData)
+                {
+                    case Status.NEW: return "新規";
+                    case Status.MOD: return "変更";
+                    default:
+                    case Status.NONE:
+                        break;
+                }
+                return "　　";
+            }
         }
 
         /// <summary>
@@ -60,7 +96,7 @@ namespace BoxNestGroup.Views
         {
             GroupName = groupName_;
             OldGroupName = groupName_;
-            GroupId = OFFLINE_GROUP_ID;
+            GroupId = Resource.OfflineName;
 
             UserCount = SettingManager.Instance.ListMembershipGroupNameLogin.CountBoxUserInGroupName(GroupName);
 

@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:BoxNestGroup"
              xmlns:view="clr-namespace:BoxNestGroup.Views"
              xmlns:manager="clr-namespace:BoxNestGroup.Managers"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -35,9 +36,14 @@
             Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
             ItemsSource="{Binding ListGroupDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
             >
+            <DataGrid.RowHeaderStyle>
+                <Style TargetType="{x:Type DataGridRowHeader}">
+                    <Setter Property="Content" Value="{Binding StatusName, Mode=OneWay}"/>
+                </Style>
+            </DataGrid.RowHeaderStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn 
-                    Header="グループ名"
+                    Header="{DynamicResource GroupName}"
                     Binding="{Binding GroupName, Mode=OneWay}"
                     Width="3*"
                     IsReadOnly="True"
@@ -55,25 +61,25 @@
                     </DataGridColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn 
-                    Header="{x:Static local:MainWindow.MENU_GROUP_ID}"
+                    Header="{Binding Mode=OneWay, Source={StaticResource GroupId}}"
                     Binding="{Binding GroupId, Mode=OneWay}"
                     Width="2*"
                     IsReadOnly="True"
                     Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <DataGridTextColumn 
-                    Header="{x:Static local:MainWindow.MENU_GROUP_NEST_MAX}"
+                    Header="{Binding Mode=OneWay, Source={StaticResource GroupNestMax}}"
                     Binding="{Binding MaxNestCount, Mode=OneWay}"
                     Width="*"
                     IsReadOnly="True"
                     Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupNestMax, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <DataGridTextColumn 
-                    Header="{x:Static local:MainWindow.MENU_GROUP_FOLDER_NUM}"
+                    Header="{Binding Mode=OneWay, Source={StaticResource GroupFolderNum}}"
                     Binding="{Binding FolderCount, Mode=OneWay}"
                     Width="*"
                     IsReadOnly="True"
                     Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupFolderCount, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <DataGridTextColumn 
-                    Header="{x:Static local:MainWindow.MENU_GROUP_USER_NUM}"
+                    Header="{Binding Mode=OneWay, Source={StaticResource GroupUserNum}}"
                     Binding="{Binding UserCount, Mode=OneWay}"
                     Width="*"
                     IsReadOnly="True"

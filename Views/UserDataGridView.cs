@@ -28,7 +28,8 @@ namespace BoxNestGroup.Views
         {
             if (_flgInital == true)
             {
-                StatudData =(string.IsNullOrEmpty(UserId) ==true) ? Status.NEW : Status.MOD;
+                _statudData = (string.IsNullOrEmpty(UserId) ==true) ? Status.NEW : Status.MOD;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusName"));
             }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
@@ -36,7 +37,31 @@ namespace BoxNestGroup.Views
 
         private bool _flgInital = false;
 
-        public Status StatudData { get; private set; } = Status.NONE;
+        private Status _statudData = Status.NONE;
+        public Status StatudData
+        {
+            get => _statudData;
+            private set
+            {
+                _statudData = value;
+            }
+        }
+        public string StatusName 
+        {
+            get
+            {
+                switch (StatudData)
+                {
+                    case Status.NEW:return "新規";
+                    case Status.MOD:return "変更";
+                    default:
+                    case Status.NONE:
+                        break;
+                }
+                return "　　";
+            }
+        }
+
 
         /// <summary>
         /// ユーザー名
@@ -165,6 +190,7 @@ namespace BoxNestGroup.Views
             Debug.WriteLine("■BoxUserDataGridView name_[{0}] login_[{1}] listGroup_[{2}] strage_[{3}] colabo_[{4}]", name_, login_, string.Join(",", listGroup_), strage_,colabo_);
             UserName = name_;
             UserLogin = login_;
+            UserId = Resource.OfflineName;
 
             _listNowAllGroup.Clear();
             _listNowAllGroup.AddRange(listGroup_);

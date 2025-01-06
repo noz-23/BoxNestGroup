@@ -47,7 +47,7 @@ namespace BoxNestGroup.Contorls
                     continue;
                 }
                 // オフライン
-                if (group.GroupId == GroupDataGridView.OFFLINE_GROUP_ID)
+                if (group.GroupId == Resource.OfflineName)
                 {
                     if( group.IsSameOldGroupName==false)
                     {

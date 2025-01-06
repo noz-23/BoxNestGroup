@@ -19,6 +19,9 @@ namespace BoxNestGroup.Contorls
         public UserGridViewControl()
         {
             InitializeComponent();
+
+            //var strResouce = System.Windows.Application.LoadComponent(new Uri(@"StringResource.xaml", UriKind.Relative)) as ResourceDictionary;
+            //this.Resources.MergedDictionaries.Add(strResouce);
         }
 
         /// <summary>
@@ -53,6 +56,7 @@ namespace BoxNestGroup.Contorls
                 }
                 if (user.StatudData == UserDataGridView.Status.MOD)
                 {
+                    // 変更
                     var boxUser = await BoxManager.Instance.UpdateUser(user.UserId, user.UserName, user.UserLogin);
                     if (boxUser != null)
                     {
@@ -111,7 +115,12 @@ namespace BoxNestGroup.Contorls
             }
             // ここでcellの内容を処理
             // （cell.DataContextにバインドされたものが入っているかと思います）
-            if (cell.Column.Header.ToString() != MainWindow.MENU_USER_NOW)
+            if (cell.Column.Header==null)
+            {
+                return;
+            }
+            //if (cell.Column.Header.ToString() != MainWindow.MENU_USER_NOW)
+            if (cell.Column.Header.ToString() != this.Resources.FindName("UserGroupNow").ToString())
             {
                 return;
             }

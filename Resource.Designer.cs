@@ -61,11 +61,11 @@ namespace BoxNestGroup {
         }
         
         /// <summary>
-        ///   グループ名 に類似しているローカライズされた文字列を検索します。
+        ///   [OFFLINE] に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string GroupName {
+        internal static string OfflineName {
             get {
-                return ResourceManager.GetString("GroupName", resourceCulture);
+                return ResourceManager.GetString("OfflineName", resourceCulture);
             }
         }
         

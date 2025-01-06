@@ -385,8 +385,15 @@ namespace BoxNestGroup.Managers
             }
         }
 
+        /// <summary>
+        /// ユーザーグループ更新
+        /// </summary>
+        /// <param name="user_"></param>
+        /// <param name="listGroupName_"></param>
+        /// <returns></returns>
         public async Task UpDateGroupUserFromName(BoxUser user_, IList<string> listGroupName_)
         {
+            // 全グループID取得
             var listGroupIdAll = SettingManager.Instance.ListGroupDataGridView.Select(g_ => g_.GroupId);
             var listMembership =new List<BoxGroupMembership>();
             foreach (var groupId in listGroupIdAll)
@@ -401,7 +408,9 @@ namespace BoxNestGroup.Managers
                     listMembership.Add(membership);
                 }              
             }
+            // ユーザーを含むメンバシップ削除
             await DeleteGroupUser(listMembership);
+            // グループ追加
             await AddGroupUserFromName(user_, listGroupName_);
 
             var listGroupId = SettingManager.Instance.ConvertGroupNameToId(listGroupName_);

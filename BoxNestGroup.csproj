@@ -33,7 +33,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Resources\StringResource.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="StringResource.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -74,7 +85,12 @@
     <None Update="Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

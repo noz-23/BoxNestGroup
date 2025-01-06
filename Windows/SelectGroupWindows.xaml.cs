@@ -40,6 +40,7 @@ namespace BoxNestGroup.Windows
             _listSelect = new HashSet<string>( groups.Split("\n"));
             _setCheckedItem(_treeBoxGroup.ItemsSource as ObservableCollection<FolderGroupTreeView>);
         }
+
         /// <summary>
         /// チェックボックスの状態を設定
         /// </summary>
