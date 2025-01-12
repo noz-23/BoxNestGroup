@@ -1,82 +1,71 @@
 ﻿using Box.V2.Models;
-using BoxNestGroup.View;
+using BoxNestGroup.Views;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Diagnostics;
 
-namespace BoxNestGroup.Manager
+namespace BoxNestGroup.Managers
 {
     /// <summary>
     /// フォルダの管理
     /// </summary>
-    class FolderManager
+    public class FolderManager
     {
         /// <summary>
         /// シングルトン
         /// </summary>
-        static public FolderManager Instance { get; } = new FolderManager();
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        private FolderManager()
-        {
-        }
+        static public FolderManager Instance { get; private set; } = new FolderManager();
 
         /// <summary>
         /// フォルダ管理パス
         /// </summary>
         public string CommonGroupFolderPath { get; private set; } = Directory.GetCurrentDirectory() + @"\" + Settings.Default.CommonGroupFolder;
 
+        //private FileSystemWatcher _watcher = null;
         /// <summary>
-        /// フォルダ(グループ名)の一覧
-        /// 　あるなしの判断
+        /// コンストラクタ
         /// </summary>
-        private HashSet<string> _listFolderName = new HashSet<string>();
-        public HashSet<string> ListFolderName
+        private FolderManager()
         {
-            get
+            Load();
+        }
+
+        /// <summary>
+        /// フォルダの読み込み
+        /// </summary>
+        public void Load()
+        {
+            var commonDirInfo = new DirectoryInfo(CommonGroupFolderPath);
+
+            var list = new List<FolderGroupTreeView>();
+            foreach (var info in commonDirInfo.GetDirectories())
             {
-                if (_listFolderName.Count ==0) 
-                {
-                    foreach( var path in ListPathFindFolderName("*")) 
-                    {
-                        var list = path.Split("\\");
-                        _listFolderName.UnionWith(list);
-                    }
-                    _listFolderName.Remove(string.Empty);
-                }
-                return _listFolderName; 
+                list.Add(new FolderGroupTreeView(info,null));
             }
+            list.Sort((a, b) => string.Compare(a.GroupName, b.GroupName));
+            ListFolderTree = new ObservableCollection<FolderGroupTreeView>(list);
         }
 
         /// <summary>
         /// フォルダのツリービュー管理
         /// </summary>
-        private ObservableCollection<FolderGroupTreeView> _listFolderTree = new ObservableCollection<FolderGroupTreeView>();
-        public ObservableCollection<FolderGroupTreeView> ListFolderTree
-        {
-            get
-            {
-                Console.WriteLine("■ListCommonFolder:" + CommonGroupFolderPath);
-                _listFolderTree.Clear();
-
-                //ListFolderName.Clear();
-                // このフォルダリスト
-                var list = new ObservableCollection<FolderGroupTreeView>();
-                list.Add(new FolderGroupTreeView() { GroupName = Settings.Default.ClearGroupName });
-
-                _listFolderTree = listFolder(CommonGroupFolderPath, list);
-                return _listFolderTree;
-            }
-        }
-
+        public ObservableCollection<FolderGroupTreeView> ListFolderTree { get; private set; } = new ObservableCollection<FolderGroupTreeView> ();
 
         /// <summary>
-        /// フォルダ(グループ)作成
+        /// グループ名を含んでるか
         /// </summary>
-        /// <param name="boxGroup_">Boxグループ</param>
-        public void CreateFolder(BoxGroup boxGroup_)
+        /// <param name="name_">グループ名</param>
+        /// <returns></returns>
+        public bool Contains(string name_)
         {
-            CreateFolder(boxGroup_.Name);
+            foreach (var view in ListFolderTree)
+            {
+                if ( view.Contains(name_) ==true)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -85,6 +74,12 @@ namespace BoxNestGroup.Manager
         /// <param name="boxGroup_">グループ名</param>
         public void CreateFolder(string name_) 
         {
+            if (Contains(name_) == true)
+            {
+                // すでにある場合は作らない
+                return;
+            }
+
             var pathName = CommonGroupFolderPath + @"\" + name_;
 
             if (Directory.Exists(pathName) == false)
@@ -99,45 +94,16 @@ namespace BoxNestGroup.Manager
         /// </summary>
         /// <param name="oldName_">古いフォルダ(グループ)名</param>
         /// <param name="newName_">新しいフォルダ(グループ)名</param>
-        public void UpdateFolder(string oldName_, string newName_)
+        public void UpdateGroupName(string oldName_, string newName_)
         {
-            Console.WriteLine("■UpdateFolder old [{0}] new [{1}]", oldName_, newName_);
-            var list = ListPathFindFolderName(oldName_);
+            Debug.WriteLine("■UpdateFolder old [{0}] new [{1}]", oldName_, newName_);
+            var list =new List<FolderGroupTreeView>();
 
-            foreach (var path in list)
-            {
-                var oldPath = CommonGroupFolderPath + path;
-                var newPath = CommonGroupFolderPath + path.Substring(0,path.LastIndexOf(@"\"))+@"\"+ newName_;
-
-                Directory.Move(oldPath,newPath);
-                Console.WriteLine("　UpdateFolder old [{0}] -> new [{1}]", oldPath, newPath);
-            }
+            ListFolderTree.ToList().ForEach(view => list.AddRange(view.Find(oldName_)));
+            list.ForEach(view => view.GroupName = newName_);
         }
 
-        /// <summary>
-        /// フォルダ管理リストの作成
-        /// </summary>
-        /// <param name="path_">パス</param>
-        /// <param name="list_">サブフォルダ(クリア用の表示をするため、関数内で作らない)</param>
-        /// <returns>フォルダ管理リスト</returns>
-        private ObservableCollection<FolderGroupTreeView> listFolder(string path_, ObservableCollection<FolderGroupTreeView> list_)
-        {
-            //Console.WriteLine("■ listFolder :" + path_.Replace(_commonGroupFolderPath,string.Empty));
 
-            // このフォルダリスト
-            foreach (var folderPath in Directory.GetDirectories(path_))
-            {
-                var list = new ObservableCollection<FolderGroupTreeView>();
-                var addData = new FolderGroupTreeView();
-
-                addData.GroupName = System.IO.Path.GetFileName(folderPath);
-                addData.ListNestGroup = listFolder(folderPath, list);
-
-                list_.Add(addData);
-
-            }
-            return list_;
-        }
         /// <summary>
         /// フォルダ(グループ)名を含んだパスリスト(ネスト)一覧
         /// </summary>
@@ -145,12 +111,9 @@ namespace BoxNestGroup.Manager
         /// <returns>パスリスト</returns>
         public IList<string> ListPathFindFolderName(string groupName_) 
         {
-            //Console.WriteLine("■ListPathFindFolderName[{0}]" , groupName_);
-
             var rtn = new List<string>();
             foreach (var folderName in Directory.GetDirectories(CommonGroupFolderPath, groupName_, System.IO.SearchOption.AllDirectories))
             {
-                //Console.WriteLine("　find:" + folderName);
                 rtn.Add(folderName.Replace(CommonGroupFolderPath, string.Empty));
             }
 
@@ -162,7 +125,7 @@ namespace BoxNestGroup.Manager
         /// </summary>
         /// <param name="listGroupName_">ネスト前のグループ名一覧</param>
         /// <returns>全フォルダ(グループ)名一覧</returns>
-        public IList<string> ListUniqueGroup(IList<string> listGroupName_) 
+        public IList<string> ListUniqueGroup(ICollection<string> listGroupName_) 
         {
             var rtn = new HashSet<string>();
 
@@ -180,15 +143,16 @@ namespace BoxNestGroup.Manager
             rtn.Remove(string.Empty);
             return new List<string>(rtn);
         }
+
         /// <summary>
         /// 全フォルダ(グループ)名一覧からネストを削除したグループの取得
         /// </summary>
         /// <param name="listGroupName_">全フォルダ(グループ)名一覧</param>
         /// <returns>最小のフォルダ(グループ)名一覧</returns>
-        public IList<string> ListMinimumGroup(IList<string> listGroupName_)
+        public IList<string> ListMinimumGroup(ICollection<string> listGroupName_)
         {
             var listNest = new HashSet<string>();
-            var rtn =new HashSet<string>(listGroupName_);
+            var rtn = new HashSet<string>(listGroupName_);
 
             // ネストしているフォルダの削除
             foreach (var name in listGroupName_)
@@ -197,19 +161,18 @@ namespace BoxNestGroup.Manager
                 var listPath = ListPathFindFolderName(name);
                 foreach (var path in listPath)
                 {
-                    var nest = path.Substring(0,path.LastIndexOf('\\'));
-                    var list = nest.Split(new char[] { '\\' });
+                    var nest = path.Substring(0, path.LastIndexOf(@"\"));
+                    var list = nest.Split(@"\");
                     listNest.UnionWith(list);
                 }
             }
             // ネストしているフォルダを全グループから削除
-            foreach(var nest in listNest)
+            foreach (var nest in listNest)
             {
                 rtn.Remove(nest);
             }
-
             rtn.Remove(string.Empty);
-            return new List<string>(rtn);
+            return rtn.ToList();
         }
 
     }

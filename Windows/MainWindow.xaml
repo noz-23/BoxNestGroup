@@ -1,0 +1,140 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoxNestGroup"
+        xmlns:views="clr-namespace:BoxNestGroup.Views"
+        xmlns:controls="clr-namespace:BoxNestGroup.Contorls"
+        xmlns:managers="clr-namespace:BoxNestGroup.Managers"
+        xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        x:Class="BoxNestGroup.MainWindow"
+        mc:Ignorable="d"
+        Title="BoxNestGroup" Height="768" Width="1024"
+        Loaded="_windowLoaded"
+        Closing="_windowClosing"
+    >
+    <Window.Resources>
+        <Style TargetType="TextBox" x:Key="_dataGridUserTextBoxStyle">
+            <EventSetter Event="KeyDown" Handler="_dataGridUserTextColumnKeyDown" />
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
+    </Window.Resources>
+    <Grid Cursor="">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="24*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="22*"/>
+        </Grid.RowDefinitions>
+        <Menu x:Name="_menuMain" DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="8">
+            <MenuItem x:Name="_menuSetting" Header="設定">
+                <MenuItem Header="接続設定" Click="_buttonSettingsClick"/>
+                <MenuItem Header="承認" Click="_buttonWebAuthClick"/>
+            </MenuItem>
+            <MenuItem x:Name="_menuShow" Header="表示">
+                <MenuItem x:Name="menuShowUser" Header="ユーザー">
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserId}}"       IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserId}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserLogin}}"    IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserLogin}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserGroupNow}}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserGroupNow}" />
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserGroupAll}}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserGroupAll}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserUsed}}"     IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserUsed}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserColabo}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserColabo}"/>
+                </MenuItem>
+                <MenuItem x:Name="menuShowGroup" Header="グループ">
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupId}}"        IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupId}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupNestMax}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupNestMax}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupFolderNum}}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupFolderCount}" />
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupUserNum}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupUserCount}" />
+                </MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="_menuMenu" Header="メニュー">
+                <MenuItem Header="About" Click="_buttonAboutClick" />
+                <MenuItem Header="終了" />
+            </MenuItem>
+        </Menu>
+        <TextBlock
+            x:Name="_textLogin" 
+            Grid.Row="1" Grid.Column="0"
+            HorizontalAlignment="Left" VerticalAlignment="Center"
+            Margin="1,1,1,1"
+            Text="{Binding LoginName,Source={x:Static managers:SettingManager.Instance},StringFormat=ログイン:{0},Mode=OneWay}"
+            />
+        <DockPanel Grid.Row="1" Grid.Column="2" Margin="1,1,1,1">
+            <Button x:Name="_buttonWebAuth" Content="　承　認　" HorizontalAlignment="Left"  Margin="1,1,1,1" Click="_buttonWebAuthClick"/>
+            <Button x:Name="_buttonOffLine" Content="オフライン" HorizontalAlignment="Right" Margin="1,1,1,1" Click="_buttonOffLineButtonClick"/>
+        </DockPanel>
+        <Button x:Name="_buttonOpenFolder"
+                Grid.Row="2" Grid.Column="0" Content="グループ整理" 
+                HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="1,1,1,1"
+                Click="_buttonOpenFolderClick"/>
+        <TreeView
+            x:Name="_treeViewFolder"
+            Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" 
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            Margin="1,1,1,1"
+            ItemsSource="{Binding ListFolderTree ,Source={x:Static managers:FolderManager.Instance}, Mode=OneWay}"
+            >
+            <TreeView.ItemTemplate >
+                <HierarchicalDataTemplate DataType="{x:Type views:FolderGroupTreeView}" ItemsSource="{Binding ListChild}">
+                    <StackPanel >
+                        <TextBlock Text="{Binding GroupName}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <GridSplitter Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" Background="Gray" />
+        <TabControl x:Name="_tabControlBox" Grid.Row="2" Grid.Column="2" Margin="1,1,1,1" Grid.RowSpan="3" TabStripPlacement="Left" SelectionChanged="_tabControlBoxSelectionChanged">
+            <TabItem Header="ユーザー" Margin="1,1,0,-1"  HorizontalAlignment="Left">
+                <Grid>
+                    <controls:UserGridViewControl
+                        x:Name="_userGridViewControl"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="グループ" Margin="1,1,1,1" HorizontalAlignment="Left">
+                <Grid>
+                    <controls:GroupGridViewControl 
+                        x:Name="_groupGridViewControl"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="メンバシップ" Margin="1,1,1,1" HorizontalAlignment="Left">
+                <Grid >
+                    <controls:MembershipGroupNameMailControl 
+                        x:Name="_membershipGridViewControl"/>
+                </Grid>
+            </TabItem>
+            <!--
+            <TabItem Header="ユーザー名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="23*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="テキストに書いたユーザー名のみ表示します"/>
+                    <TextBox x:Name="_textBoxUserNameFilter" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="グループ名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="23*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="テキストに書いたグループ名のみ表示します"/>
+                    <TextBox x:Name="textBoxGroupNameFilter" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"  />
+                </Grid>
+            </TabItem>
+            -->
+        </TabControl>
+    </Grid>
+</Window>

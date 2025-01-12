@@ -7,11 +7,11 @@
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Title="BoxOAuthWebWindow" Height="768" Width="1024"
-        Closing="windowClosing">
+        Closing="_windowClosing">
     <Grid>
         <!---
         <WebBrowser Name="BoxOAuthWebBrowser" Navigated="boxOAuthWebBrowserNavigated"/>
         -->
-        <wv2:WebView2 Name="BoxOAuthWebBrowser" NavigationCompleted="boxOAuthWebBrowserNavigationCompleted" />
+        <wv2:WebView2 Name="_boxOAuthWebBrowser" NavigationCompleted="_boxOAuthWebBrowserNavigationCompleted" />
     </Grid>
 </Window>

@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:BoxNestGroup">
+    <system:String x:Key="UserName">ユーザー名</system:String>
+    <system:String x:Key="UserId">ユーザーID</system:String>
+    <system:String x:Key="UserLogin">メールアドレス</system:String>
+    <system:String x:Key="UserGroupNow">現在[所　属]</system:String>
+    <system:String x:Key="UserGroupAll">現在[所　属]</system:String>
+    <system:String x:Key="UserUsed">容量制限</system:String>
+    <system:String x:Key="UserColabo">外部コラボ</system:String>
+    <system:String x:Key="GroupName">グループ名</system:String>
+    <system:String x:Key="GroupId">グループID</system:String>
+    <system:String x:Key="GroupNestMax">ネスト最大数</system:String>
+    <system:String x:Key="GroupFolderNum">フォルダ数</system:String>
+    <system:String x:Key="GroupUserNum">ユーザー数</system:String>
+</ResourceDictionary>

@@ -21,8 +21,8 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="buttonCancel" Content="Cancel"  Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="1,1,1,1" Click="cancelClick"/>
-        <Button x:Name="buttonSave" Content="Save"  Grid.Row="5" Grid.Column="3" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Margin="1,1,1,1" Click="saveClick"/>
+        <Button x:Name="buttonCancel" Content="Cancel"  Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,10,10,10" Click="cancelClick"/>
+        <Button x:Name="buttonSave" Content="Save"  Grid.Row="5" Grid.Column="3" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Margin="10,10,10,10" Click="saveClick"/>
         <Label x:Name="labelClientID" Content="ClientID" Grid.Row="0" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,1"/>
         <Label x:Name="labelSecretID" Content="SecretID" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <Label x:Name="labelPortNumber" Content="PortNumber" Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,1"/>

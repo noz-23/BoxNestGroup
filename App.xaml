@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:BoxNestGroup"
              >
     <Application.Resources>
-         
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/StringResource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

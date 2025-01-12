@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
+using System.Diagnostics;
+using BoxNestGroup.Managers;
 
 namespace BoxNestGroup
 {
@@ -8,6 +10,9 @@ namespace BoxNestGroup
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public App():base()
         {
             // ログ作成
@@ -15,7 +20,7 @@ namespace BoxNestGroup
 
             // 基本フォルダ
             var currentFolder = Directory.GetCurrentDirectory();
-            Console.WriteLine("■currentFolder:" + currentFolder.ToString());
+            Debug.WriteLine("■currentFolder:" + currentFolder.ToString());
 
             var commonGroupFolder = currentFolder + @"\" + Settings.Default.CommonGroupFolder;
 
@@ -23,7 +28,7 @@ namespace BoxNestGroup
             if (Directory.Exists(commonGroupFolder) == false)
             {
                 Directory.CreateDirectory(commonGroupFolder);
-                Console.WriteLine("■commonGroupFolder" + commonGroupFolder.ToString());
+                Debug.WriteLine("■commonGroupFolder" + commonGroupFolder.ToString());
             }
 
             var commonGroupSetting = currentFolder + @"\" + Settings.Default.CommonGroupSetting;
@@ -32,9 +37,11 @@ namespace BoxNestGroup
             if (Directory.Exists(commonGroupSetting) == false)
             {
                 Directory.CreateDirectory(commonGroupSetting);
-                Console.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
+                Debug.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
             }
 
+
+            SettingManager.Instance.Create();
         }
         /// <summary>
         /// 初期化

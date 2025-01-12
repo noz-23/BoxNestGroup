@@ -12,7 +12,7 @@ namespace BoxNestGroup {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.12.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -191,60 +191,24 @@ namespace BoxNestGroup {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowUserMail {
+        public bool ShowUserGroupNow {
             get {
-                return ((bool)(this["ShowUserMail"]));
+                return ((bool)(this["ShowUserGroupNow"]));
             }
             set {
-                this["ShowUserMail"] = value;
+                this["ShowUserGroupNow"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowUserNowGroup {
+        public bool ShowUserGroupAll {
             get {
-                return ((bool)(this["ShowUserNowGroup"]));
+                return ((bool)(this["ShowUserGroupAll"]));
             }
             set {
-                this["ShowUserNowGroup"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowUserAllGroup {
-            get {
-                return ((bool)(this["ShowUserAllGroup"]));
-            }
-            set {
-                this["ShowUserAllGroup"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowUserModGroup {
-            get {
-                return ((bool)(this["ShowUserModGroup"]));
-            }
-            set {
-                this["ShowUserModGroup"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowUserNestGroup {
-            get {
-                return ((bool)(this["ShowUserNestGroup"]));
-            }
-            set {
-                this["ShowUserNestGroup"] = value;
+                this["ShowUserGroupAll"] = value;
             }
         }
         
@@ -269,6 +233,18 @@ namespace BoxNestGroup {
             }
             set {
                 this["ShowUserColabo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public string ShowUserLogin {
+            get {
+                return ((string)(this["ShowUserLogin"]));
+            }
+            set {
+                this["ShowUserLogin"] = value;
             }
         }
     }

@@ -47,25 +47,19 @@
     <Setting Name="ShowUserId" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ShowUserMail" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowUserGroupNow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ShowUserNowGroup" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ShowUserAllGroup" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ShowUserModGroup" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ShowUserNestGroup" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowUserGroupAll" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ShowUserUsed" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ShowUserColabo" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowUserLogin" Type="System.String" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

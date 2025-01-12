@@ -7,10 +7,22 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Contorls\GroupGridViewControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Contorls\MembershipGroupNameMailControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Contorls\UserGridViewControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Windows\AboutWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Windows\BoxOauthWebWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\SelectGroupWindows.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Windows\SettingsWindow.xaml.cs">
@@ -21,13 +33,30 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Contorls\GroupGridViewControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Contorls\MembershipGroupNameMailControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Contorls\UserGridViewControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Windows\AboutWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Windows\BoxOauthWebWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="MainWindow.xaml">
+    <Page Update="Windows\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\SelectGroupWindows.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Windows\SettingsWindow.xaml">

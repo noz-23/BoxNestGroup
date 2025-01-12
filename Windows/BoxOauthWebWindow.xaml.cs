@@ -1,6 +1,8 @@
-﻿using BoxNestGroup.Manager;
+﻿using BoxNestGroup.Managers;
+using System.IO;
 using System.Net;
 using System.Windows;
+using System.Diagnostics;
 
 namespace BoxNestGroup
 {
@@ -12,7 +14,7 @@ namespace BoxNestGroup
         /// <summary>
         /// リダイレクト(localhost)の操作
         /// </summary>
-        private HttpListener _listener =null;
+        private HttpListener? _listener =null;
         /// <summary>
         /// ログイン後の表示
         /// </summary>
@@ -30,15 +32,15 @@ namespace BoxNestGroup
         {
             InitializeComponent();
 
-            setListner();
+            _setListner();
 
-            setAuthBox();
+            _setAuthBox();
         }
 
         /// <summary>
         /// listner(ユーザーコード受信)設定
         /// </summary>
-        private void setListner() 
+        private void _setListner() 
         {
             _listener = new HttpListener();
             _listener.Prefixes.Add(string.Format(Settings.Default.ListenUrl, Settings.Default.PortNumber));
@@ -48,11 +50,11 @@ namespace BoxNestGroup
         /// <summary>
         /// Box承認画面の表示
         /// </summary>
-        private void setAuthBox()
+        private void _setAuthBox()
         {
             var url = BoxManager.Instance.AuthorizationUrl;
-            Console.WriteLine("■ setAuthBox url : {0}", url);
-            BoxOAuthWebBrowser.Source = new System.Uri(url);
+            Debug.WriteLine("■ setAuthBox url : {0}", url);
+            _boxOAuthWebBrowser.Source = new System.Uri(url);
         }
 
         /// <summary>
@@ -61,9 +63,9 @@ namespace BoxNestGroup
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void windowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void _windowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _listener.Close();
+            _listener?.Close();
             _listener = null;
         }
 
@@ -71,12 +73,16 @@ namespace BoxNestGroup
         /// ユーザーコード受信待ち
         /// </summary>
         /// <returns>ユーザーコード</returns>
-        private async Task<string> getUserCode()
+        private async Task<string> _getUserCode()
         {
             try
             {
-                var context = await _listener.GetContextAsync();
-                Console.WriteLine("■getUserCode StatusCode[{0}]", context.Response.StatusCode);
+                var context = await _listener?.GetContextAsync() ?? null;
+                if (context == null)
+                {
+                    return string.Empty;
+                }
+                Debug.WriteLine("■getUserCode StatusCode[{0}]", context.Response.StatusCode);
 
                 if (context.Response.StatusCode == (int)HttpStatusCode.OK)
                 {
@@ -90,7 +96,7 @@ namespace BoxNestGroup
             }
             catch (System.Exception ex_)
             {
-                Console.WriteLine("■getUserCode : {0}", ex_.ToString());
+                Debug.WriteLine("■getUserCode : {0}", ex_.ToString());
             }
             return string.Empty;
        }
@@ -100,26 +106,27 @@ namespace BoxNestGroup
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void boxOAuthWebBrowserNavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        private async void _boxOAuthWebBrowserNavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
             if (_loadedTopPage == false)
             {
                 _loadedTopPage = true;
 
-                var userCode = await getUserCode();
+                var userCode = await _getUserCode();
                 if (userCode != string.Empty)
                 {
                     await BoxManager.Instance.CreateBoxClient(userCode);
 
-                    _listener.Stop();
+                    _listener?.Stop();
                     
                     var currentFolder = System.IO.Directory.GetCurrentDirectory();
-                    var uri = currentFolder + _htmlLogin;
+                    //var uri = currentFolder + _htmlLogin;
 
-                    uri ="file:///" + uri.Replace("\\","/");
-                    Console.WriteLine("■ setAuthBox url : {0}", uri);
-                    BoxOAuthWebBrowser.Source = new System.Uri(uri);
-                    
+                    //uri ="file:///" + uri.Replace(@"\","/");
+                    //Debug.WriteLine("■ setAuthBox url : {0}", uri);
+                    //BoxOAuthWebBrowser.Source = new System.Uri(uri);
+
+                    _boxOAuthWebBrowser.NavigateToString(File.ReadAllText(currentFolder));
 
                     Thread.Sleep(1000);
                 }
