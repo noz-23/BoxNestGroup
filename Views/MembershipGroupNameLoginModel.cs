@@ -20,8 +20,7 @@ namespace BoxNestGroup.Views
         //public int CountBoxGroupMemberShip(string groupId_)
         public int CountBoxUserInGroupName(string groupName_)
         {
-            var list = this.ToList().FindAll((d) => (d.GroupName == groupName_));
-            return list.Count;
+            return this.ToList().FindAll((d) => (d.GroupName == groupName_))?.Count ?? 0;
         }
 
         /// <summary>

@@ -18,6 +18,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <UserSecretsId>30228c13-abea-4d14-a6d9-eb8189a796da</UserSecretsId>
     <StartupObject>BoxNestGroup.App</StartupObject>
+    <NeutralLanguage>ja-JP</NeutralLanguage>
+    <AssemblyVersion>0.3.0</AssemblyVersion>
+    <FileVersion>0.3.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,11 +32,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\ListBoxMembership.cs" />
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+    <Page Remove="Resources\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="Resources\StringResource.xaml" />
+    <Compile Remove="Views\ListBoxMembership.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -87,10 +93,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

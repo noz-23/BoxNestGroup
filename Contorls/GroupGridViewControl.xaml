@@ -24,16 +24,22 @@
         <Button
             x:Name="_buttonMakeGroup"
             Content="作成/更新"
-            HorizontalAlignment="Left" VerticalAlignment="Top"
+            HorizontalAlignment="Left" 
             Margin="1,1,1,1"
             Click="_buttonMakeAndRenewGroupButtonClick"/>
-
-        <Label x:Name="labelDescriptionGroup" Content="グループIDがない場合は未作成"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" />
+        <Label
+            x:Name="labelDescriptionGroup"
+            Content="グループIDがない場合は未作成"
+            HorizontalAlignment="Right"
+            Margin="1,1,1,1" />
         <DataGrid
             x:Name="_dataGridGroup"
             Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"
             HorizontalAlignment="Left" VerticalAlignment="Top"
-            Margin="1,1,1,1" CanUserAddRows="True" AutoGenerateColumns="False" HeadersVisibility="Column"
+            Margin="1,1,1,1"
+            AutoGenerateColumns="False"
+            HeadersVisibility="All"
+            CanUserAddRows="True"
             ItemsSource="{Binding ListGroupDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
             >
             <DataGrid.RowHeaderStyle>
@@ -44,11 +50,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn 
                     Header="{DynamicResource GroupName}"
-                    Binding="{Binding GroupName, Mode=OneWay}"
+                    Binding="{Binding GroupName, Mode=TwoWay}"
                     Width="3*"
-                    IsReadOnly="True"
-                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"
-                >
+                    Visibility="{Binding Source={x:Static local:Settings.Default}, Path=ShowGroupId, Converter={StaticResource BoolVisibilityConverter}}"                >
                     <DataGridColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Aquamarine"/>

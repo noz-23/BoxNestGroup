@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 
 namespace BoxNestGroup
 {
@@ -36,8 +37,11 @@ namespace BoxNestGroup
             var stream = new System.IO.StreamWriter(_logFileName);
             stream.AutoFlush = true;
             //Console.Writeメソッドでファイルに出力
-            Console.SetOut(stream);
+            //Console.SetOut(stream);
             //
+
+            Trace.Listeners.Remove("Default");
+            Trace.Listeners.Add(new TextWriterTraceListener(TextWriter.Synchronized(stream)));
         }
     }
 }

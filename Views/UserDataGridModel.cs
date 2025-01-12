@@ -13,6 +13,13 @@ namespace BoxNestGroup.Views
     public class UserDataGridModel: ObservableCollection<UserDataGridView>
     {
         /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public UserDataGridModel() 
+        {
+        }
+
+        /// <summary>
         /// ユーザー名の更新
         /// </summary>
         /// <param name="oldName_">古いグループ</param>

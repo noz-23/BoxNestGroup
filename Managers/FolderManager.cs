@@ -51,6 +51,11 @@ namespace BoxNestGroup.Managers
         /// </summary>
         public ObservableCollection<FolderGroupTreeView> ListFolderTree { get; private set; } = new ObservableCollection<FolderGroupTreeView> ();
 
+        /// <summary>
+        /// グループ名を含んでるか
+        /// </summary>
+        /// <param name="name_">グループ名</param>
+        /// <returns></returns>
         public bool Contains(string name_)
         {
             foreach (var view in ListFolderTree)
@@ -167,7 +172,7 @@ namespace BoxNestGroup.Managers
                 rtn.Remove(nest);
             }
             rtn.Remove(string.Empty);
-            return new List<string>(rtn);
+            return rtn.ToList();
         }
 
     }

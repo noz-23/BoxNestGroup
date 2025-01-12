@@ -29,7 +29,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="27*"/>
+            <RowDefinition Height="22*"/>
         </Grid.RowDefinitions>
         <Menu x:Name="_menuMain" DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="8">
             <MenuItem x:Name="_menuSetting" Header="設定">
@@ -65,8 +65,8 @@
             Text="{Binding LoginName,Source={x:Static managers:SettingManager.Instance},StringFormat=ログイン:{0},Mode=OneWay}"
             />
         <DockPanel Grid.Row="1" Grid.Column="2" Margin="1,1,1,1">
-            <Button x:Name="_buttonWebAuth" Content="　承　認　" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="1,1,1,1" Click="_buttonWebAuthClick"/>
-            <Button x:Name="_buttonOffLine" Content="オフライン" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="1,1,1,1" Click="_buttonOffLineButtonClick"/>
+            <Button x:Name="_buttonWebAuth" Content="　承　認　" HorizontalAlignment="Left"  Margin="1,1,1,1" Click="_buttonWebAuthClick"/>
+            <Button x:Name="_buttonOffLine" Content="オフライン" HorizontalAlignment="Right" Margin="1,1,1,1" Click="_buttonOffLineButtonClick"/>
         </DockPanel>
         <Button x:Name="_buttonOpenFolder"
                 Grid.Row="2" Grid.Column="0" Content="グループ整理" 
@@ -107,7 +107,6 @@
                         x:Name="_membershipGridViewControl"/>
                 </Grid>
             </TabItem>
-
             <!--
             <TabItem Header="ユーザー名&#xa;フィルタ" Margin="1,1,1,1" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <Grid >
@@ -118,7 +117,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="23*"/>
                     </Grid.RowDefinitions>
-                    <Label x:Name="_labelDescriptionUserNameFilter" Grid.Row="0" Grid.Column="0" Content="テキストに書いたユーザー名のみ表示します"/>
+                    <Label Grid.Row="0" Grid.Column="0" Content="テキストに書いたユーザー名のみ表示します"/>
                     <TextBox x:Name="_textBoxUserNameFilter" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
                 </Grid>
             </TabItem>
@@ -131,7 +130,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="23*"/>
                     </Grid.RowDefinitions>
-                    <Label x:Name="labelDescriptionGroupNameFilter" Grid.Row="0" Grid.Column="0" Content="テキストに書いたグループ名のみ表示します"/>
+                    <Label Grid.Row="0" Grid.Column="0" Content="テキストに書いたグループ名のみ表示します"/>
                     <TextBox x:Name="textBoxGroupNameFilter" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" Text="" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"  />
                 </Grid>
             </TabItem>

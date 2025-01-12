@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Reflection;
 
 namespace BoxNestGroup.Windows
 {
@@ -23,6 +24,16 @@ namespace BoxNestGroup.Windows
         private void buttonClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        public string ApplicationVersion 
+        {
+            get
+            {
+                var asmName =Assembly.GetExecutingAssembly().GetName();
+
+                return $"{asmName.Name} Ver.{asmName.Version.ToString()} \nLisence: MIT license\n";
+            }
         }
     }
 }

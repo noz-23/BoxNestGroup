@@ -11,14 +11,8 @@ namespace BoxNestGroup.Views
     /// <summary>
     /// メンバシップ(グループ名とユーザーログイン情報)の紐付き情報
     /// </summary>
-    public class MembershipGroupNameLoginView : INotifyPropertyChanged
+    public class MembershipGroupNameLoginView : BaseView
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
-        }
-
         /// <summary>
         /// グループ名
         /// </summary>

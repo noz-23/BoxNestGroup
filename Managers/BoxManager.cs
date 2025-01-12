@@ -111,7 +111,9 @@ namespace BoxNestGroup.Managers
         /// </summary>
         public bool IsHaveRefreshToken { get=> IsNoData(Settings.Default.RefreshToken?.Trim() ?? string.Empty); }
 
-
+        /// <summary>
+        /// オンライン接続してるか
+        /// </summary>
         public bool IsOnlne { get => _client != null; }
 
         /// <summary>
@@ -177,9 +179,7 @@ namespace BoxNestGroup.Managers
                 try
                 {
                     var currentUser = await _client.UsersManager.GetCurrentUserInformationAsync();
-                    //Debug.WriteLine("■BoxManager LoginUserName:" + currentUser.Name);
                     SettingManager.Instance.LoginName = currentUser.Name;
-                    //return SettingManager.Instance.LoginName;
                 }
                 catch (Exception ex_)
                 {
@@ -187,7 +187,6 @@ namespace BoxNestGroup.Managers
                     Debug.WriteLine(ex_);
                 }
             }
-            //return string.Empty;
         }
 
         /// <summary>
@@ -209,7 +208,6 @@ namespace BoxNestGroup.Managers
                     {
                         SettingManager.Instance.ListGroupDataGridView.Add(new GroupDataGridView(group));
 
-                        //await SettingManager.Instance.ListMembershipGroupNameLogin.AddMemberShipGroupId(group.Id);
                         // Boxからメンバシップ取得
                         var listMembership = await BoxManager.Instance.GetListMemberIdFromGroup(group.Id);
 
@@ -416,6 +414,12 @@ namespace BoxNestGroup.Managers
             var listGroupId = SettingManager.Instance.ConvertGroupNameToId(listGroupName_);
         }
 
+        /// <summary>
+        /// ユーザーの作成
+        /// </summary>
+        /// <param name="userName_">名前</param>
+        /// <param name="userLogin_">メールアドレス</param>
+        /// <returns></returns>
         public async Task<BoxUser> CreateUser(string userName_, string userLogin_)
         {
             Debug.WriteLine($"■BoxManager CreateUser [{userName_}][{userLogin_}]");
@@ -438,6 +442,13 @@ namespace BoxNestGroup.Managers
             return null;
         }
 
+        /// <summary>
+        /// ユーザーの更新
+        /// </summary>
+        /// <param name="userId_">ユーザーID</param>
+        /// <param name="userName_">名前</param>
+        /// <param name="userLogin_">メールアドレス</param>
+        /// <returns></returns>
         public async Task<BoxUser> UpdateUser(string userId_,string userName_, string userLogin_)
         {
             Debug.WriteLine($"■BoxManager UpdateUser [{userId_}][{userName_}][{userLogin_}]");

@@ -14,6 +14,12 @@ namespace BoxNestGroup.Views
     /// </summary>
     public class GroupDataGridModel : ObservableCollection<GroupDataGridView>
     {
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public GroupDataGridModel()
+        { 
+        }
 
         /// <summary>
         /// グループIDからグループ名の取得

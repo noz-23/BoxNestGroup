@@ -23,24 +23,28 @@
         <DockPanel Grid.Row="0" Grid.Column="0" Margin="1,1,1,1">
             <Button
                 x:Name="_buttonAddUserGroup"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
+                HorizontalAlignment="Left" 
                 Margin="1,1,1,1"
                 Content="作成/更新"
                 Click="_buttonMakeAndRenewUserGroupClick"
              />
-            <Button x:Name="_buttonSaveExcel" Content="Excel保存"   HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1,1,1,1" Click="saveExcelButtonClick"/>
+            <Button 
+                x:Name="_buttonSaveExcel"
+                Content="Excel保存"
+                HorizontalAlignment="Right"
+                Margin="1,1,1,1" Click="saveExcelButtonClick"/>
         </DockPanel>
         <DataGrid
             x:Name="_dataGridUser"
             Grid.Row="1"
-            HorizontalAlignment="Center" VerticalAlignment="Top"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
             Margin="1,1,1,1"                       
             ItemsSource="{Binding ListUserDataGridView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
-            CanUserAddRows="True"
             AutoGenerateColumns="False"
             HeadersVisibility="All"
+            CanUserAddRows="True"
             MouseDoubleClick="_dataGridUserMouseDoubleClick"
-        >
+            >
             <DataGrid.RowHeaderStyle>
                 <Style TargetType="{x:Type DataGridRowHeader}">
                     <Setter Property="Content" Value="{Binding StatusName, Mode=OneWay}"/>

@@ -1,38 +1,78 @@
 ﻿using Box.V2.Models;
 using BoxNestGroup.Managers;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using DocumentFormat.OpenXml.Office2013.Drawing.Chart;
+using System.Runtime.CompilerServices;
 
 namespace BoxNestGroup.Views
 {
     /// <summary>
     /// ユーザー情報の表示用クラス
     /// </summary>
-    public class UserDataGridView : INotifyPropertyChanged
+    public class UserDataGridView : BaseView
     {
         public const string BOX_UNLIMITED = "unlimited";
         public const string BOX_ENABLED = "enabled";
         public const string BOX_DISABLED = "disabled";
 
-        public enum Status
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public UserDataGridView():base()
         {
-            NONE,
-            NEW,
-            MOD,
+            _flgInital = true;
+        }
+        /// <summary>
+        /// オンライン時のコンストラクタ
+        /// </summary>
+        /// <param name="user_">Boxユーザー</param>
+        public UserDataGridView(BoxUser user_)
+        {
+            _userBox = user_;
+
+            UserName = user_.Name;
+            UserLogin = user_.Login;
+            UserId = user_.Id;
+
+            _listNowAllGroup.Clear();
+            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_.Login));
+
+            UserSpaceUsed = (user_.SpaceUsed == -1) ? Resource.UserUnLimited : user_.SpaceUsed.ToString();
+            UserExternalCollaborate = (user_.IsExternalCollabRestricted == true) ? Resource.UserEnabled : Resource.UserDisabeld;
+            _flgInital = true;
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
+        /// <summary>
+        /// オフライン時のコンストラクタ
+        /// </summary>
+        /// <param name="name_">ユーザー名</param>
+        /// <param name="mail_">メールアドレス</param>
+        /// <param name="listGroup_">所属グループ</param>
+        /// <param name="strage_">容量制限</param>
+        /// <param name="colabo_">外部コラボ制限</param>
+        public UserDataGridView(string name_, string login_, IList<string> listGroup_, string strage_, string colabo_)
+        {
+            Debug.WriteLine("■BoxUserDataGridView name_[{0}] login_[{1}] listGroup_[{2}] strage_[{3}] colabo_[{4}]", name_, login_, string.Join(",", listGroup_), strage_, colabo_);
+            UserName = name_;
+            UserLogin = login_;
+            UserId = Resource.OfflineName;
+
+            _listNowAllGroup.Clear();
+            _listNowAllGroup.AddRange(listGroup_);
+
+            UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) == true) ? Resource.UserUnLimited : strage_;
+            UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) == true) ? Resource.UserEnabled : Resource.UserDisabeld;
+            _flgInital = true;
+        }
+
+        protected override void _NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
         {
             if (_flgInital == true)
             {
                 _statudData = (string.IsNullOrEmpty(UserId) ==true) ? Status.NEW : Status.MOD;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusName"));
+                base._NotifyPropertyChanged("StatusName");
             }
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
+            base._NotifyPropertyChanged(propertyName_);
         }
 
         private bool _flgInital = false;
@@ -41,25 +81,11 @@ namespace BoxNestGroup.Views
         public Status StatudData
         {
             get => _statudData;
-            private set
-            {
-                _statudData = value;
-            }
+            private set => _statudData = value;
         }
         public string StatusName 
         {
-            get
-            {
-                switch (StatudData)
-                {
-                    case Status.NEW:return "新規";
-                    case Status.MOD:return "変更";
-                    default:
-                    case Status.NONE:
-                        break;
-                }
-                return "　　";
-            }
+            get => StatusString(_statudData);
         }
 
 
@@ -69,12 +95,8 @@ namespace BoxNestGroup.Views
         private string _userName = string.Empty;
         public string UserName
         {
-            get => _userName; 
-            set
-            {
-                _userName = value;
-                NotifyPropertyChanged();
-            }
+            get => _userName;
+            set => _SetValue(ref _userName, value);
         }
         /// <summary>
         /// メールアドレス
@@ -82,12 +104,8 @@ namespace BoxNestGroup.Views
         private string _userLogin = string.Empty;
         public string UserLogin
         {
-            get => _userLogin; 
-            set
-            {
-                _userLogin = value;
-                NotifyPropertyChanged();
-            }
+            get => _userLogin;
+            set =>_SetValue(ref _userLogin, value);
         }
 
         /// <summary>
@@ -111,8 +129,8 @@ namespace BoxNestGroup.Views
                 _listNowAllGroup.Clear();
                 _listNowAllGroup.AddRange(value.Split("\n"));
                 _listNowAllGroup.Sort();
-                NotifyPropertyChanged();
-                NotifyPropertyChanged("ListNowGroup");
+                _NotifyPropertyChanged();
+                _NotifyPropertyChanged("ListNowGroup");
             }
         }
 
@@ -127,8 +145,8 @@ namespace BoxNestGroup.Views
             {
                 _listModGroup.Clear();
                 _listModGroup.AddRange(value.Split("\n"));
-                NotifyPropertyChanged();
-                NotifyPropertyChanged("ListModAllGroup");
+                _NotifyPropertyChanged();
+                _NotifyPropertyChanged("ListModAllGroup");
             }
         }
         /// <summary>
@@ -151,56 +169,6 @@ namespace BoxNestGroup.Views
 
 
         /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        private UserDataGridView()
-        {
-            _flgInital = true;
-        }
-        /// <summary>
-        /// オンライン時のコンストラクタ
-        /// </summary>
-        /// <param name="user_">Boxユーザー</param>
-        public UserDataGridView(BoxUser user_)
-        {
-            _userBox = user_;
-
-            UserName = user_.Name;
-            UserLogin = user_.Login;
-            UserId = user_.Id;
-
-            _listNowAllGroup.Clear();
-            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_.Login));
-
-            UserSpaceUsed = (user_.SpaceUsed == -1) ? Resource.UserUnLimited : user_.SpaceUsed.ToString();
-            UserExternalCollaborate = (user_.IsExternalCollabRestricted ==true) ? Resource.UserEnabled : Resource.UserDisabeld;
-            _flgInital = true;
-        }
-
-        /// <summary>
-        /// オフライン時のコンストラクタ
-        /// </summary>
-        /// <param name="name_">ユーザー名</param>
-        /// <param name="mail_">メールアドレス</param>
-        /// <param name="listGroup_">所属グループ</param>
-        /// <param name="strage_">容量制限</param>
-        /// <param name="colabo_">外部コラボ制限</param>
-        public UserDataGridView(string name_, string login_, IList<string> listGroup_, string strage_, string colabo_)
-        {
-            Debug.WriteLine("■BoxUserDataGridView name_[{0}] login_[{1}] listGroup_[{2}] strage_[{3}] colabo_[{4}]", name_, login_, string.Join(",", listGroup_), strage_,colabo_);
-            UserName = name_;
-            UserLogin = login_;
-            UserId = Resource.OfflineName;
-
-            _listNowAllGroup.Clear();
-            _listNowAllGroup.AddRange(listGroup_);
-
-            UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) ==true) ? Resource.UserUnLimited : strage_;
-            UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) ==true) ? Resource.UserEnabled : Resource.UserDisabeld;
-            _flgInital = true;
-        }
-
-        /// <summary>
         /// グループ名の更新
         /// </summary>
         /// <param name="oldName_">古いグループ</param>
@@ -214,10 +182,5 @@ namespace BoxNestGroup.Views
             }
             _listNowAllGroup.Sort();
         }
-
-        //public void ClearStatus()
-        //{
-        //    StatudData = Status.NONE;
-        //}
     }
 }

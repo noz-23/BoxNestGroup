@@ -14,14 +14,16 @@ namespace BoxNestGroup.Contorls
     public partial class UserGridViewControl : System.Windows.Controls.UserControl
     {
         /// <summary>
+        /// 「StringResouce.xaml」からの読み出し
+        /// </summary>
+        private const string USER_GROUP_NOW = "UserGroupNow";
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public UserGridViewControl()
         {
             InitializeComponent();
-
-            //var strResouce = System.Windows.Application.LoadComponent(new Uri(@"StringResource.xaml", UriKind.Relative)) as ResourceDictionary;
-            //this.Resources.MergedDictionaries.Add(strResouce);
         }
 
         /// <summary>
@@ -119,8 +121,8 @@ namespace BoxNestGroup.Contorls
             {
                 return;
             }
-            //if (cell.Column.Header.ToString() != MainWindow.MENU_USER_NOW)
-            if (cell.Column.Header.ToString() != this.Resources.FindName("UserGroupNow").ToString())
+            // https://gist.github.com/kikuchy/2559432
+            if (cell.Column.Header.ToString() != App.Current.Resources[USER_GROUP_NOW].ToString())
             {
                 return;
             }

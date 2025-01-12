@@ -10,12 +10,14 @@ namespace BoxNestGroup.Views
     /// <summary>
     /// フォルダーツリーのデータ構造
     /// </summary>
-    public class FolderGroupTreeView : INotifyPropertyChanged
+    public class FolderGroupTreeView : BaseView
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        private FolderGroupTreeView()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
+            _info = null;
         }
 
         private DirectoryInfo? _info =null;
@@ -24,12 +26,14 @@ namespace BoxNestGroup.Views
         /// </summary>
         public string GroupName
         {
-            get { return _info?.Name ?? string.Empty; }
+            get => _info?.Name ?? string.Empty; 
             set
             {
                 string newPath = _info?.Parent?.FullName + @"\" + value;
                 _info?.MoveTo(newPath);
-                NotifyPropertyChanged();
+
+                string tmp=string.Empty;
+                _SetValue(ref tmp,newPath);
             }
         }
 
@@ -43,14 +47,6 @@ namespace BoxNestGroup.Views
         /// サブフォルダリスト
         /// </summary>
         public ObservableCollection<FolderGroupTreeView> ListChild { get; private set; }= new ObservableCollection<FolderGroupTreeView>();
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        private FolderGroupTreeView()
-        {
-            _info = null;
-        }
 
         public FolderGroupTreeView(DirectoryInfo info_, FolderGroupTreeView parent_) :this()
         {
