@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace BoxNestGroup.Managers
 {
@@ -85,6 +86,12 @@ namespace BoxNestGroup.Managers
         ///  グループとユーザーの両方でカウントありのためBoxGroupMembershipを登録
         /// </summary>
         public MembershipGroupNameLoginModel ListMembershipGroupNameLogin { get; private set; } = new MembershipGroupNameLoginModel();
+
+        /// <summary>
+        /// フォルダのツリービュー管理
+        /// </summary>
+        public XmlGroupTreeModel ListXmlGroupTreeView { get; private set; } = new XmlGroupTreeModel();
+
 
         /// <summary>
         /// エクセルのシート読み込み処理
@@ -189,5 +196,6 @@ namespace BoxNestGroup.Managers
 
             return rtn;
         }
+
     }
 }

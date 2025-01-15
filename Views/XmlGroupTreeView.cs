@@ -40,7 +40,7 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// サブフォルダリスト
         /// </summary>
-        public ObservableCollection<XmlGroupTreeView> ListChild { get; private set; }= new ObservableCollection<XmlGroupTreeView>();
+        public XmlGroupTreeModel ListChild { get; private set; }= new XmlGroupTreeModel();
 
         /// <summary>
         /// グループ名が含まれているか
@@ -57,19 +57,29 @@ namespace BoxNestGroup.Views
             return ListChild?.ToList()?.Find(view=> view.Contains(groupName_))!=null;
         }
 
-        public IList<XmlGroupTreeView> Find(string groupName_)
+        //public IList<XmlGroupTreeView> Find(string groupName_)
+        //{
+        //    var list = new List<XmlGroupTreeView>();
+        //    if (GroupName == groupName_)
+        //    {
+        //        list.Add(this);
+        //    }
+        //    foreach (var view in ListChild)
+        //    {
+        //        list.AddRange(view.Find(groupName_));
+        //    }
+
+        //    return list;
+        //}
+
+        public void ListAllParentGroupName(ICollection<string> rtn_)
         {
-            var list = new List<XmlGroupTreeView>();
-            if (GroupName == groupName_)
+            if (Parent != null)
             {
-                list.Add(this);
-            }
-            foreach (var view in ListChild)
-            {
-                list.AddRange(view.Find(groupName_));
+                rtn_.Add(Parent.GroupName);
+                Parent.ListAllParentGroupName(rtn_);
             }
 
-            return list;
         }
     }
 }

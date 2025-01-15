@@ -40,10 +40,15 @@ namespace BoxNestGroup.Contorls
                         }
                     }
 
-                    if (FolderManager.Instance.Contains(group.GroupName) == false)
+                    //if (FolderManager.Instance.Contains(group.GroupName) == false)
+                    //{
+                    //    FolderManager.Instance.CreateFolder(group.GroupName);
+                    //}
+                    if (SettingManager.Instance.ListXmlGroupTreeView.Contains(group.GroupName) == false)
                     {
-                        FolderManager.Instance.CreateFolder(group.GroupName);
+                        SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(group.GroupName,null));
                     }
+
                     continue;
                 }
                 // オフライン
@@ -51,7 +56,8 @@ namespace BoxNestGroup.Contorls
                 {
                     if( group.IsSameOldGroupName==false)
                     {
-                        FolderManager.Instance.UpdateGroupName(group.OldGroupName, group.GroupName);
+                        //FolderManager.Instance.UpdateGroupName(group.OldGroupName, group.GroupName);
+                        SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListMembershipGroupNameLogin.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListUserDataGridView.UpdateGroupName(group.OldGroupName, group.GroupName);
 

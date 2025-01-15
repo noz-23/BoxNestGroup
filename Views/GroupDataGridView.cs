@@ -35,9 +35,13 @@ namespace BoxNestGroup.Views
             string name = string.Empty;
 
             // 設定がない場合は作る
-            if (FolderManager.Instance.Contains(GroupName) == false)
+            //if (FolderManager.Instance.Contains(GroupName) == false)
+            //{
+            //    FolderManager.Instance.CreateFolder(GroupName);
+            //}
+            if (SettingManager.Instance.ListXmlGroupTreeView.Contains(GroupName) == false)
             {
-                FolderManager.Instance.CreateFolder(GroupName);
+                SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, null));
             }
             _flgInital = true;
         }
@@ -63,17 +67,26 @@ namespace BoxNestGroup.Views
                 // 設定と現状の名前が違う場合
                 if (GroupName != name)
                 {
-                    if (FolderManager.Instance.Contains(name) == true)
+                    //if (FolderManager.Instance.Contains(name) == true)
+                    //{
+                    //    FolderManager.Instance.UpdateGroupName(name, GroupName);
+                    //}
+                    if (SettingManager.Instance.ListXmlGroupTreeView.Contains(GroupName) == false)
                     {
-                        FolderManager.Instance.UpdateGroupName(name, GroupName);
+                        SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(name, GroupName);
                     }
                 }
             }
             // 設定がない場合は作る
-            if (FolderManager.Instance.Contains(GroupName) == false)
+            //if (FolderManager.Instance.Contains(GroupName) == false)
+            //{
+            //    FolderManager.Instance.CreateFolder(GroupName);
+            //}
+            if (SettingManager.Instance.ListXmlGroupTreeView.Contains(GroupName) == false)
             {
-                FolderManager.Instance.CreateFolder(GroupName);
+                SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName,null));
             }
+
             SettingManager.Instance.ListGroupIdName[GroupId] = GroupName;
             _flgInital = true;
         }
@@ -124,12 +137,15 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 最大のネスト最大数(基本並び替え用)
         /// </summary>
-        public int MaxNestCount { get => maxNestCount(FolderManager.Instance.ListPathFindFolderName(GroupName)); }
+        //public int MaxNestCount { get => maxNestCount(FolderManager.Instance.ListPathFindFolderName(GroupName)); }
+        public int MaxNestCount { get => SettingManager.Instance.ListXmlGroupTreeView.MaxNestCount(GroupName, 0); }
+
 
         /// <summary>
         /// フォルダの数
         /// </summary>
-        public int FolderCount { get => FolderManager.Instance.ListPathFindFolderName(GroupName).Count; }
+        //public int FolderCount { get => FolderManager.Instance.ListPathFindFolderName(GroupName).Count; }
+        public int FolderCount { get => SettingManager.Instance.ListXmlGroupTreeView.NameCount(GroupName, 0); }
 
         /// <summary>
         /// ユーザーの数
