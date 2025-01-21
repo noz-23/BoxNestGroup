@@ -171,9 +171,9 @@ namespace BoxNestGroup
         private void _buttonOpenFolderClick(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("■openFolderClick : {0} {1}", sender, e);
-            Debug.WriteLine("　openFolderClick open: {0}", FolderManager.Instance.CommonGroupFolderPath);
+            //Debug.WriteLine("　openFolderClick open: {0}", FolderManager.Instance.CommonGroupFolderPath);
             //
-            Process.Start("explorer.exe", FolderManager.Instance.CommonGroupFolderPath);
+            //Process.Start("explorer.exe", FolderManager.Instance.CommonGroupFolderPath);
         }
 
         /// <summary>

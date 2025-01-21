@@ -35,7 +35,7 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// ツリービュー表示用
         /// </summary>
-        public XmlGroupTreeView Parent { get; private set; } = null;
+        public XmlGroupTreeView Parent { get; set; } = null;
 
         /// <summary>
         /// サブフォルダリスト
@@ -55,6 +55,15 @@ namespace BoxNestGroup.Views
             }
 
             return ListChild?.ToList()?.Find(view=> view.Contains(groupName_))!=null;
+        }
+
+        public bool Contains(XmlGroupTreeView group_)
+        {
+            if (this == group_)
+            {
+                return true;
+            }
+            return ListChild?.ToList()?.Find(view => view.Contains(group_)) != null;
         }
 
         //public IList<XmlGroupTreeView> Find(string groupName_)

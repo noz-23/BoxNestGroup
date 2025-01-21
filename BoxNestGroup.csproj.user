@@ -10,7 +10,7 @@
     <Compile Update="Contorls\GroupGridViewControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Contorls\GroupTreeView.xaml.cs">
+    <Compile Update="Contorls\GroupTreeViewControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Contorls\MembershipGroupNameMailControl.xaml.cs">
@@ -44,7 +44,7 @@
     <Page Update="Contorls\GroupGridViewControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Contorls\GroupTreeView.xaml">
+    <Page Update="Contorls\GroupTreeViewControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Contorls\MembershipGroupNameMailControl.xaml">

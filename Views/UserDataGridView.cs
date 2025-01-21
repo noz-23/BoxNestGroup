@@ -115,7 +115,8 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 現在所属の最小表示(ネスト分引く)
         /// </summary>
-        public string ListNowGroup{get=>string.Join("\n", FolderManager.Instance.ListMinimumGroup(_listNowAllGroup));}
+        //public string ListNowGroup{get=>string.Join("\n", FolderManager.Instance.ListMinimumGroup(_listNowAllGroup));}
+        public string ListNowGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListMinimumGroup(_listNowAllGroup)); }
 
         /// <summary>
         /// 現在所属の全所属
@@ -152,7 +153,10 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 変更後の前所属(ネスト後)
         /// </summary>
-        public string ListModAllGroup{get=> string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listModGroup));}
+        //public string ListModAllGroup{get=> string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listModGroup));}
+        public string ListModAllGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListUniqueGroup(_listModGroup)); }
+
+
         /// <summary>
         /// ユーザーの領域制限
         /// </summary>
