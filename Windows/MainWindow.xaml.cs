@@ -72,7 +72,8 @@ namespace BoxNestGroup
         private void _windowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Settings.Default.Save();
-            SettingManager.Instance.ListGroupIdName.SavaData();
+            //SettingManager.Instance.ListGroupIdName.SavaData();
+            SettingManager.Instance.ListXmlGroupTreeView.Save();
         }
 
 
@@ -86,7 +87,7 @@ namespace BoxNestGroup
             SettingManager.Instance.ListGroupDataGridView.Clear();
             SettingManager.Instance.ListUserDataGridView.Clear();
             SettingManager.Instance.ListMembershipGroupNameLogin.Clear();
-            SettingManager.Instance.ListGroupIdName.Clear();
+            //SettingManager.Instance.ListGroupIdName.Clear();
         }
 
         /// <summary>

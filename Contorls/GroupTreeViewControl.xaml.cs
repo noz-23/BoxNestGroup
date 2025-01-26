@@ -1,22 +1,7 @@
-﻿using BoxNestGroup.Views;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BoxNestGroup.Managers;
+using BoxNestGroup.Views;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using BoxNestGroup.Managers;
-using System.Windows.Input;
-using System.Windows.Forms;
 
 namespace BoxNestGroup.Contorls
 {
@@ -32,6 +17,7 @@ namespace BoxNestGroup.Contorls
         //private System.Windows.Input.Cursor noneCursor = new System.Windows.Input.Cursor("none.cur");
         //private System.Windows.Input.Cursor moveCursor = new System.Windows.Input.Cursor("move.cur");
         private XmlGroupTreeView _downItem = null;
+        private XmlGroupTreeView _moveItem = null;
 
         private void _previewMouseDown(object sender_, MouseButtonEventArgs e_)
         {
@@ -55,8 +41,18 @@ namespace BoxNestGroup.Contorls
 
             //var cursorPoint = _treeView.PointToScreen(e_.GetPosition(_treeView));
 
-                //DragDrop.DoDragDrop(_treeView, _downItem, System.Windows.DragDropEffects.Copy);
-                this.Cursor = (_downItem != null) ? System.Windows.Input.Cursors.Hand : System.Windows.Input.Cursors.Arrow;
+            //moveElemnt?.IsFocused = false;
+
+            //DragDrop.DoDragDrop(_treeView, _downItem, System.Windows.DragDropEffects.Copy);
+            var elemnt = e_.OriginalSource as FrameworkElement;
+            var _moveItem = elemnt?.DataContext as XmlGroupTreeView;
+
+            this.Cursor = System.Windows.Input.Cursors.Arrow;
+            if(_downItem != _moveItem
+            && _downItem!=null)
+            {
+                this.Cursor =  System.Windows.Input.Cursors.ScrollNS;
+            }
         }
 
         private void _previewMouseUp(object sender_, MouseButtonEventArgs e_)
@@ -87,7 +83,7 @@ namespace BoxNestGroup.Contorls
                 }
                 else if (upItem != _downItem)
                 {
-                    if (upItem?.Contains(_downItem) == false)
+                    if (upItem?.ContainsView(_downItem) == false)
                     {
                         _downItem.Parent?.ListChild.Remove(_downItem);
                         if (_downItem.Parent == null)

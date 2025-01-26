@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Drawing.Charts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,8 @@ using System.Xml.Serialization;
 
 namespace BoxNestGroup.Views
 {
+
+    [XmlRoot]
     public class XmlGroupTreeModel : ObservableCollection<XmlGroupTreeView>
     {
         /// <summary>
@@ -19,24 +22,33 @@ namespace BoxNestGroup.Views
         /// </summary>
         public XmlGroupTreeModel()
         {
-            if (File.Exists(_fileName) ==true)
-            {
-                Open(_fileName);
-            }
         }
         ~XmlGroupTreeModel()
         {
-
-            Save(_fileName);
+            //Save(_fileName);
         }
 
-        private string _fileName = "XmlGroupTree.xml";
+        private string _fileName =Directory.GetCurrentDirectory()+ @"\XmlGroupTree.xml";
 
-        public bool Contains(string groupName_)
+        public bool ContainsName(string groupName_)
         {
             bool rtn = false;
 
-            this.ToList().ForEach(x => rtn |= x.Contains(groupName_));
+            this.ToList().ForEach(x => rtn |= x.ContainsName(groupName_));
+
+            return rtn;
+        }
+
+        public bool ContainsId(string groupId_)
+        {
+            if (string.IsNullOrEmpty(groupId_) == true)
+            {
+                return true;
+            }
+
+            bool rtn = false;
+
+            this.ToList().ForEach(x => rtn |= x.ContainsId(groupId_));
 
             return rtn;
         }
@@ -45,7 +57,7 @@ namespace BoxNestGroup.Views
         {
             bool rtn = false;
 
-            this.ToList().ForEach(x => rtn |= x.Contains(group_));
+            this.ToList().ForEach(x => rtn |= x.ContainsView(group_));
 
             return rtn;
         }
@@ -172,8 +184,43 @@ namespace BoxNestGroup.Views
             }
         }
 
+
+        public IList<XmlGroupTreeView> FindAllGroupId(string groupId_)
+        {
+            var rtn = new List<XmlGroupTreeView>();
+            _findAllGroupId(rtn, groupId_);
+            return rtn;
+        }
+
+        private void _findAllGroupId(ICollection<XmlGroupTreeView> rtn_, string groupId_)
+        {
+            if (string.IsNullOrEmpty(groupId_) == true)
+            {
+                return;
+            }
+            foreach (var view in this)
+            {
+                if (view.GroupId == groupId_)
+                {
+                    rtn_.Add(view);
+                }
+                view.ListChild._findAllGroupId(rtn_, groupId_);
+            }
+        }
+
+
+        public void Open()
+        {
+            Open(_fileName);
+        }   
+
         public void Open(string path_)
         {
+            if (File.Exists(path_) == false)
+            {
+                return;
+            }
+
             var serializer = new XmlSerializer(typeof(XmlGroupTreeModel));
             using (var sr = new StreamReader(path_, Encoding.UTF8))
             {
@@ -182,17 +229,30 @@ namespace BoxNestGroup.Views
                 var listPropert = typeof(XmlGroupTreeModel).GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var p in listPropert)
                 {
-                    typeof(XmlGroupTreeModel)?.GetProperty(p.Name)?.SetValue(this, p.GetValue(xml));
+                    try
+                    {
+                        typeof(XmlGroupTreeModel)?.GetProperty(p.Name)?.SetValue(this, p.GetValue(xml));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Å°Open : {0}", ex.Message);
+                    }
                 }
+                sr.Close();
             }
         }
 
+        public void Save()
+        {
+            Save(_fileName);
+        }
         public void Save(string path_)
         {
             var serializer = new XmlSerializer(typeof(XmlGroupTreeModel));
             using (var sw = new StreamWriter(path_, false, Encoding.UTF8))
             {
                 serializer.Serialize(sw, this);
+                sw.Close();
             }
         }
 

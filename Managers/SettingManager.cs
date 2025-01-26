@@ -34,16 +34,18 @@ namespace BoxNestGroup.Managers
         /// </summary>
         private SettingManager()
         {
+            ListXmlGroupTreeView.Open();
         }
 
         ~SettingManager() 
         {
-            ListGroupIdName.SavaData();
+            //ListGroupIdName.SavaData();
+            //ListXmlGroupTreeView.Save();
         }
 
         public void Create()
         {
-            ListGroupIdName.Clear();
+            //ListGroupIdName.Clear();
             ListGroupDataGridView.Clear();
             ListUserDataGridView.Clear();
             ListMembershipGroupNameLogin.Clear();
@@ -69,7 +71,7 @@ namespace BoxNestGroup.Managers
         /// <summary>
         /// 保存したグループ名とIDのリスト
         /// </summary>
-        public DictionaryGroupIdName ListGroupIdName { get; private set; } = new DictionaryGroupIdName();
+        //public DictionaryGroupIdName ListGroupIdName { get; private set; } = new DictionaryGroupIdName();
         
         /// <summary>
         /// グループビュー

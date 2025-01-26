@@ -25,7 +25,9 @@
             <TreeView.ItemTemplate >
                 <HierarchicalDataTemplate DataType="{x:Type view:XmlGroupTreeView}" ItemsSource="{Binding ListChild}">
                     <StackPanel >
-                        <TextBlock Text="{Binding GroupName}" />
+                        <Border BorderBrush="Black">
+                            <TextBlock Text="{Binding GroupName}" />
+                        </Border>
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
