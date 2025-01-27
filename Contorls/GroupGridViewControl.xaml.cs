@@ -44,11 +44,21 @@ namespace BoxNestGroup.Contorls
                     //{
                     //    FolderManager.Instance.CreateFolder(group.GroupName);
                     //}
-                    if (SettingManager.Instance.ListXmlGroupTreeView.Contains(group.GroupName) == false)
+                    var listTreeView = SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupId(group.GroupId);
+                    foreach (var view in listTreeView)
                     {
-                        SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(group.GroupName,null));
+                        if(view.GroupName != group.GroupName)
+                        {
+                            view.GroupName = group.GroupName;
+                        }
                     }
 
+                    if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(group.GroupName) == false)
+                    {
+                        SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(group.OldGroupName, group.GroupName);
+                        SettingManager.Instance.ListMembershipGroupNameLogin.UpdateGroupName(group.OldGroupName, group.GroupName);
+                        SettingManager.Instance.ListUserDataGridView.UpdateGroupName(group.OldGroupName, group.GroupName);
+                    }
                     continue;
                 }
                 // オフライン

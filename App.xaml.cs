@@ -18,30 +18,30 @@ namespace BoxNestGroup
             // ログ作成
             LogFile.Instance.Create();
 
+            SettingManager.Instance.Create();
             // 基本フォルダ
             var currentFolder = Directory.GetCurrentDirectory();
-            Debug.WriteLine("■currentFolder:" + currentFolder.ToString());
+            LogFile.Instance.WriteLine("■currentFolder:" + currentFolder.ToString());
 
-            var commonGroupFolder = currentFolder + @"\" + Settings.Default.CommonGroupFolder;
+            //var commonGroupFolder = currentFolder + @"\" + Settings.Default.CommonGroupFolder;
 
-            // 基本フォルダがない場合は作成
-            if (Directory.Exists(commonGroupFolder) == false)
-            {
-                Directory.CreateDirectory(commonGroupFolder);
-                Debug.WriteLine("■commonGroupFolder" + commonGroupFolder.ToString());
-            }
+            //// 基本フォルダがない場合は作成
+            //if (Directory.Exists(commonGroupFolder) == false)
+            //{
+            //    Directory.CreateDirectory(commonGroupFolder);
+            //    Debug.WriteLine("■commonGroupFolder" + commonGroupFolder.ToString());
+            //}
 
-            var commonGroupSetting = currentFolder + @"\" + Settings.Default.CommonGroupSetting;
+            //var commonGroupSetting = currentFolder + @"\" + Settings.Default.CommonGroupSetting;
 
-            // 基本フォルダがない場合は作成
-            if (Directory.Exists(commonGroupSetting) == false)
-            {
-                Directory.CreateDirectory(commonGroupSetting);
-                Debug.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
-            }
+            //// 基本フォルダがない場合は作成
+            //if (Directory.Exists(commonGroupSetting) == false)
+            //{
+            //    Directory.CreateDirectory(commonGroupSetting);
+            //    Debug.WriteLine("■commonGroupFolder" + commonGroupSetting.ToString());
+            //}
 
 
-            SettingManager.Instance.Create();
         }
         /// <summary>
         /// 初期化

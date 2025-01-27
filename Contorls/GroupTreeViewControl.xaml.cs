@@ -83,7 +83,7 @@ namespace BoxNestGroup.Contorls
                 }
                 else if (upItem != _downItem)
                 {
-                    if (upItem?.ContainsView(_downItem) == false)
+                    if (_downItem?.ContainsView(upItem) == false)
                     {
                         _downItem.Parent?.ListChild.Remove(_downItem);
                         if (_downItem.Parent == null)

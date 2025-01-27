@@ -1,5 +1,9 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.ComponentModel;
 
 namespace BoxNestGroup
 {
@@ -42,6 +46,10 @@ namespace BoxNestGroup
 
             Trace.Listeners.Remove("Default");
             Trace.Listeners.Add(new TextWriterTraceListener(TextWriter.Synchronized(stream)));
+        }
+        public void WriteLine(string message_, [CallerFilePath]string soruce_ ="", [CallerLineNumber]int line_=-1,[CallerMemberName] string member_="")
+        {
+            Trace.WriteLine($"{DateTime.Now.ToString()} [{Path.GetFileName(soruce_)}({line_})][{member_}]\n{message_}");
         }
     }
 }

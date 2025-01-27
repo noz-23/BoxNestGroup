@@ -1,5 +1,4 @@
 ﻿using Box.V2.Models;
-using BoxNestGroup.Managers.Data;
 using BoxNestGroup.Views;
 using ClosedXML.Excel;
 using System.Collections.ObjectModel;
@@ -34,7 +33,7 @@ namespace BoxNestGroup.Managers
         /// </summary>
         private SettingManager()
         {
-            ListXmlGroupTreeView.Open();
+            //ListXmlGroupTreeView.Open();
         }
 
         ~SettingManager() 
@@ -49,6 +48,8 @@ namespace BoxNestGroup.Managers
             ListGroupDataGridView.Clear();
             ListUserDataGridView.Clear();
             ListMembershipGroupNameLogin.Clear();
+
+            ListXmlGroupTreeView.Open();
         }
 
 

@@ -39,7 +39,7 @@ namespace BoxNestGroup.Views
             //{
             //    FolderManager.Instance.CreateFolder(GroupName);
             //}
-            if (SettingManager.Instance.ListXmlGroupTreeView.Contains(GroupName) == false)
+            if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(GroupName) == false)
             {
                 SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, null));
             }
@@ -62,32 +62,45 @@ namespace BoxNestGroup.Views
 
             // グループ名の変更された場合の処理
             string name = string.Empty;
-            if (SettingManager.Instance.ListGroupIdName.TryGetValue(GroupId, out name) == true)
+            //if (SettingManager.Instance.ListGroupIdName.TryGetValue(GroupId, out name) == true)
+            //{
+            //    // 設定と現状の名前が違う場合
+            //    if (GroupName != name)
+            //    {
+            //        //if (FolderManager.Instance.Contains(name) == true)
+            //        //{
+            //        //    FolderManager.Instance.UpdateGroupName(name, GroupName);
+            //        //}
+            //        if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(GroupName) == false)
+            //        {
+            //            SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(name, GroupName);
+            //        }
+            //    }
+            //}
+            var listTreeView = SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupId(GroupId);
+            foreach (var view in listTreeView)
             {
-                // 設定と現状の名前が違う場合
-                if (GroupName != name)
+                if (view.GroupName != GroupName)
                 {
-                    //if (FolderManager.Instance.Contains(name) == true)
-                    //{
-                    //    FolderManager.Instance.UpdateGroupName(name, GroupName);
-                    //}
-                    if (SettingManager.Instance.ListXmlGroupTreeView.Contains(GroupName) == false)
-                    {
-                        SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(name, GroupName);
-                    }
+                    view.GroupName = GroupName;
                 }
             }
+
             // 設定がない場合は作る
             //if (FolderManager.Instance.Contains(GroupName) == false)
             //{
             //    FolderManager.Instance.CreateFolder(GroupName);
             //}
-            if (SettingManager.Instance.ListXmlGroupTreeView.Contains(GroupName) == false)
+            if (SettingManager.Instance.ListXmlGroupTreeView.ContainsId(GroupId) == false)
             {
-                SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName,null));
+                SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, GroupId, null));
+            }
+            if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(GroupName) == false)
+            {
+                SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, GroupId, null));
             }
 
-            SettingManager.Instance.ListGroupIdName[GroupId] = GroupName;
+            //SettingManager.Instance.ListGroupIdName[GroupId] = GroupName;
             _flgInital = true;
         }
 

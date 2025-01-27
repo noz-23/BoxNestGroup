@@ -225,27 +225,32 @@ namespace BoxNestGroup.Views
             using (var sr = new StreamReader(path_, Encoding.UTF8))
             {
                 var xml = serializer.Deserialize(sr) as XmlGroupTreeModel;
+                LogFile.Instance.WriteLine($"Å°xml {xml?.Count}");
 
-                var listPropert = typeof(XmlGroupTreeModel).GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                foreach (var p in listPropert)
-                {
-                    try
-                    {
-                        typeof(XmlGroupTreeModel)?.GetProperty(p.Name)?.SetValue(this, p.GetValue(xml));
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Å°Open : {0}", ex.Message);
-                    }
-                }
+                //var listPropert = typeof(XmlGroupTreeModel).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                //foreach (var p in listPropert)
+                //{
+                //    try
+                //    {
+                //        typeof(XmlGroupTreeModel)?.GetProperty(p.Name)?.SetValue(this, p.GetValue(xml));
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        LogFile.Instance.WriteLine("Å°Open Error: {0}", ex.Message);
+                //    }
+                //}
+                xml?.ToList().ForEach(x_ => this.Add(x_));
                 sr.Close();
             }
+            LogFile.Instance.WriteLine($"Å°this {this?.Count}");
+
         }
 
         public void Save()
         {
             Save(_fileName);
         }
+
         public void Save(string path_)
         {
             var serializer = new XmlSerializer(typeof(XmlGroupTreeModel));
