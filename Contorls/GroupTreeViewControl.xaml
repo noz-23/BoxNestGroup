@@ -18,10 +18,10 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Margin="1,1,1,1"
             ItemsSource="{Binding ListXmlGroupTreeView ,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
-            PreviewMouseDown="_previewMouseDown"
-            PreviewMouseMove="_previewMouseMove"
-            PreviewMouseUp="_previewMouseUp"
             AllowDrop="True"
+            MouseDown="_mouseDown"
+            MouseMove="_mouseMove"
+            Drop="_drop"
             >
             <TreeView.ItemTemplate >
                 <HierarchicalDataTemplate DataType="{x:Type view:XmlGroupTreeView}" ItemsSource="{Binding ListChild}">
