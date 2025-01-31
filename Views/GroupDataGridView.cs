@@ -151,14 +151,14 @@ namespace BoxNestGroup.Views
         /// 最大のネスト最大数(基本並び替え用)
         /// </summary>
         //public int MaxNestCount { get => maxNestCount(FolderManager.Instance.ListPathFindFolderName(GroupName)); }
-        public int MaxNestCount { get => SettingManager.Instance.ListXmlGroupTreeView.MaxNestCount(GroupName, 0); }
+        public int MaxNestCount { get => SettingManager.Instance.ListXmlGroupTreeView.MaxNestCount(GroupName); }
 
 
         /// <summary>
         /// フォルダの数
         /// </summary>
         //public int FolderCount { get => FolderManager.Instance.ListPathFindFolderName(GroupName).Count; }
-        public int FolderCount { get => SettingManager.Instance.ListXmlGroupTreeView.NameCount(GroupName, 0); }
+        public int FolderCount { get => SettingManager.Instance.ListXmlGroupTreeView.NameCount(GroupName); }
 
         /// <summary>
         /// ユーザーの数

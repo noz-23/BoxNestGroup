@@ -108,14 +108,15 @@ namespace BoxNestGroup.Views
         //    return list;
         //}
 
-        public void ListAllParentGroupName(ICollection<string> rtn_)
+        public IList<string> ListAllParentGroupName()
         {
+            var rtn = new List<string>();
             if (Parent != null)
             {
-                rtn_.Add(Parent.GroupName);
-                Parent.ListAllParentGroupName(rtn_);
+                rtn.Add(Parent.GroupName);
+                rtn.AddRange(Parent.ListAllParentGroupName());
             }
-
+            return rtn;
         }
     }
 }

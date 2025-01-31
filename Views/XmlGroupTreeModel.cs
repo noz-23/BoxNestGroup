@@ -27,9 +27,16 @@ namespace BoxNestGroup.Views
         {
             //Save(_fileName);
         }
-
+        /// <summary>
+        /// 保存ファイル処理
+        /// </summary>
         private string _fileName =Directory.GetCurrentDirectory()+ @"\XmlGroupTree.xml";
 
+        /// <summary>
+        /// 子も含めたグループ名の検索(持っているか)
+        /// </summary>
+        /// <param name="groupName_"></param>
+        /// <returns></returns>
         public bool ContainsName(string groupName_)
         {
             bool rtn = false;
@@ -39,6 +46,11 @@ namespace BoxNestGroup.Views
             return rtn;
         }
 
+        /// <summary>
+        /// 子も含めたグループIDの検索(持っているか)
+        /// </summary>
+        /// <param name="groupId_"></param>
+        /// <returns></returns>
         public bool ContainsId(string groupId_)
         {
             if (string.IsNullOrEmpty(groupId_) == true)
@@ -53,6 +65,11 @@ namespace BoxNestGroup.Views
             return rtn;
         }
 
+        /// <summary>
+        /// 子も含めたViewの検索(持っているか)
+        /// </summary>
+        /// <param name="group_"></param>
+        /// <returns></returns>
         public bool ContainsView(XmlGroupTreeView group_)
         {
             bool rtn = false;
@@ -62,7 +79,11 @@ namespace BoxNestGroup.Views
             return rtn;
         }
 
-
+        /// <summary>
+        /// 名前の更新
+        /// </summary>
+        /// <param name="oldName_"></param>
+        /// <param name="newName_"></param>
         public void UpdateGroupName(string oldName_, string newName_)
         {
             Debug.WriteLine("■UpdateGroupName old [{0}] new [{1}]", oldName_, newName_);
@@ -84,7 +105,7 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="groupName_">フォルダ(グループ)名</param>
         /// <returns>パスリスト</returns>
-        public int MaxNestCount(string groupName_ ,int nest_)
+        public int MaxNestCount(string groupName_ ,int nest_=0)
         {
             int rtn = 0;
             foreach (var view in this)
@@ -100,7 +121,13 @@ namespace BoxNestGroup.Views
             return rtn;
         }
 
-        public int NameCount(string groupName_, int count_)
+        /// <summary>
+        /// 名前のカウント
+        /// </summary>
+        /// <param name="groupName_"></param>
+        /// <param name="count_"></param>
+        /// <returns></returns>
+        public int NameCount(string groupName_, int count_ =0)
         {
             foreach (var view in this)
             {
@@ -119,31 +146,26 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="listGroupName_">全フォルダ(グループ)名一覧</param>
         /// <returns>最小のフォルダ(グループ)名一覧</returns>
-        public IList<string> ListMinimumGroup(ICollection<string> listGroupName_)
+        public IList<string> ListMinimumGroup(List<string> listGroupName_)
         {
             var listNest = new HashSet<string>();
             var rtn = new HashSet<string>(listGroupName_);
 
             // ネストしているフォルダの削除
             var listView = new List<XmlGroupTreeView>();
-            foreach (var groupName in listGroupName_)
-            {
-                _findAllGroupName(listView, groupName);
-            }
+            listGroupName_.ForEach(groupName => listView.AddRange(FindAllGroupName(groupName)));
 
+            // すべての親の名前を取得
             var listParent = new HashSet<string>();
-            foreach (var view in listView)
-            {
-                view.ListAllParentGroupName(listParent);
-            }
+            listView.ForEach(view => listParent.UnionWith(view.ListAllParentGroupName()));
 
+            // 親の名前を削除
             foreach (var del in listParent)
             {
                 rtn.Remove(del);
             }
 
             rtn.Remove(string.Empty);
-
 
             return rtn.ToList();
         }
@@ -153,59 +175,60 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="listGroupName_">ネスト前のグループ名一覧</param>
         /// <returns>全フォルダ(グループ)名一覧</returns>
-        public List<string> ListUniqueGroup(ICollection<string> listGroupName_)
+        public List<string> ListUniqueGroup(List<string> listGroupName_)
         {
 
             var listView =new List<XmlGroupTreeView>();
-            foreach (var group in listGroupName_)
-            {
-                _findAllGroupName(listView, group);
-            }
+
+            listGroupName_.ForEach(groupName=> listView.AddRange(FindAllGroupName(groupName)));
 
             var rtn = new HashSet<string>(listGroupName_);
-            foreach (var view in listView)
-            {
-                view.ListAllParentGroupName(rtn);
-            }
+            listView.ForEach(view => rtn.UnionWith(view.ListAllParentGroupName()));
 
             rtn.Remove(string.Empty);
             return rtn.ToList();
         }
 
-        private void _findAllGroupName(ICollection<XmlGroupTreeView> rtn_, string groupName_)
+        /// <summary>
+        /// グループ名を持ってるViewのすべての取得
+        /// </summary>
+        /// <param name="rtn_"></param>
+        /// <param name="groupName_"></param>
+        public IList<XmlGroupTreeView> FindAllGroupName( string groupName_)
         {
+            var rtn = new List<XmlGroupTreeView>();
             foreach (var view in this)
             {
                 if (view.GroupName == groupName_)
                 {
-                    rtn_.Add(view);
+                    rtn.Add(view);
                 }
-                view.ListChild._findAllGroupName(rtn_, groupName_);
+                rtn.AddRange(view.ListChild.FindAllGroupName(groupName_));
             }
-        }
-
-
-        public IList<XmlGroupTreeView> FindAllGroupId(string groupId_)
-        {
-            var rtn = new List<XmlGroupTreeView>();
-            _findAllGroupId(rtn, groupId_);
             return rtn;
         }
 
-        private void _findAllGroupId(ICollection<XmlGroupTreeView> rtn_, string groupId_)
+        /// <summary>
+        /// グループIDを持ってるViewのすべての取得
+        /// </summary>
+        /// <param name="groupId_"></param>
+        /// <returns></returns>
+        public IList<XmlGroupTreeView> FindAllGroupId(string groupId_)
         {
+            var rtn =new List<XmlGroupTreeView>();
             if (string.IsNullOrEmpty(groupId_) == true)
             {
-                return;
+                return rtn;
             }
             foreach (var view in this)
             {
                 if (view.GroupId == groupId_)
                 {
-                    rtn_.Add(view);
+                    rtn.Add(view);
                 }
-                view.ListChild._findAllGroupId(rtn_, groupId_);
+                rtn.AddRange(view.ListChild.FindAllGroupId( groupId_));
             }
+            return rtn;
         }
 
 
