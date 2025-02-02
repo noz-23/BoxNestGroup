@@ -3,6 +3,8 @@ using System.IO;
 using System.Net;
 using System.Windows;
 using System.Diagnostics;
+using DocumentFormat.OpenXml.CustomProperties;
+using DocumentFormat.OpenXml.InkML;
 
 namespace BoxNestGroup
 {
@@ -53,7 +55,7 @@ namespace BoxNestGroup
         private void _setAuthBox()
         {
             var url = BoxManager.Instance.AuthorizationUrl;
-            Debug.WriteLine("■ setAuthBox url : {0}", url);
+            LogFile.Instance.WriteLine($"■ setAuthBox url : {url}");
             _boxOAuthWebBrowser.Source = new System.Uri(url);
         }
 
@@ -82,7 +84,7 @@ namespace BoxNestGroup
                 {
                     return string.Empty;
                 }
-                Debug.WriteLine("■getUserCode StatusCode[{0}]", context.Response.StatusCode);
+                LogFile.Instance.WriteLine($"StatusCode [{context.Response.StatusCode}]");
 
                 if (context.Response.StatusCode == (int)HttpStatusCode.OK)
                 {
@@ -96,7 +98,7 @@ namespace BoxNestGroup
             }
             catch (System.Exception ex_)
             {
-                Debug.WriteLine("■getUserCode : {0}", ex_.ToString());
+                LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
             }
             return string.Empty;
        }
@@ -119,14 +121,14 @@ namespace BoxNestGroup
 
                     _listener?.Stop();
                     
-                    var currentFolder = System.IO.Directory.GetCurrentDirectory();
+                    var loginFile = System.IO.Directory.GetCurrentDirectory()+@"\"+ Resource.LoginFile;
                     //var uri = currentFolder + _htmlLogin;
 
                     //uri ="file:///" + uri.Replace(@"\","/");
                     //Debug.WriteLine("■ setAuthBox url : {0}", uri);
                     //BoxOAuthWebBrowser.Source = new System.Uri(uri);
 
-                    _boxOAuthWebBrowser.NavigateToString(File.ReadAllText(currentFolder));
+                    _boxOAuthWebBrowser.NavigateToString(File.ReadAllText(File.ReadAllText(loginFile)));
 
                     Thread.Sleep(1000);
                 }

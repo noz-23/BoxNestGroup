@@ -30,8 +30,10 @@ namespace BoxNestGroup.Contorls
                 if (string.IsNullOrEmpty(group.GroupId) == true)
                 {
                     // 新規
-                    if(BoxManager.Instance.IsOnlne)
+                    if(BoxManager.Instance.IsOnlne ==true)
                     {
+                        LogFile.Instance.WriteLine($"OffLine {group.GroupName} {group.GroupId}");
+
                         var boxGroup = await BoxManager.Instance.CreateGroup(group.GroupName);
                         if (boxGroup != null)
                         {
@@ -40,21 +42,32 @@ namespace BoxNestGroup.Contorls
                         }
                     }
 
-                    //if (FolderManager.Instance.Contains(group.GroupName) == false)
-                    //{
-                    //    FolderManager.Instance.CreateFolder(group.GroupName);
-                    //}
-                    var listTreeView = SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupId(group.GroupId);
-                    foreach (var view in listTreeView)
+                    // オンラインのグループID検索
+                    foreach (var view in SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupId(group.GroupId))
                     {
-                        if(view.GroupName != group.GroupName)
+                        // グループIDが同じで名前が違う場合変更
+                        if (view.GroupName != group.GroupName)
                         {
+                            LogFile.Instance.WriteLine($"ID[{group.GroupId}] [{view.GroupName}] -> [{group.GroupName}]");
+                            // グループIDが同じで名前が違う場合変更
                             view.GroupName = group.GroupName;
+                        }
+                    }
+                    foreach (var view in SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupName(group.GroupName))
+                    {
+                        // 名前が同じでグループIDがない場合
+                        if (string.IsNullOrEmpty(view.GroupId)==true)
+                        {
+                            LogFile.Instance.WriteLine($"Name[{group.GroupName}] [{view.GroupId}] -> [{group.GroupId}]");
+                            // 名前が同じでグループIDがない場合
+                            view.GroupId = group.GroupId;
                         }
                     }
 
                     if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(group.GroupName) == false)
                     {
+                        LogFile.Instance.WriteLine($"Update {group.OldGroupName} -> {group.GroupName}");
+                        // 新しいグループ名がない場合
                         SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListMembershipGroupNameLogin.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListUserDataGridView.UpdateGroupName(group.OldGroupName, group.GroupName);

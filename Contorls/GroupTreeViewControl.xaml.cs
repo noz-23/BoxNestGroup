@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Security.Policy;
 
 namespace BoxNestGroup.Contorls
 {
@@ -52,13 +53,15 @@ namespace BoxNestGroup.Contorls
             {
                 return;
             }
-            if (Math.Abs(nowPoint.Y - _startPoint.Y) < SystemParameters.MinimumVerticalDragDistance)
+            if(Math.Abs(nowPoint.Y - _startPoint.Y) < SystemParameters.MinimumVerticalDragDistance)
             {
                 return;
             }
 
             if (_treeView.SelectedItem is XmlGroupTreeView selectView)
             {
+                LogFile.Instance.WriteLine($"selectView {selectView.GroupName} -> {selectView.GroupId}");
+
                 // 選択されたViewをセット
                 DragDrop.DoDragDrop(_treeView, selectView, System.Windows.DragDropEffects.Move);   
             }
@@ -83,6 +86,8 @@ namespace BoxNestGroup.Contorls
 
                     if (dragView?.ContainsView(dropView) == false)
                     {
+                        LogFile.Instance.WriteLine($"selectView {dropView.GroupName} -> {dropView.GroupId}");
+                        //
                         var listRemove = dragView.Parent?.ListChild ?? SettingManager.Instance.ListXmlGroupTreeView;
                         listRemove.Remove(dragView);
                         dragView.Parent = dropView;
@@ -95,10 +100,17 @@ namespace BoxNestGroup.Contorls
             }
         }
 
-        private void _mouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void _mouseDoubleClick(object sender_, MouseButtonEventArgs e_)
         {
             var win = new MakeGroupWindow();
-            win.ShowDialog();
+            if(win.ShowDialog()== true)
+            {
+                var element =e_.OriginalSource as FrameworkElement;
+                var item = element?.DataContext as XmlGroupTreeView;
+
+                LogFile.Instance.WriteLine($"■ _mouseDoubleClick url : {item}");
+
+            }
         }
     }
 }

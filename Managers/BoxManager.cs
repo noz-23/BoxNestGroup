@@ -4,8 +4,6 @@ using Box.V2.Config;
 using Box.V2.Models;
 using Box.V2.Models.Request;
 using BoxNestGroup.Views;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -71,7 +69,8 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public async Task CreateBoxClient(string userCode_)
         {
-            Debug.WriteLine("■BoxManager CreateBoxClient userCode_:{0}", userCode_);
+            LogFile.Instance.WriteLine($"UserCode [{userCode_}]");
+
             if (_client == null)
             {
                 return ;
@@ -84,9 +83,9 @@ namespace BoxNestGroup.Managers
                 session = await _client.Auth.RefreshAccessTokenAsync(session.AccessToken);
                 _client = new BoxClient(_config, session);
             }
-            catch (Exception ex)
+            catch (Exception ex_)
             {
-                Debug.WriteLine("　BoxManager CreateBoxClient:{0}", ex.Message);
+                LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
             }
 
             SetTokens(_client.Auth.Session.AccessToken, _client.Auth.Session.RefreshToken);
@@ -124,7 +123,7 @@ namespace BoxNestGroup.Managers
             // トークンがあればそのトークンを使って再セッション
             var accessToken = Settings.Default.AccessToken;
             string refreshToken = (IsHaveRefreshToken == false) ? "" : Settings.Default.RefreshToken;
-            Debug.WriteLine("■BoxManager OAuthToken : AccessToken[{0}] RefreshToken[{1}]", accessToken, refreshToken);
+            LogFile.Instance.WriteLine($"OAuthToken AccessToken[{accessToken}] RefreshToken[{refreshToken}]");
 
             // リフレッシュトークン取得
             var session = new OAuthSession(accessToken, refreshToken, Constants.AccessTokenExpirationTime, Constants.BearerTokenType);
@@ -139,7 +138,7 @@ namespace BoxNestGroup.Managers
         /// </summary>
         public async Task RefreshToken()
         {
-            Debug.WriteLine("■BoxManager RefreshToken");
+            LogFile.Instance.WriteLine($"RefreshToken");
             if (_client == null)
             {
                 return;
@@ -159,7 +158,8 @@ namespace BoxNestGroup.Managers
         /// <param name="refreshToken_">リフレッシュトークン</param>
         public void SetTokens(string accessToken_, string refreshToken_)
         {
-            Debug.WriteLine("■BoxManager SeTokens Access[{0}] Refresh[{1}]", accessToken_, refreshToken_);
+            LogFile.Instance.WriteLine($"Access[{accessToken_}] Refresh[{refreshToken_}]");
+
 
             Settings.Default.AccessToken = accessToken_;
             Settings.Default.RefreshToken = refreshToken_;
@@ -174,19 +174,19 @@ namespace BoxNestGroup.Managers
         //public async Task<string> LoginUserName()
         public async Task GetLoginUser()
         {
-            if (_client != null) 
-            {
+            //if (_client != null) 
+            //{
                 try
                 {
-                    var currentUser = await _client.UsersManager.GetCurrentUserInformationAsync();
-                    SettingManager.Instance.LoginName = currentUser.Name;
+                    var currentUser = await _client?.UsersManager.GetCurrentUserInformationAsync();
+                    SettingManager.Instance.LoginName = currentUser?.Name?? "取得失敗";
                 }
                 catch (Exception ex_)
                 {
                     SettingManager.Instance.LoginName = "取得失敗";
-                    Debug.WriteLine(ex_);
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
         }
 
         /// <summary>
@@ -194,16 +194,17 @@ namespace BoxNestGroup.Managers
         /// </summary>
         public async Task GetListGroupData()
         {
-            Debug.WriteLine("■GetListGroupData");
-            if (_client != null)
-            {
+            //if (_client != null)
+            //{
                 try
                 {
+                    LogFile.Instance.WriteLine($"GetListGroupData");
+
                     SettingManager.Instance.ListGroupDataGridView.Clear();
                     SettingManager.Instance.ListMembershipGroupNameLogin.Clear();
 
                     // Boxからグループデータ取得
-                    var listGroup = await _client.GroupsManager.GetAllGroupsAsync();
+                    var listGroup = await _client?.GroupsManager.GetAllGroupsAsync();
                     foreach (var group in listGroup.Entries)
                     {
                         SettingManager.Instance.ListGroupDataGridView.Add(new GroupDataGridView(group));
@@ -216,9 +217,9 @@ namespace BoxNestGroup.Managers
                 }
                 catch (Exception ex_)
                 {
-                    Debug.WriteLine("　ListGroupData:" + ex_.ToString());
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
         }
         /// <summary>
         /// Boxにグループを作成
@@ -227,19 +228,20 @@ namespace BoxNestGroup.Managers
         /// <returns>作成したBoxグループ</returns>
         public async Task<BoxGroup> CreateGroup(string groupName_)
         {
-            Debug.WriteLine("■BoxManager CreateGroup [{0}]", groupName_);
-            if (_client != null)
-            {
+            LogFile.Instance.WriteLine($"CreateGroup [{groupName_}]");
+
+            //if (_client != null)
+            //{
                 try
                 {
                     var request = new BoxGroupRequest() { Name = groupName_ };
-                    return await _client.GroupsManager.CreateAsync(request);
+                    return await _client?.GroupsManager.CreateAsync(request);
                 }
                 catch (Exception ex_)
                 {
-                    Debug.WriteLine("　BoxManager CreateGroup:" + ex_.ToString());
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
             return null;
         }
 
@@ -252,19 +254,20 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public async Task<BoxGroup> UpdateGroupName(string groupId_, string groupName_)
         {
-            Debug.WriteLine(string.Format("■UpdateGroupName : id[{0}] name[{0}]", groupId_, groupName_));
-            if (_client != null)
-            {
+            LogFile.Instance.WriteLine($"UpdateGroup [{groupId_}] [{groupName_}]");
+
+            //if (_client != null)
+            //{
                 try
                 {
                     var request = new BoxGroupRequest() { Id = groupId_, Name = groupName_ };
-                    return await _client.GroupsManager.UpdateAsync(groupId_, request);
+                    return await _client?.GroupsManager.UpdateAsync(groupId_, request);
                 }
                 catch (Exception ex_)
                 {
-                    Debug.WriteLine("　UpdateGroupName:" + ex_.ToString());
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
 
             return null;
         }
@@ -276,17 +279,19 @@ namespace BoxNestGroup.Managers
         /// <returns>所属するメンバシップ(グループとユーザの紐付け)の取得</returns>
         public async Task<BoxCollection<BoxGroupMembership>> GetListMemberIdFromGroup(string gorupId_)
         {
-            if (_client != null)
-            {
+            LogFile.Instance.WriteLine($"GetListMember [{gorupId_}]");
+
+            //if (_client != null)
+            //{
                 try
                 {
-                    return await _client.GroupsManager.GetAllGroupMembershipsForGroupAsync(gorupId_);
+                    return await _client?.GroupsManager.GetAllGroupMembershipsForGroupAsync(gorupId_);
                 }
                 catch (Exception ex_)
                 {
-                    Debug.WriteLine(string.Format("\tBoxManager ListMemberIdFromGroup{0}" , ex_.ToString()));
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
             return null;
         }
 
@@ -296,12 +301,12 @@ namespace BoxNestGroup.Managers
         /// <returns>全ユーザーの取得(データービュー)</returns>
         public async Task GetListUserData()
         {
-            Debug.WriteLine("■BoxManager GetListUserData");
-            if (_client != null)
-            {
+            LogFile.Instance.WriteLine($"GetListUserData");
+            //if (_client != null)
+            //{
                 try
                 {
-                    var listUser = await _client.UsersManager.GetEnterpriseUsersAsync();
+                    var listUser = await _client?.UsersManager.GetEnterpriseUsersAsync();
 
                     SettingManager.Instance.ListUserDataGridView.Clear();
 
@@ -309,9 +314,9 @@ namespace BoxNestGroup.Managers
                 }
                 catch (Exception ex_)
                 {
-                    Debug.WriteLine("　ListUserData:" + ex_.ToString());
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
         }
 
         /// <summary>
@@ -321,10 +326,10 @@ namespace BoxNestGroup.Managers
         /// <param name="listGroupId_">追加するグループIDのリスト</param>
         public async Task AddGroupUserFromId(BoxUser user_, IList<string> listGroupId_) 
         {
-            Debug.WriteLine(string.Format("■BoxManager AddGroupUser userId_[{0}] listGroupId_[{1}]", user_.Id, string.Join(",", listGroupId_)));
-            if (_client != null)
-            {
-                foreach (var groupId in listGroupId_)
+            LogFile.Instance.WriteLine($"AddGroupUser[{user_.Name}] [{user_.Id}] [{user_.Login}] [{string.Join(",", listGroupId_)}]");
+            //if (_client != null)
+            //{
+            foreach (var groupId in listGroupId_)
                 {
                     var request = new BoxGroupMembershipRequest()
                     {
@@ -334,16 +339,16 @@ namespace BoxNestGroup.Managers
 
                     try
                     {
-                        await _client.GroupsManager.AddMemberToGroupAsync(request);
+                        await _client?.GroupsManager.AddMemberToGroupAsync(request);
 
                         SettingManager.Instance.ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(groupId,user_.Login));
                     }
                     catch (Exception ex_)
                     {
-                        Debug.WriteLine("　AddGroupUser:" + ex_.ToString());
-                    }
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
             }
+            //}
         }
 
         /// <summary>
@@ -354,7 +359,9 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public async Task AddGroupUserFromName(BoxUser user_, IList<string> listGroupName_)
         {
-            Debug.WriteLine(string.Format("■BoxManager AddGroupUser userId_[{0}] listGroupName_[{1}]", user_.Id, string.Join(",", listGroupName_)));
+            //Debug.WriteLine(string.Format("■BoxManager AddGroupUser userId_[{0}] listGroupName_[{1}]", user_.Id, string.Join(",", listGroupName_)));
+            LogFile.Instance.WriteLine($"AddGroupUser[{user_.Name}] [{user_.Id}] [{user_.Login}] [{string.Join(",", listGroupName_)}]");
+
             // グループ名からグループIDに変換
             await AddGroupUserFromId(user_, SettingManager.Instance.ConvertGroupNameToId(listGroupName_));
         }
@@ -365,22 +372,22 @@ namespace BoxNestGroup.Managers
         /// <param name="list_">削除するメンバシップ(グループとユーザーの紐付け)のリスト</param>
         public async Task DeleteGroupUser(IList<BoxGroupMembership> list_)
         {
-            Debug.WriteLine("■BoxManager DeleteGroupUser");
-            if (_client != null)
-            {
+            LogFile.Instance.WriteLine($"DeleteGroupUser [{list_.Count}]");
+            //if (_client != null)
+            //{
                 foreach (var member in list_)
                 {
-                    Debug.WriteLine("　BoxManager DeleteGroupUser id[{0}] group[{1}] user[{2}]", member.Id, member.Group.Id, member.User.Id);
-                    try
-                    {
-                        var rtn = await _client.GroupsManager.DeleteGroupMembershipAsync(member.Id);
+                LogFile.Instance.WriteLine($"DeleteGroupUser Member[{member.Id}] Group[{member.Group.Id}] User[{member.User.Id}]");
+                try
+                {
+                        var rtn = await _client?.GroupsManager.DeleteGroupMembershipAsync(member.Id);
                     }
                     catch (Exception ex_)
                     {
-                        Debug.WriteLine("　BoxManager DeleteGroupUser:" + ex_.ToString());
+                        LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                     }
                 }
-            }
+            //}
         }
 
         /// <summary>
@@ -391,6 +398,8 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public async Task UpDateGroupUserFromName(BoxUser user_, IList<string> listGroupName_)
         {
+            LogFile.Instance.WriteLine($"UpDateGroupUser [{user_.Id}] [{user_.Name}] [{user_.Login}] [{string.Join(",", listGroupName_)}]");
+
             // 全グループID取得
             var listGroupIdAll = SettingManager.Instance.ListGroupDataGridView.Select(g_ => g_.GroupId);
             var listMembership =new List<BoxGroupMembership>();
@@ -422,9 +431,9 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public async Task<BoxUser> CreateUser(string userName_, string userLogin_)
         {
-            Debug.WriteLine($"■BoxManager CreateUser [{userName_}][{userLogin_}]");
-            if (_client != null)
-            {
+            LogFile.Instance.WriteLine($"CreateUser [{userName_}][{userLogin_}]");
+            //if (_client != null)
+            //{
                 try
                 {
                     var request = new BoxUserRequest()
@@ -436,9 +445,9 @@ namespace BoxNestGroup.Managers
                 }
                 catch (Exception ex_)
                 {
-                    Debug.WriteLine("　BoxManager CreateUser:" + ex_.ToString());
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
             return null;
         }
 
@@ -451,9 +460,9 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public async Task<BoxUser> UpdateUser(string userId_,string userName_, string userLogin_)
         {
-            Debug.WriteLine($"■BoxManager UpdateUser [{userId_}][{userName_}][{userLogin_}]");
-            if (_client != null)
-            {
+            LogFile.Instance.WriteLine($"UpdateUser [{userId_}][{userName_}][{userLogin_}]");
+            //if (_client != null)
+            //{
                 try
                 {
                     var request = new BoxUserRequest()
@@ -466,9 +475,9 @@ namespace BoxNestGroup.Managers
                 }
                 catch (Exception ex_)
                 {
-                    Debug.WriteLine("　UpdateUser CreateUser:" + ex_.ToString());
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
                 }
-            }
+            //}
             return null;
         }
 
@@ -480,7 +489,7 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         private bool IsNoData(string data_, [CallerMemberName] string propertyName_="")
         {
-            Debug.WriteLine($"■BoxManager {propertyName_} : {data_}");
+            LogFile.Instance.WriteLine($"IsNoData [{data_}][{propertyName_}]");
 
             switch (data_)
             {

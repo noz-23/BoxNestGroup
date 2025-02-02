@@ -10,28 +10,20 @@
     xmlns:manager="clr-namespace:BoxNestGroup.Managers"    
     xmlns:system="clr-namespace:System;assembly=mscorlib"    
     mc:Ignorable="d" 
-    d:DesignHeight="450" d:DesignWidth="800">
+    d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
         <TreeView
             x:Name="_treeView"
             Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" 
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Margin="1,1,1,1"
-            ItemsSource="{Binding ListXmlGroupTreeView ,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
             AllowDrop="True"
             MouseDown="_mouseDown"
             MouseMove="_mouseMove"
             Drop="_drop"
+            MouseDoubleClick="_mouseDoubleClick"
             >
-            <TreeView.ItemTemplate >
-                <HierarchicalDataTemplate DataType="{x:Type view:XmlGroupTreeView}" ItemsSource="{Binding ListChild}">
-                    <StackPanel >
-                        <Border BorderBrush="Black">
-                            <TextBlock Text="{Binding GroupName}" />
-                        </Border>
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
+            <Menu x:Name="menu"/>
         </TreeView>
     </Grid>
 </UserControl>

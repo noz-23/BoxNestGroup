@@ -24,9 +24,13 @@ namespace BoxNestGroup.Views
         /// <param name="groupName_">グループ名</param>
         public GroupDataGridView(string groupName_)
         {
+            LogFile.Instance.WriteLine($"{groupName_}");
+            //
             GroupName = groupName_;
             OldGroupName = groupName_;
-            GroupId = Resource.OfflineName;
+
+            GroupId = SettingManager.Instance.ListXmlGroupTreeView.FindGroupId(groupName_);
+            GroupId =(string.IsNullOrEmpty(GroupId) == true )?( Resource.OfflineName) :( GroupId);
 
             UserCount = SettingManager.Instance.ListMembershipGroupNameLogin.CountBoxUserInGroupName(GroupName);
 
@@ -52,6 +56,7 @@ namespace BoxNestGroup.Views
         /// <param name="group_">Boxグループ</param>
         public GroupDataGridView(BoxGroup group_)
         {
+            LogFile.Instance.WriteLine($"{group_.Id} {group_.Name}");
             //_groupBox = group_;
             GroupName = group_.Name;
             OldGroupName = group_.Name;
@@ -95,7 +100,21 @@ namespace BoxNestGroup.Views
             {
                 SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, GroupId, null));
             }
-            if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(GroupName) == false)
+
+            var listAllGroupName = SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupName(GroupName);
+
+
+            if (listAllGroupName.Count>0)
+            {
+                foreach (var view in listAllGroupName)
+                {
+                    if (string.IsNullOrEmpty(view.GroupId)==true)
+                    {
+                        view.GroupId = GroupId;
+                    }
+                }
+            }
+            else
             {
                 SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, GroupId, null));
             }
@@ -104,8 +123,10 @@ namespace BoxNestGroup.Views
             _flgInital = true;
         }
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName_"></param>
         protected override void _NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
         {
             if (_flgInital == true )
@@ -143,6 +164,7 @@ namespace BoxNestGroup.Views
         public bool IsSameOldGroupName { get => GroupName == OldGroupName; }
 
         public string OldGroupName { get; private set; } = string.Empty;
+
         /// <summary>
         /// グループID
         /// </summary>
@@ -172,9 +194,5 @@ namespace BoxNestGroup.Views
         /// <param name="list_">パス一覧</param>
         /// <returns>最大のネスト数</returns>
 
-        private int maxNestCount(IList<string> list_)
-        {
-            return list_.Max(path => (path.Length - path.Replace(@"\", "").Length));
-        }
     }
 }

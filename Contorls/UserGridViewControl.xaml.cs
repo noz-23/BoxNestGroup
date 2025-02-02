@@ -45,6 +45,7 @@ namespace BoxNestGroup.Contorls
                 //if (string.IsNullOrEmpty(user.UserId) == true)
                 if(user.StatudData == UserDataGridView.Status.NEW)
                 {
+                    LogFile.Instance.WriteLine($"新規 [{user.UserName}] [{user.UserLogin}]");
                     // 新規
                     var boxUser = await BoxManager.Instance.CreateUser(user.UserName, user.UserLogin);
                     if (boxUser != null)
@@ -58,6 +59,7 @@ namespace BoxNestGroup.Contorls
                 }
                 if (user.StatudData == UserDataGridView.Status.MOD)
                 {
+                    LogFile.Instance.WriteLine($"変更 [{user.UserName}] [{user.UserLogin}]");
                     // 変更
                     var boxUser = await BoxManager.Instance.UpdateUser(user.UserId, user.UserName, user.UserLogin);
                     if (boxUser != null)
@@ -83,7 +85,7 @@ namespace BoxNestGroup.Contorls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveExcelButtonClick(object sender, RoutedEventArgs e)
+        private void saveExcelButtonClick(object sender_, RoutedEventArgs e_)
         {
             var dlg = new SaveFileDialog();
 
@@ -99,11 +101,10 @@ namespace BoxNestGroup.Contorls
             SettingManager.Instance.SaveExcelFile(path);
         }
 
-        private void _dataGridUserMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void _dataGridUserMouseDoubleClick(object sender_, MouseButtonEventArgs e_)
         {
-            Debug.WriteLine("■_dataGridUserMouseDoubleClick : {0} {1}", sender, e);
             // https://qiita.com/kabosu/items/2e905a532632c1512e65
-            var elem = e.MouseDevice.DirectlyOver as FrameworkElement;
+            var elem = e_.MouseDevice.DirectlyOver as FrameworkElement;
             if (elem == null)
             {
                 return;
@@ -131,7 +132,7 @@ namespace BoxNestGroup.Contorls
             {
                 return;
             }
-            Debug.WriteLine("■_dataGridUserMouseDoubleClick Cell : {0} {1}", data.ListNowGroup, data.ListNowAllGroup);
+            LogFile.Instance.WriteLine($"変更 [{data.ListNowGroup}] [{data.ListNowAllGroup}]");
 
             var selectGroupWin = new SelectGroupWindows(data.ListNowGroup);
 

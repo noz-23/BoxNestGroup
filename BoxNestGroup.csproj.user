@@ -27,7 +27,10 @@
     <Compile Update="Windows\BoxOauthWebWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Windows\SelectGroupWindows.xaml.cs">
+    <Compile Update="Windows\MakeGroupWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\SelectGroupWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Windows\SettingsWindow.xaml.cs">
@@ -38,7 +41,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Resource.resx">
+    <EmbeddedResource Update="Properties\Resource.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -64,7 +67,10 @@
     <Page Update="Windows\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Windows\SelectGroupWindows.xaml">
+    <Page Update="Windows\MakeGroupWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\SelectGroupWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Windows\SettingsWindow.xaml">
