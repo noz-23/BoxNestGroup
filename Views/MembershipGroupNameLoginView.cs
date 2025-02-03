@@ -30,6 +30,8 @@ namespace BoxNestGroup.Views
         /// <param name="userLogin_"></param>
         public MembershipGroupNameLoginView(string groupName_, string userLogin_)
         {
+            LogFile.Instance.WriteLine($"[{groupName_}] [{userLogin_}]");
+
             GroupName = groupName_;
             UserLogin = userLogin_;
         }

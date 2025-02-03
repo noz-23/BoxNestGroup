@@ -26,6 +26,8 @@ namespace BoxNestGroup.Views
         /// <param name="newName_">新しいグループ</param>
         public void UpdateGroupName(string oldName_, string newName_)
         {
+            LogFile.Instance.WriteLine($"[{oldName_}] -> [{newName_}]");
+
             this.ToList().ForEach(m => m.UpdateGroupName(oldName_, newName_));
         }
     }

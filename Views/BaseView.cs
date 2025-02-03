@@ -44,7 +44,15 @@ namespace BoxNestGroup.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
         }
 
-        protected  bool _SetValue<T>(ref T field_, T value_, [CallerMemberName] string propertyName_ ="")
+        /// <summary>
+        /// プロパティの値を設定する
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="field_"></param>
+        /// <param name="value_"></param>
+        /// <param name="propertyName_"></param>
+        /// <returns></returns>
+        protected bool _SetValue<T>(ref T field_, T value_, [CallerMemberName] string propertyName_ ="")
         {
             if (EqualityComparer<T>.Default.Equals(field_, value_))
             {

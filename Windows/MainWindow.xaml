@@ -1,23 +1,21 @@
 ﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BoxNestGroup"
-        xmlns:view="clr-namespace:BoxNestGroup.Views"
-        xmlns:control="clr-namespace:BoxNestGroup.Contorls"
-        xmlns:manager="clr-namespace:BoxNestGroup.Managers"
-        xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
-        x:Class="BoxNestGroup.MainWindow"
-        mc:Ignorable="d"
-        Title="BoxNestGroup" Height="768" Width="1024"
-        Loaded="_windowLoaded"
-        Closing="_windowClosing"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:BoxNestGroup"
+    xmlns:view="clr-namespace:BoxNestGroup.Views"
+    xmlns:control="clr-namespace:BoxNestGroup.Contorls"
+    xmlns:manager="clr-namespace:BoxNestGroup.Managers"
+    xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    xmlns:property="clr-namespace:BoxNestGroup.Properties"
+    x:Class="BoxNestGroup.MainWindow"
+    mc:Ignorable="d"
+    Title="BoxNestGroup" Height="768" Width="1024"
+    Loaded="_windowLoaded"
+    Closing="_windowClosing"
     >
     <Window.Resources>
-        <Style TargetType="TextBox" x:Key="_dataGridUserTextBoxStyle">
-            <EventSetter Event="KeyDown" Handler="_dataGridUserTextColumnKeyDown" />
-        </Style>
         <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
     </Window.Resources>
     <Grid Cursor="">
@@ -38,18 +36,18 @@
             </MenuItem>
             <MenuItem x:Name="_menuShow" Header="表示">
                 <MenuItem x:Name="menuShowUser" Header="ユーザー">
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserId}}"       IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserId}"/>
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserLogin}}"    IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserLogin}"/>
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserGroupNow}}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserGroupNow}" />
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserGroupAll}}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserGroupAll}"/>
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserUsed}}"     IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserUsed}"/>
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserColabo}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowUserColabo}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserId}}"       IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowUserId}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserLogin}}"    IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowUserLogin}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserGroupNow}}" IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowUserGroupNow}" />
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserGroupAll}}" IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowUserGroupAll}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserUsed}}"     IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowUserUsed}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource UserColabo}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowUserColabo}"/>
                 </MenuItem>
                 <MenuItem x:Name="menuShowGroup" Header="グループ">
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupId}}"        IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupId}"/>
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupNestMax}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupNestMax}"/>
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupFolderNum}}" IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupFolderCount}" />
-                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupUserNum}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static local:Settings.Default}, Mode=TwoWay, Path=ShowGroupUserCount}" />
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupId}}"        IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowGroupId}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupNestMax}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowGroupNestMax}"/>
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupFolderNum}}" IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowGroupFolderCount}" />
+                    <MenuItem Header="{Binding Mode=OneWay, Source={StaticResource GroupUserNum}}"   IsCheckable="True" IsChecked="{Binding Source={x:Static property:Settings.Default}, Mode=TwoWay, Path=ShowGroupUserCount}" />
                 </MenuItem>
             </MenuItem>
             <MenuItem x:Name="_menuMenu" Header="メニュー">

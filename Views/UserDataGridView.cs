@@ -27,6 +27,8 @@ namespace BoxNestGroup.Views
         /// <param name="user_">Boxユーザー</param>
         public UserDataGridView(BoxUser user_)
         {
+            LogFile.Instance.WriteLine($"[{user_.Id}] [{user_.Name}] [{user_.Login}]");
+
             _userBox = user_;
 
             UserName = user_.Name;
@@ -36,8 +38,8 @@ namespace BoxNestGroup.Views
             _listNowAllGroup.Clear();
             _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_.Login));
 
-            UserSpaceUsed = (user_.SpaceUsed == -1) ? Resource.UserUnLimited : user_.SpaceUsed.ToString();
-            UserExternalCollaborate = (user_.IsExternalCollabRestricted == true) ? Resource.UserEnabled : Resource.UserDisabeld;
+            UserSpaceUsed = (user_.SpaceUsed == -1) ? Properties.Resource.UserUnLimited : user_.SpaceUsed.ToString();
+            UserExternalCollaborate = (user_.IsExternalCollabRestricted == true) ? Properties.Resource.UserEnabled : Properties.Resource.UserDisabeld;
             _flgInital = true;
         }
 
@@ -51,16 +53,17 @@ namespace BoxNestGroup.Views
         /// <param name="colabo_">外部コラボ制限</param>
         public UserDataGridView(string name_, string login_, IList<string> listGroup_, string strage_, string colabo_)
         {
-            Debug.WriteLine("■BoxUserDataGridView name_[{0}] login_[{1}] listGroup_[{2}] strage_[{3}] colabo_[{4}]", name_, login_, string.Join(",", listGroup_), strage_, colabo_);
+            LogFile.Instance.WriteLine($"[{name_}] [{login_}] [{string.Join(",", listGroup_)}]");
+
             UserName = name_;
             UserLogin = login_;
-            UserId = Resource.OfflineName;
+            UserId = Properties.Resource.OfflineName;
 
             _listNowAllGroup.Clear();
             _listNowAllGroup.AddRange(listGroup_);
 
-            UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) == true) ? Resource.UserUnLimited : strage_;
-            UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) == true) ? Resource.UserEnabled : Resource.UserDisabeld;
+            UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) == true) ? Properties.Resource.UserUnLimited : strage_;
+            UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) == true) ? Properties.Resource.UserEnabled : Properties.Resource.UserDisabeld;
             _flgInital = true;
         }
 

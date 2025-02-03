@@ -61,12 +61,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resource.Designer.cs">
+    <Compile Update="Properties\Resource.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Update="Settings.Designer.cs">
+    <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -74,7 +74,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resource.resx">
+    <EmbeddedResource Update="Properties\Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -88,7 +88,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Update="Settings.settings">
+    <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
+using BoxNestGroup.Properties;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,8 @@ using System.Windows.Input;
 using System.Diagnostics;
 using BoxNestGroup.Windows;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.InkML;
 
 namespace BoxNestGroup
 {
@@ -110,42 +113,48 @@ namespace BoxNestGroup
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _dataGridUserTextColumnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Return && ( e.KeyboardDevice.Modifiers & ModifierKeys.Shift) >0)
-            {
-                Debug.WriteLine("　DataGridUserTextColumnKeyDown : {0} {1}", sender, e);
+        //private void _dataGridUserTextColumnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.Return && ( e.KeyboardDevice.Modifiers & ModifierKeys.Shift) >0)
+        //    {
 
-                var textBox = sender as System.Windows.Controls.TextBox;
-                if (textBox == null) 
-                {
-                    return;
-                }
-                int pos = textBox.CaretIndex;
-                textBox.Text = textBox.Text.Insert(pos, "\n");
-                textBox.CaretIndex = pos+1;
-                e.Handled = true;
+        //        Debug.WriteLine("　DataGridUserTextColumnKeyDown : {0} {1}", sender, e);
 
-            }
-        }
+        //        var textBox = sender as System.Windows.Controls.TextBox;
+        //        if (textBox == null) 
+        //        {
+        //            return;
+        //        }
+        //        int pos = textBox.CaretIndex;
+        //        textBox.Text = textBox.Text.Insert(pos, "\n");
+        //        textBox.CaretIndex = pos+1;
+        //        e.Handled = true;
 
+        //    }
+        //}
+    //<Window.Resources>
+    //    <Style TargetType = "TextBox" x:Key="_dataGridUserTextBoxStyle">
+    //        <EventSetter Event = "KeyDown" Handler="_dataGridUserTextColumnKeyDown" />
+    //    </Style>
+    //    <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
+    //</Window.Resources>
         /// <summary>
         /// タブ移動した場合の表示更新(フィルター)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _tabControlBoxSelectionChanged(object sender, RoutedEventArgs e)
+        private void _tabControlBoxSelectionChanged(object sender_, RoutedEventArgs e_)
         {
-            Debug.WriteLine("■_tabControlBoxSelectionChanged : {0} {1}", sender, e);
+            LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
         }
 
         /// <summary>
         /// 「設定」ボタン操作
         ///  設定画面の表示
         /// </summary>
-        private void _buttonSettingsClick(object sender, RoutedEventArgs e)
+        private void _buttonSettingsClick(object sender_, RoutedEventArgs e_)
         {
-            Debug.WriteLine("■settingsClick : {0} {1}", sender, e);
+            LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
             //
             var win = new SettingsWindow();
             win.Owner = this;
@@ -156,9 +165,9 @@ namespace BoxNestGroup
         /// 「About」ボタン操作
         ///  About画面の表示
         /// </summary>
-        private void _buttonAboutClick(object sender, RoutedEventArgs e)
+        private void _buttonAboutClick(object sender_, RoutedEventArgs e_)
         {
-            Debug.WriteLine("■settingsClick : {0} {1}", sender, e);
+            LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
             //
             var win = new AboutWindow();
             win.Owner = this;
@@ -169,9 +178,9 @@ namespace BoxNestGroup
         /// 「About」ボタン操作
         ///  About画面の表示
         /// </summary>
-        private void _buttonOpenFolderClick(object sender, RoutedEventArgs e)
+        private void _buttonOpenFolderClick(object sender_, RoutedEventArgs e_)
         {
-            Debug.WriteLine("■openFolderClick : {0} {1}", sender, e);
+            LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
             //Debug.WriteLine("　openFolderClick open: {0}", FolderManager.Instance.CommonGroupFolderPath);
             //
             //Process.Start("explorer.exe", FolderManager.Instance.CommonGroupFolderPath);
@@ -181,16 +190,16 @@ namespace BoxNestGroup
         /// 「承認」ボタン操作
         ///  BoxへOAuth2承認
         /// </summary>
-        private async void _buttonWebAuthClick(object sender, RoutedEventArgs e)
+        private async void _buttonWebAuthClick(object sender_, RoutedEventArgs e_)
         {
+            LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
+
             if (BoxManager.Instance.IsHaveClientID == false
              || BoxManager.Instance.IsSecretID == false)
             {
                 System.Windows.MessageBox.Show("｢設定｣から｢アプリID｣と｢シークレットID｣を設定してください。", "注意");
                 return;
             }
-
-            Debug.WriteLine("■webAuthClick : {0} {1}", sender, e);
             //
             if (BoxManager.Instance.IsHaveAccessToken == false)
             {
@@ -214,10 +223,11 @@ namespace BoxNestGroup
                 _buttonOffLine.IsEnabled = false;
 
             }
-            catch (Exception ex)
+            catch (Exception ex_)
             {
                 // 承認失敗したらクリア
-                Debug.WriteLine(ex.Message);
+                LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
+
                 BoxManager.Instance.SetTokens(string.Empty, string.Empty);
 
                 clearBox("再取得");
@@ -233,9 +243,9 @@ namespace BoxNestGroup
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _buttonOffLineButtonClick(object sender, RoutedEventArgs e)
+        private void _buttonOffLineButtonClick(object sender_, RoutedEventArgs e_)
         {
-            Debug.WriteLine("■renewUserButtonClick : {0} {1}", sender, e);
+            LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
 
             var dlg = new OpenFileDialog();
 

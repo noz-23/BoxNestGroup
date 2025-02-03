@@ -1,4 +1,5 @@
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -86,7 +87,7 @@ namespace BoxNestGroup.Views
         /// <param name="newName_"></param>
         public void UpdateGroupName(string oldName_, string newName_)
         {
-            Debug.WriteLine("¡UpdateGroupName old [{0}] new [{1}]", oldName_, newName_);
+            LogFile.Instance.WriteLine($"[{oldName_}] -> [{newName_}]");
             var list = new List<XmlGroupTreeView>();
 
             foreach (var view in this)
@@ -229,6 +230,13 @@ namespace BoxNestGroup.Views
                 rtn.AddRange(view.ListChild.FindAllGroupId( groupId_));
             }
             return rtn;
+        }
+
+        public string FindGroupId(string groupName_)
+        {
+            var rtn =FindAllGroupName(groupName_);
+
+            return (rtn.Count > 0) ? (rtn[0].GroupId ): string.Empty;
         }
 
 

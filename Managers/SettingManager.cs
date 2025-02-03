@@ -1,15 +1,13 @@
-﻿using Box.V2.Models;
-using BoxNestGroup.Views;
+﻿using BoxNestGroup.Views;
 using ClosedXML.Excel;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using DocumentFormat.OpenXml.Presentation;
 
 namespace BoxNestGroup.Managers
 {
+    /// <summary>
+    /// 設定管理クラス
+    /// </summary>
     public class SettingManager: INotifyPropertyChanged
     {
         private const int INDEX_NAME = 1;
@@ -68,11 +66,6 @@ namespace BoxNestGroup.Managers
                 NotifyPropertyChanged("LoginName");
             }               
         }
-
-        /// <summary>
-        /// 保存したグループ名とIDのリスト
-        /// </summary>
-        //public DictionaryGroupIdName ListGroupIdName { get; private set; } = new DictionaryGroupIdName();
         
         /// <summary>
         /// グループビュー
@@ -102,6 +95,8 @@ namespace BoxNestGroup.Managers
         /// <param name="sheet_">エクセルのシート</param>
         public void LoadExcelSheet(IXLWorksheet sheet_)
         {
+            LogFile.Instance.WriteLine($"Load RowCount{sheet_.RowCount()}");
+
             var listGroup =new HashSet<string>();
 
             // 1行目はヘッダーのため飛ばし
@@ -143,6 +138,7 @@ namespace BoxNestGroup.Managers
         /// <param name="path_"></param>
         public void SaveExcelFile(string path_)
         {
+            LogFile.Instance.WriteLine($"Save RowCount{path_}");
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.AddWorksheet(1);
@@ -165,8 +161,8 @@ namespace BoxNestGroup.Managers
                     worksheet.Cell(row, INDEX_NAME).Value = user.UserName;
                     worksheet.Cell(row, INDEX_MAIL).Value = user.UserLogin;
                     worksheet.Cell(row, INDEX_GROUP).Value = user.ListModAllGroup.Replace("\n", ";");
-                    worksheet.Cell(row, INDEX_STRAGE).Value = (user.UserSpaceUsed == Resource.UserUnLimited) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
-                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == Resource.UserEnabled) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
+                    worksheet.Cell(row, INDEX_STRAGE).Value = (user.UserSpaceUsed == Properties.Resource.UserUnLimited) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
+                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == Properties.Resource.UserEnabled) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
                     row++;
 
                 }
@@ -181,8 +177,10 @@ namespace BoxNestGroup.Managers
         /// </summary>
         /// <param name="listGroupName_"></param>
         /// <returns></returns>
-        public List<string> ConvertGroupNameToId(IList<string> listGroupName_)
+        public IList<string> ConvertGroupNameToId(IList<string> listGroupName_)
         {
+            LogFile.Instance.WriteLine($"ConvertGroupName {string.Join(",", listGroupName_)}");
+
             var rtn = new List<string>();
 
             // グループ名からグループIDに変換

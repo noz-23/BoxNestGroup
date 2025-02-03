@@ -100,17 +100,44 @@ namespace BoxNestGroup.Contorls
             }
         }
 
-        private void _mouseDoubleClick(object sender_, MouseButtonEventArgs e_)
+        private void _addClick(object sender_, RoutedEventArgs e_)
         {
             var win = new MakeGroupWindow();
-            if(win.ShowDialog()== true)
+            if (win.ShowDialog() == true)
             {
-                var element =e_.OriginalSource as FrameworkElement;
-                var item = element?.DataContext as XmlGroupTreeView;
+                //var element = e_.OriginalSource as FrameworkElement;
+                //var item = element?.DataContext as XmlGroupTreeView;
+                var item = _treeView.SelectedItem as XmlGroupTreeView;
 
-                LogFile.Instance.WriteLine($"■ _mouseDoubleClick url : {item}");
+                LogFile.Instance.WriteLine($"[{item?.GroupName}]");
 
+                var listMake = win.ListGroup.ToList().FindAll(s_ => s_.IsChecked == true);
+                foreach (var view in listMake)
+                {
+                    if (item.ListChild.ToList().Find(x_ => x_.GroupName == view.GroupName) != null)
+                    {
+                        continue;
+                    }
+                    item.ListChild.Add(new XmlGroupTreeView(view.GroupName,view.GroupId, item));
+                }
             }
+        }
+        private void _deleteClick(object sender_, RoutedEventArgs e_)
+        {
+            //var element = e_.OriginalSource as FrameworkElement;
+            //var item = element?.DataContext as XmlGroupTreeView;
+
+            var item = _treeView.SelectedItem as XmlGroupTreeView;
+
+            LogFile.Instance.WriteLine($"[{item?.GroupName}]");
+            if (item == null)
+            {
+                return;
+            }
+
+            var parent = item.Parent?.ListChild ?? SettingManager.Instance.ListXmlGroupTreeView;
+            parent.Remove(item);
+
         }
     }
 }
