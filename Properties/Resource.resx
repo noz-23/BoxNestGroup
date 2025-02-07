@@ -117,19 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LoginFile" xml:space="preserve">
+  <data name="FILE_NAME_LOGIN_HTML" xml:space="preserve">
     <value>html/login.html</value>
   </data>
-  <data name="OfflineName" xml:space="preserve">
+  <data name="ID_NAME_OFFLINE" xml:space="preserve">
     <value>[OFFLINE]</value>
   </data>
-  <data name="UserDisabeld" xml:space="preserve">
+  <data name="BOX_USER_LIMIT_DISABELD" xml:space="preserve">
     <value>制限なし</value>
   </data>
-  <data name="UserEnabled" xml:space="preserve">
+  <data name="BOX_USER_LIMIT_ENABLED" xml:space="preserve">
     <value>制限あり</value>
   </data>
-  <data name="UserUnLimited" xml:space="preserve">
+  <data name="BOX_USER_DISK_UNLIMITED" xml:space="preserve">
     <value>無制限</value>
+  </data>
+  <data name="EXCEL_USER_NAME" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="EXCEL_USER_MAIL" xml:space="preserve">
+    <value>メール</value>
+  </data>
+  <data name="EXCEL_USER_GROUP" xml:space="preserve">
+    <value>グループ</value>
+  </data>
+  <data name="EXCEL_USER_STORAGE" xml:space="preserve">
+    <value>ストレージ</value>
+  </data>
+  <data name="EXCEL_USER_COLABO" xml:space="preserve">
+    <value>外部コラボレーション制限</value>
+  </data>
+  <data name="LOGIN_FAIL" xml:space="preserve">
+    <value>取得失敗</value>
   </data>
 </root>

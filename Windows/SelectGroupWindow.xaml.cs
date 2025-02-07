@@ -10,7 +10,7 @@ namespace BoxNestGroup.Windows
     /// </summary>
     public partial class SelectGroupWindows : Window
     {
-        private HashSet<string> _listSelect  = null;
+        private readonly HashSet<string> _listSelect  = new HashSet<string>();
         /// <summary>
         /// 選択されたグループリスト
         /// </summary>
@@ -25,7 +25,7 @@ namespace BoxNestGroup.Windows
         {
             InitializeComponent();
 
-            _listSelect = new HashSet<string>( groups.Split("\n"));
+            _listSelect.UnionWith( groups.Split("\n"));
             //_setCheckedItem(_treeBoxGroup.ItemsSource as ObservableCollection<FolderGroupTreeView>);
             _setCheckedItem(_treeBoxGroup.ItemsSource as XmlGroupTreeModel);
         }
@@ -35,17 +35,13 @@ namespace BoxNestGroup.Windows
         /// </summary>
         /// <param name="list_"></param>
         //private void _setCheckedItem(ObservableCollection<FolderGroupTreeView> list_)
-        private void _setCheckedItem(XmlGroupTreeModel list_)
+        private void _setCheckedItem(XmlGroupTreeModel? list_)
         {
-            if (list_ != null)
+            list_?.ToList().ForEach(item =>
             {
-                //foreach (FolderGroupTreeView item in list_)
-                foreach (var item in list_)
-                {
-                    item.Checked = _listSelect?.Contains(item.GroupName) ??false;
-                    _setCheckedItem(item.ListChild);
-                }
-            }
+                item.Checked = _listSelect?.Contains(item.GroupName) ?? false;
+                _setCheckedItem(item.ListChild);
+            });
         }
 
         /// <summary>
@@ -53,20 +49,16 @@ namespace BoxNestGroup.Windows
         /// </summary>
         /// <param name="list_"></param>
         //private void _getCheckItem(ObservableCollection<FolderGroupTreeView> list_)
-        private void _getCheckItem(XmlGroupTreeModel list_)
+        private void _getCheckItem(XmlGroupTreeModel? list_)
         {
-            if (list_ != null)
+            list_?.ToList().ForEach(item =>
             {
-                //foreach (FolderGroupTreeView item in list_)
-                foreach (var item in list_)
+                if (item.Checked == true)
                 {
-                    if (item.Checked == true)
-                    {
-                        _listSelect.Add(item.GroupName);
-                    }
-                    _getCheckItem(item.ListChild);
+                    _listSelect.Add(item.GroupName);
                 }
-            }
+                _getCheckItem(item.ListChild);
+            });
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Box.V2.Models;
+using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
@@ -20,6 +21,11 @@ namespace BoxNestGroup.Views
         //public int CountBoxGroupMemberShip(string groupId_)
         public int CountBoxUserInGroupName(string groupName_)
         {
+            if (string.IsNullOrEmpty(groupName_) == true)
+            {
+                return 0;
+            }
+
             return this.ToList().FindAll((d) => (d.GroupName == groupName_))?.Count ?? 0;
         }
 
@@ -31,6 +37,11 @@ namespace BoxNestGroup.Views
         public IList<string> ListGroupNameInUser(string userLogin_)
         {
             var rtn = new List<string>();
+
+            if (string.IsNullOrEmpty(userLogin_) == true)
+            {
+                return rtn;
+            }
 
             this.ToList().FindAll((d) => (d.UserLogin == userLogin_))?.ForEach(member=> rtn.Add(member.GroupName));
 

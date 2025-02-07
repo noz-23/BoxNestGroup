@@ -32,7 +32,7 @@ namespace BoxNestGroup.Windows
             {
                 var asmName =Assembly.GetExecutingAssembly().GetName();
 
-                return $"{asmName.Name} Ver.{asmName.Version.ToString()} \nLisence: MIT license\n";
+                return $"{asmName.Name} Ver.{asmName?.Version?.ToString()??string.Empty} \nLisence: MIT license\n";
             }
         }
     }

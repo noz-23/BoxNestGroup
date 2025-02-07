@@ -1,4 +1,5 @@
 ﻿using Box.V2.Models;
+using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -30,7 +31,7 @@ namespace BoxNestGroup.Views
             OldGroupName = groupName_;
 
             GroupId = SettingManager.Instance.ListXmlGroupTreeView.FindGroupId(groupName_);
-            GroupId =(string.IsNullOrEmpty(GroupId) == true )?( Resource.OfflineName) :( GroupId);
+            GroupId =(string.IsNullOrEmpty(GroupId) == true )?(Properties.Resource.ID_NAME_OFFLINE) :( GroupId);
 
             UserCount = SettingManager.Instance.ListMembershipGroupNameLogin.CountBoxUserInGroupName(GroupName);
 

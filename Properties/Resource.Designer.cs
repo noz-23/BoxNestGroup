@@ -61,47 +61,101 @@ namespace BoxNestGroup.Properties {
         }
         
         /// <summary>
-        ///   html/login.html に類似しているローカライズされた文字列を検索します。
+        ///   無制限 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string LoginFile {
+        internal static string BOX_USER_DISK_UNLIMITED {
             get {
-                return ResourceManager.GetString("LoginFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   [OFFLINE] に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        internal static string OfflineName {
-            get {
-                return ResourceManager.GetString("OfflineName", resourceCulture);
+                return ResourceManager.GetString("BOX_USER_DISK_UNLIMITED", resourceCulture);
             }
         }
         
         /// <summary>
         ///   制限なし に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string UserDisabeld {
+        internal static string BOX_USER_LIMIT_DISABELD {
             get {
-                return ResourceManager.GetString("UserDisabeld", resourceCulture);
+                return ResourceManager.GetString("BOX_USER_LIMIT_DISABELD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   制限あり に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string UserEnabled {
+        internal static string BOX_USER_LIMIT_ENABLED {
             get {
-                return ResourceManager.GetString("UserEnabled", resourceCulture);
+                return ResourceManager.GetString("BOX_USER_LIMIT_ENABLED", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   無制限 に類似しているローカライズされた文字列を検索します。
+        ///   外部コラボレーション制限 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string UserUnLimited {
+        internal static string EXCEL_USER_COLABO {
             get {
-                return ResourceManager.GetString("UserUnLimited", resourceCulture);
+                return ResourceManager.GetString("EXCEL_USER_COLABO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   グループ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string EXCEL_USER_GROUP {
+            get {
+                return ResourceManager.GetString("EXCEL_USER_GROUP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   メール に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string EXCEL_USER_MAIL {
+            get {
+                return ResourceManager.GetString("EXCEL_USER_MAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   名前 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string EXCEL_USER_NAME {
+            get {
+                return ResourceManager.GetString("EXCEL_USER_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ストレージ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string EXCEL_USER_STORAGE {
+            get {
+                return ResourceManager.GetString("EXCEL_USER_STORAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   html/login.html に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string FILE_NAME_LOGIN_HTML {
+            get {
+                return ResourceManager.GetString("FILE_NAME_LOGIN_HTML", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   [OFFLINE] に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ID_NAME_OFFLINE {
+            get {
+                return ResourceManager.GetString("ID_NAME_OFFLINE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   取得失敗 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string LOGIN_FAIL {
+            get {
+                return ResourceManager.GetString("LOGIN_FAIL", resourceCulture);
             }
         }
     }

@@ -1,10 +1,12 @@
 ﻿using BoxNestGroup.Managers;
+using BoxNestGroup.Properties;
 using System.IO;
 using System.Net;
 using System.Windows;
 using System.Diagnostics;
 using DocumentFormat.OpenXml.CustomProperties;
 using DocumentFormat.OpenXml.InkML;
+using BoxNestGroup.Files;
 
 namespace BoxNestGroup
 {
@@ -17,10 +19,6 @@ namespace BoxNestGroup
         /// リダイレクト(localhost)の操作
         /// </summary>
         private HttpListener? _listener =null;
-        /// <summary>
-        /// ログイン後の表示
-        /// </summary>
-        private string _htmlLogin = @"\html\login.html";
 
         /// <summary>
         /// 画面表示後の処理
@@ -79,7 +77,12 @@ namespace BoxNestGroup
         {
             try
             {
-                var context = await _listener?.GetContextAsync() ?? null;
+                if (_listener == null)
+                {
+                    return string.Empty;
+                }
+
+                var context = await _listener.GetContextAsync();
                 if (context == null)
                 {
                     return string.Empty;
@@ -91,7 +94,7 @@ namespace BoxNestGroup
                     var request = context.Request;
 
                     var rawUrl = request.RawUrl;    // 		RawUrl	"/callback?code=yWtJmL9c2xgtZd3V2jTwCDiMMASK0sF5"	string
-                    var userCode = rawUrl.Replace(@"/callback?code=", "");
+                    var userCode = rawUrl?.Replace(@"/callback?code=", "")??string.Empty;
 
                     return userCode;
                 }
@@ -121,7 +124,7 @@ namespace BoxNestGroup
 
                     _listener?.Stop();
                     
-                    var loginFile = System.IO.Directory.GetCurrentDirectory()+@"\"+ Resource.LoginFile;
+                    var loginFile = System.IO.Directory.GetCurrentDirectory()+@"\"+ Properties.Resource.FILE_NAME_LOGIN_HTML;
                     //var uri = currentFolder + _htmlLogin;
 
                     //uri ="file:///" + uri.Replace(@"\","/");

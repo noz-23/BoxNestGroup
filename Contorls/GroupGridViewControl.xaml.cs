@@ -1,4 +1,5 @@
-﻿using BoxNestGroup.Managers;
+﻿using BoxNestGroup.Files;
+using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using System.Windows;
 
@@ -75,7 +76,7 @@ namespace BoxNestGroup.Contorls
                     continue;
                 }
                 // オフライン
-                if (group.GroupId == Resource.OfflineName)
+                if (group.GroupId == Properties.Resource.ID_NAME_OFFLINE)
                 {
                     if( group.IsSameOldGroupName==false)
                     {

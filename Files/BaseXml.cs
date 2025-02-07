@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
-namespace BoxNestGroup
+namespace BoxNestGroup.Files
 {
     public class BaseXml<T> where T : class
     {
-        public void  Open(string path_)
+        public void Open(string path_)
         {
             var serializer = new XmlSerializer(typeof(T));
-            using (var sr =new StreamReader(path_,Encoding.UTF8))
+            using (var sr = new StreamReader(path_, Encoding.UTF8))
             {
                 var xml = serializer.Deserialize(sr) as T;
 
-                var listPropert =typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                var listPropert = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var p in listPropert)
                 {
                     typeof(T)?.GetProperty(p.Name)?.SetValue(this, p.GetValue(xml));

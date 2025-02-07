@@ -18,13 +18,13 @@ namespace BoxNestGroup.Views
         {
         }
         
-        public XmlGroupTreeView(string groupName_, XmlGroupTreeView parent_) :this()
+        public XmlGroupTreeView(string groupName_, XmlGroupTreeView? parent_) :this()
         {
             GroupName = groupName_;
             Parent = parent_;
         }
 
-        public XmlGroupTreeView(string groupName_, string groupId_, XmlGroupTreeView parent_) : this()
+        public XmlGroupTreeView(string groupName_, string groupId_, XmlGroupTreeView? parent_) : this()
         {
             GroupName = groupName_;
             GroupId = groupId_;
@@ -50,7 +50,7 @@ namespace BoxNestGroup.Views
         /// ツリービュー表示用
         /// </summary>
         [XmlIgnore]
-        public XmlGroupTreeView Parent { get; set; } = null;
+        public XmlGroupTreeView? Parent { get; set; } = null;
 
         /// <summary>
         /// サブフォルダリスト
@@ -70,7 +70,7 @@ namespace BoxNestGroup.Views
                 return true;
             }
 
-            return ListChild?.ToList()?.Find(view=> view.ContainsName(groupName_))!=null;
+            return ListChild?.ToList()?.Find(v_=> v_.ContainsName(groupName_))!=null;
         }
 
 
@@ -84,9 +84,13 @@ namespace BoxNestGroup.Views
             return ListChild?.ToList()?.Find(view => view.ContainsId(groupId_)) != null;
         }
 
-        public bool ContainsView(XmlGroupTreeView groupView_)
+        public bool ContainsView(XmlGroupTreeView? groupView_)
         {
-            if (this == groupView_)
+            if (groupView_ ==null)
+            {
+                return false;
+            }
+            if (groupView_ == this)
             {
                 return true;
             }

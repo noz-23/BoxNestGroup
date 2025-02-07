@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Security.Policy;
+using BoxNestGroup.Files;
 
 namespace BoxNestGroup.Contorls
 {
@@ -86,7 +87,7 @@ namespace BoxNestGroup.Contorls
 
                     if (dragView?.ContainsView(dropView) == false)
                     {
-                        LogFile.Instance.WriteLine($"selectView {dropView.GroupName} -> {dropView.GroupId}");
+                        LogFile.Instance.WriteLine($"selectView {dropView?.GroupName} -> {dropView?.GroupId}");
                         //
                         var listRemove = dragView.Parent?.ListChild ?? SettingManager.Instance.ListXmlGroupTreeView;
                         listRemove.Remove(dragView);
@@ -114,11 +115,11 @@ namespace BoxNestGroup.Contorls
                 var listMake = win.ListGroup.ToList().FindAll(s_ => s_.IsChecked == true);
                 foreach (var view in listMake)
                 {
-                    if (item.ListChild.ToList().Find(x_ => x_.GroupName == view.GroupName) != null)
+                    if (item?.ListChild.ToList().Find(x_ => x_.GroupName == view.GroupName) != null)
                     {
                         continue;
                     }
-                    item.ListChild.Add(new XmlGroupTreeView(view.GroupName,view.GroupId, item));
+                    item?.ListChild.Add(new XmlGroupTreeView(view.GroupName,view.GroupId, item));
                 }
             }
         }

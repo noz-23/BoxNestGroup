@@ -1,4 +1,5 @@
 ﻿using Box.V2.Models;
+using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -25,21 +26,21 @@ namespace BoxNestGroup.Views
         /// オンライン時のコンストラクタ
         /// </summary>
         /// <param name="user_">Boxユーザー</param>
-        public UserDataGridView(BoxUser user_)
+        public UserDataGridView(BoxUser? user_)
         {
-            LogFile.Instance.WriteLine($"[{user_.Id}] [{user_.Name}] [{user_.Login}]");
+            LogFile.Instance.WriteLine($"[{user_?.Id}] [{user_?.Name}] [{user_?.Login}]");
 
             _userBox = user_;
 
-            UserName = user_.Name;
-            UserLogin = user_.Login;
-            UserId = user_.Id;
+            UserName = user_?.Name ??string.Empty;
+            UserLogin = user_?.Login ?? string.Empty;
+            UserId = user_?.Id ?? string.Empty;
 
             _listNowAllGroup.Clear();
-            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_.Login));
+            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_?.Login??string.Empty));
 
-            UserSpaceUsed = (user_.SpaceUsed == -1) ? Properties.Resource.UserUnLimited : user_.SpaceUsed.ToString();
-            UserExternalCollaborate = (user_.IsExternalCollabRestricted == true) ? Properties.Resource.UserEnabled : Properties.Resource.UserDisabeld;
+            UserSpaceUsed = ((user_?.SpaceUsed ?? -1) != -1) ? user_?.SpaceUsed?.ToString()??string.Empty:Properties.Resource.BOX_USER_DISK_UNLIMITED;
+            UserExternalCollaborate = (user_?.IsExternalCollabRestricted == true) ? Properties.Resource.BOX_USER_LIMIT_ENABLED : Properties.Resource.BOX_USER_LIMIT_DISABELD;
             _flgInital = true;
         }
 
@@ -57,13 +58,13 @@ namespace BoxNestGroup.Views
 
             UserName = name_;
             UserLogin = login_;
-            UserId = Properties.Resource.OfflineName;
+            UserId = Properties.Resource.ID_NAME_OFFLINE;
 
             _listNowAllGroup.Clear();
             _listNowAllGroup.AddRange(listGroup_);
 
-            UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) == true) ? Properties.Resource.UserUnLimited : strage_;
-            UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) == true) ? Properties.Resource.UserEnabled : Properties.Resource.UserDisabeld;
+            UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) == true) ? Properties.Resource.BOX_USER_DISK_UNLIMITED : strage_;
+            UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) == true) ? Properties.Resource.BOX_USER_LIMIT_ENABLED : Properties.Resource.BOX_USER_LIMIT_DISABELD;
             _flgInital = true;
         }
 

@@ -1,4 +1,5 @@
-﻿using BoxNestGroup.Views;
+﻿using BoxNestGroup.Files;
+using BoxNestGroup.Views;
 using ClosedXML.Excel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -13,7 +14,7 @@ namespace BoxNestGroup.Managers
         private const int INDEX_NAME = 1;
         private const int INDEX_MAIL = 2;
         private const int INDEX_GROUP = 3;
-        private const int INDEX_STRAGE = 4;
+        private const int INDEX_STORAGE = 4;
         private const int INDEX_COLABO = 5;
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -109,7 +110,7 @@ namespace BoxNestGroup.Managers
                 group.Remove(string.Empty);
                 listGroup.UnionWith(group);
                 //
-                var strage = sheet_.Cell(row, INDEX_STRAGE).Value.ToString();
+                var strage = sheet_.Cell(row, INDEX_STORAGE).Value.ToString();
                 var colabo = sheet_.Cell(row, INDEX_COLABO).Value.ToString();
                 //
                 var add = new UserDataGridView(userName, userMail, group, strage, colabo);
@@ -118,18 +119,16 @@ namespace BoxNestGroup.Managers
                 {
                     break;
                 }
-                ListUserDataGridView.Add(add);
-
-                foreach (var groupName in listGroup) 
-                {
-                    SettingManager.Instance.ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(groupName, userMail));
-                }
+                App.Current.Dispatcher.Invoke(() => {
+                    ListUserDataGridView.Add(add);
+                    listGroup.ToList().ForEach(groupName => ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(groupName, userMail)));
+                });
             }
 
-            foreach (var groupName in listGroup)
+            App.Current.Dispatcher.Invoke(() =>
             {
-                ListGroupDataGridView.Add(new GroupDataGridView(groupName));
-            }
+                listGroup.ToList().ForEach(groupName => ListGroupDataGridView.Add(new GroupDataGridView(groupName)));
+            });
         }
 
         /// <summary>
@@ -144,11 +143,11 @@ namespace BoxNestGroup.Managers
                 var worksheet = workbook.AddWorksheet(1);
                 int row = 1;
 
-                worksheet.Cell(row, INDEX_NAME).Value = "名前";
-                worksheet.Cell(row, INDEX_MAIL).Value = "メール";
-                worksheet.Cell(row, INDEX_GROUP).Value = "グループ";
-                worksheet.Cell(row, INDEX_STRAGE).Value = "ストレージ";
-                worksheet.Cell(row, INDEX_COLABO).Value = "外部コラボレーション制限";
+                worksheet.Cell(row, INDEX_NAME).Value = Properties.Resource.EXCEL_USER_NAME;
+                worksheet.Cell(row, INDEX_MAIL).Value = Properties.Resource.EXCEL_USER_MAIL;
+                worksheet.Cell(row, INDEX_GROUP).Value = Properties.Resource.EXCEL_USER_GROUP;
+                worksheet.Cell(row, INDEX_STORAGE).Value = Properties.Resource.EXCEL_USER_STORAGE;
+                worksheet.Cell(row, INDEX_COLABO).Value = Properties.Resource.EXCEL_USER_COLABO;
                 row++;
 
                 foreach (var user in SettingManager.Instance.ListUserDataGridView)
@@ -161,8 +160,8 @@ namespace BoxNestGroup.Managers
                     worksheet.Cell(row, INDEX_NAME).Value = user.UserName;
                     worksheet.Cell(row, INDEX_MAIL).Value = user.UserLogin;
                     worksheet.Cell(row, INDEX_GROUP).Value = user.ListModAllGroup.Replace("\n", ";");
-                    worksheet.Cell(row, INDEX_STRAGE).Value = (user.UserSpaceUsed == Properties.Resource.UserUnLimited) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
-                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == Properties.Resource.UserEnabled) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
+                    worksheet.Cell(row, INDEX_STORAGE).Value = (user.UserSpaceUsed == Properties.Resource.BOX_USER_DISK_UNLIMITED) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
+                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == Properties.Resource.BOX_USER_LIMIT_ENABLED) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
                     row++;
 
                 }

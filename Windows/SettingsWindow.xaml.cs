@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using BoxNestGroup.Managers;
+using BoxNestGroup.Properties;
 
 namespace BoxNestGroup
 {

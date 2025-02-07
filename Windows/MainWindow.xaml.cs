@@ -1,17 +1,9 @@
-﻿using System.IO;
+﻿using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
-using BoxNestGroup.Views;
 using BoxNestGroup.Properties;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Diagnostics;
 using BoxNestGroup.Windows;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.InkML;
+using System.Windows;
 
 namespace BoxNestGroup
 {
@@ -44,23 +36,11 @@ namespace BoxNestGroup
             //https://qiita.com/aonim/items/36d3894c5fe721d9ab49
 
         }
-
-        //public const string MENU_USER_SEELCT = "変更";
-        //public const string MENU_USER_NAME = "ユーザー名";
-        //public const string MENU_USER_ID = "ユーザーID";
-        //public const string MENU_USER_MAIL ="メールアドレス";
-        //public const string MENU_USER_NOW = "現在[所　属]";
-        //public const string MENU_USER_ALL = "現在[全所属]";
-        //public const string MENU_USER_MOD = "変更[所　属]";
-        //public const string MENU_USER_NEST = "変更[全所属]";
-        //public const string MENU_USER_USED = "容量制限";
-        //public const string MENU_USER_COLABO = "外部コラボ";
-
         //public const string MENU_GROUP_NAME = "グループ名";
         //public const string MENU_GROUP_ID = "グループID";
-        public const string MENU_GROUP_NEST_MAX = "ネスト最大数";
-        public const string MENU_GROUP_FOLDER_NUM = "フォルダ数";
-        public const string MENU_GROUP_USER_NUM = "ユーザー数";
+        //public const string MENU_GROUP_NEST_MAX = "ネスト最大数";
+        //public const string MENU_GROUP_FOLDER_NUM = "フォルダ数";
+        //public const string MENU_GROUP_USER_NUM = "ユーザー数";
 
         /// <summary>
         /// 起動後の処理
@@ -83,14 +63,14 @@ namespace BoxNestGroup
         /// <summary>
         /// データの表示クリア
         /// </summary>
-        /// <param name="name_">ログイン名 of ファイル名</param>
-        private void clearBox(string name_)
+        private void clearBox()
         {
-
-            SettingManager.Instance.ListGroupDataGridView.Clear();
-            SettingManager.Instance.ListUserDataGridView.Clear();
-            SettingManager.Instance.ListMembershipGroupNameLogin.Clear();
-            //SettingManager.Instance.ListGroupIdName.Clear();
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                SettingManager.Instance.ListGroupDataGridView.Clear();
+                SettingManager.Instance.ListUserDataGridView.Clear();
+                SettingManager.Instance.ListMembershipGroupNameLogin.Clear();
+            });
         }
 
         /// <summary>
@@ -107,37 +87,6 @@ namespace BoxNestGroup
             await BoxManager.Instance.GetListUserData();
         }
 
-        /// <summary>
-        /// DataGridの入力で改行するための処理
-        /// 　Shift+Returnで改行
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void _dataGridUserTextColumnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        //{
-        //    if (e.Key == Key.Return && ( e.KeyboardDevice.Modifiers & ModifierKeys.Shift) >0)
-        //    {
-
-        //        Debug.WriteLine("　DataGridUserTextColumnKeyDown : {0} {1}", sender, e);
-
-        //        var textBox = sender as System.Windows.Controls.TextBox;
-        //        if (textBox == null) 
-        //        {
-        //            return;
-        //        }
-        //        int pos = textBox.CaretIndex;
-        //        textBox.Text = textBox.Text.Insert(pos, "\n");
-        //        textBox.CaretIndex = pos+1;
-        //        e.Handled = true;
-
-        //    }
-        //}
-    //<Window.Resources>
-    //    <Style TargetType = "TextBox" x:Key="_dataGridUserTextBoxStyle">
-    //        <EventSetter Event = "KeyDown" Handler="_dataGridUserTextColumnKeyDown" />
-    //    </Style>
-    //    <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
-    //</Window.Resources>
         /// <summary>
         /// タブ移動した場合の表示更新(フィルター)
         /// </summary>
@@ -190,7 +139,7 @@ namespace BoxNestGroup
         /// 「承認」ボタン操作
         ///  BoxへOAuth2承認
         /// </summary>
-        private async void _buttonWebAuthClick(object sender_, RoutedEventArgs e_)
+        private void _buttonWebAuthClick(object sender_, RoutedEventArgs e_)
         {
             LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
 
@@ -209,31 +158,32 @@ namespace BoxNestGroup
             }
 
             var wait = new WaitWindow() { Owner = this };
-            wait.Show();
-
-            try
+            wait.Run += async(win_)=>
             {
-                BoxManager.Instance.OAuthToken();
-                await BoxManager.Instance.RefreshToken();
+                try
+                {
+                    BoxManager.Instance.OAuthToken();
+                    await BoxManager.Instance.RefreshToken();
 
-                //var box =await renewBox();
-                await renewBox();
+                    //var box =await renewBox();
+                    await renewBox();
 
-                _buttonWebAuth.IsEnabled = false;
-                _buttonOffLine.IsEnabled = false;
+                    _buttonWebAuth.IsEnabled = false;
+                    _buttonOffLine.IsEnabled = false;
 
-            }
-            catch (Exception ex_)
-            {
-                // 承認失敗したらクリア
-                LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
+                }
+                catch (Exception ex_)
+                {
+                    // 承認失敗したらクリア
+                    LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
 
-                BoxManager.Instance.SetTokens(string.Empty, string.Empty);
+                    BoxManager.Instance.SetTokens(string.Empty, string.Empty);
 
-                clearBox("再取得");
-            }
+                    clearBox();
+                }
 
-            wait.Close();
+            };
+            wait.ShowDialog();
         }
 
 
@@ -243,7 +193,7 @@ namespace BoxNestGroup
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _buttonOffLineButtonClick(object sender_, RoutedEventArgs e_)
+        private async void _buttonOffLineButtonClick(object sender_, RoutedEventArgs e_)
         {
             LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
 
@@ -256,23 +206,25 @@ namespace BoxNestGroup
                 return;
             }
 
-            var wait = new WaitWindow();
-            wait.Owner = this;
-            wait.Show();
+            var wait = new WaitWindow() { Owner = this };
 
-            var path = dlg.FileName;
-            var name = path.Substring(path.LastIndexOf("\\") + 1);
-
-            clearBox(name);
-            // ファイルを開く処理
-            using (var workbook = new XLWorkbook(path))
+            wait.Run += async (win_) =>
             {
-                var worksheet = workbook.Worksheet(1); // 1スタート(0なし)
-                                                       // シート読み込み
-                SettingManager.Instance.LoadExcelSheet(worksheet);
-            }
+                var path = dlg.FileName;
 
-            wait.Close();
+                clearBox();
+                // ファイルを開く処理
+                using (var workbook = new XLWorkbook(path))
+                {
+                    var worksheet = workbook.Worksheet(1); // 1スタート(0なし)
+                                                           // シート読み込み
+                    SettingManager.Instance.LoadExcelSheet(worksheet);
+                }
+                await Task.Delay(500);
+            };
+
+            wait.ShowDialog();
+            await Task.Delay(500);
         }
     }
 }

@@ -15,5 +15,29 @@ namespace BoxNestGroup.Windows
         {
             InitializeComponent();
         }
+
+        public delegate  Task TaskRun(WaitWindow? win_);
+
+        public TaskRun? Run = null;
+
+
+        void MessageClear(string message_ ="")
+        {
+            App.Current.Dispatcher.Invoke(() => {this._textBox.Text = message_; });
+        }
+        void MessageAdd(string message_ = "")
+        {
+            App.Current.Dispatcher.Invoke(() => { this._textBox.Text += message_; });
+        }
+
+
+        private async void _loaded(object sender_, RoutedEventArgs e_)
+        {
+            if (Run != null)
+            {
+                await Task.Run(async () => { await Run.Invoke(this); });
+            }
+            this.Close();
+        }
     }
 }

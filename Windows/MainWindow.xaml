@@ -25,11 +25,15 @@
             <ColumnDefinition Width="24*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="22*"/>
         </Grid.RowDefinitions>
-        <Menu x:Name="_menuMain" DockPanel.Dock="Top" Grid.Row="0" Grid.ColumnSpan="8">
+        <Menu
+            x:Name="_menuMain"
+            DockPanel.Dock="Top"
+            Grid.Row="0" Grid.ColumnSpan="8"
+            >
             <MenuItem x:Name="_menuSetting" Header="設定">
                 <MenuItem Header="接続設定" Click="_buttonSettingsClick"/>
                 <MenuItem Header="承認" Click="_buttonWebAuthClick"/>

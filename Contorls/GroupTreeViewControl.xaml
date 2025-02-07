@@ -21,9 +21,22 @@
             MouseDown="_mouseDown"
             MouseMove="_mouseMove"
             Drop="_drop"
-            MouseDoubleClick="_mouseDoubleClick"
+            ItemsSource="{Binding ListXmlGroupTreeView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
             >
-            <Menu x:Name="menu"/>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding ListChild}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding GroupName}" />
+                        <TextBlock Text="{Binding GroupId,StringFormat=[{0}]}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="作成" Click="_addClick"/>
+                    <MenuItem Header="削除" Click="_deleteClick"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
         </TreeView>
     </Grid>
 </UserControl>
