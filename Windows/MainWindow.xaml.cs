@@ -25,37 +25,31 @@ namespace BoxNestGroup
 
             // https://tocsworld.wordpress.com/2014/08/13/%E5%A4%9A%E8%A8%80%E8%AA%9E%E5%AF%BE%E5%BF%9Cc%E3%80%81wpf%E7%B7%A8/
             var dictionary = new ResourceDictionary();
-            //var uri= new Uri(Directory.GetCurrentDirectory()+ @"\Resources\StringResource.xaml", UriKind.Relative);
-            //var uri = new Uri(@"/Resources/StringResource.xaml", UriKind.Relative);
-            //var uri = new Uri(@"StringResource.xaml", UriKind.Relative);
-            //dictionary.Source = uri;
-
-            //this.Resources.MergedDictionaries.Add(dictionary);
             //
             //https://qiita.com/NumAniCloud/items/3d64199aee8876d53f67
             //https://qiita.com/aonim/items/36d3894c5fe721d9ab49
 
         }
-        //public const string MENU_GROUP_NAME = "グループ名";
-        //public const string MENU_GROUP_ID = "グループID";
-        //public const string MENU_GROUP_NEST_MAX = "ネスト最大数";
-        //public const string MENU_GROUP_FOLDER_NUM = "フォルダ数";
-        //public const string MENU_GROUP_USER_NUM = "ユーザー数";
 
         /// <summary>
         /// 起動後の処理
         /// 　表示関係はここで処理しないと出ない
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void _windowLoaded(object sender, RoutedEventArgs e)
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
+        private void _windowLoaded(object sender_, RoutedEventArgs e_)
         {
             // 基本設定(フォルダとBox比較)の読み込みはここ
         }
-        private void _windowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+
+        /// <summary>
+        /// 終了後の処理
+        /// </summary>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
+        private void _windowClosing(object sender_, System.ComponentModel.CancelEventArgs e_)
         {
             Settings.Default.Save();
-            //SettingManager.Instance.ListGroupIdName.SavaData();
             SettingManager.Instance.ListXmlGroupTreeView.Save();
         }
 
@@ -130,9 +124,6 @@ namespace BoxNestGroup
         private void _buttonOpenFolderClick(object sender_, RoutedEventArgs e_)
         {
             LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
-            //Debug.WriteLine("　openFolderClick open: {0}", FolderManager.Instance.CommonGroupFolderPath);
-            //
-            //Process.Start("explorer.exe", FolderManager.Instance.CommonGroupFolderPath);
         }
 
         /// <summary>
@@ -160,12 +151,16 @@ namespace BoxNestGroup
             var wait = new WaitWindow() { Owner = this };
             wait.Run += async(win_)=>
             {
+                win_?.MessageClear();
                 try
                 {
+                    win_?.MessageAdd("Box 承認");
                     BoxManager.Instance.OAuthToken();
+
+                    win_?.MessageAdd("Box トークン追加");
                     await BoxManager.Instance.RefreshToken();
 
-                    //var box =await renewBox();
+                    win_?.MessageAdd("Box 追加処理追加");
                     await renewBox();
 
                     _buttonWebAuth.IsEnabled = false;
@@ -193,7 +188,7 @@ namespace BoxNestGroup
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void _buttonOffLineButtonClick(object sender_, RoutedEventArgs e_)
+        private void _buttonOffLineButtonClick(object sender_, RoutedEventArgs e_)
         {
             LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
 
@@ -210,12 +205,14 @@ namespace BoxNestGroup
 
             wait.Run += async (win_) =>
             {
+                win_?.MessageClear();
                 var path = dlg.FileName;
 
                 clearBox();
                 // ファイルを開く処理
                 using (var workbook = new XLWorkbook(path))
                 {
+                    win_?.MessageAdd("Excelファイル\n {path}\n  読み込み中");
                     var worksheet = workbook.Worksheet(1); // 1スタート(0なし)
                                                            // シート読み込み
                     SettingManager.Instance.LoadExcelSheet(worksheet);
@@ -224,7 +221,6 @@ namespace BoxNestGroup
             };
 
             wait.ShowDialog();
-            await Task.Delay(500);
         }
     }
 }

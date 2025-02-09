@@ -1,11 +1,4 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace BoxNestGroup.Views
 {
@@ -50,17 +43,16 @@ namespace BoxNestGroup.Views
         {
             var rtn = new List<string>();
 
-            var listGroup = this.ToList();
-            foreach (var name in listGroupName_)
+            listGroupName_?.ToList().ForEach(groupName_ =>
             {
-                var find = listGroup.Find((g) => (g.GroupName == name));
-
+                var find = this?.ToList().Find((g) => (g.GroupName == groupName_));
                 if (find == null)
                 {
-                    continue;
+                    return;
                 }
                 rtn.Add(find.GroupId);
-            }
+            });
+
             return rtn;
         }
 

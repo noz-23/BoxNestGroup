@@ -151,6 +151,15 @@ namespace BoxNestGroup.Properties {
         }
         
         /// <summary>
+        ///   認証前 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string LOGIN_BEFOUR {
+            get {
+                return ResourceManager.GetString("LOGIN_BEFOUR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   取得失敗 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string LOGIN_FAIL {

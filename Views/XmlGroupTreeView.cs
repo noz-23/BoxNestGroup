@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace BoxNestGroup.Views
 {
@@ -73,7 +67,11 @@ namespace BoxNestGroup.Views
             return ListChild?.ToList()?.Find(v_=> v_.ContainsName(groupName_))!=null;
         }
 
-
+        /// <summary>
+        /// グループIDが含まれているか
+        /// </summary>
+        /// <param name="groupId_"></param>
+        /// <returns></returns>
         public bool ContainsId(string groupId_)
         {
             if (GroupId == groupId_)
@@ -84,6 +82,11 @@ namespace BoxNestGroup.Views
             return ListChild?.ToList()?.Find(view => view.ContainsId(groupId_)) != null;
         }
 
+        /// <summary>
+        /// グループViewが含まれているか
+        /// </summary>
+        /// <param name="groupView_"></param>
+        /// <returns></returns>
         public bool ContainsView(XmlGroupTreeView? groupView_)
         {
             if (groupView_ ==null)
@@ -97,21 +100,10 @@ namespace BoxNestGroup.Views
             return ListChild?.ToList()?.Find(view => view.ContainsView(groupView_)) != null;
         }
 
-        //public IList<XmlGroupTreeView> Find(string groupName_)
-        //{
-        //    var list = new List<XmlGroupTreeView>();
-        //    if (GroupName == groupName_)
-        //    {
-        //        list.Add(this);
-        //    }
-        //    foreach (var view in ListChild)
-        //    {
-        //        list.AddRange(view.Find(groupName_));
-        //    }
-
-        //    return list;
-        //}
-
+        /// <summary>
+        /// 親リストのグループ名リスト
+        /// </summary>
+        /// <returns></returns>
         public IList<string> ListAllParentGroupName()
         {
             var rtn = new List<string>();

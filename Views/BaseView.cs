@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
@@ -15,8 +10,11 @@ namespace BoxNestGroup.Views
         /// </summary>
         public enum Status
         {
+            [Description("なし")]
             NONE,
+            [Description("新規")]
             NEW,
+            [Description("変更")]
             MOD,
         }
 
@@ -25,18 +23,15 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="StatudData_"></param>
         /// <returns></returns>
-        public string StatusString(Status StatudData_)
+        //https://www.sejuku.net/blog/42539
+        public string StatusString(Status Status_)
         {
-            switch (StatudData_)
-            {
-                case Status.NEW: return "新規";
-                case Status.MOD: return "変更";
-                default:
-                case Status.NONE:
-                    break;
-            }
-            return "　　";
+            var gm = Status_.GetType().GetMember(Status_.ToString());
+            var attributes = gm[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var description = ((DescriptionAttribute)attributes[0]).Description;
+            return description;
         }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void _NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")

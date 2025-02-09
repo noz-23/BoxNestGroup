@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace BoxNestGroup.Extensions
 {
+    /// <summary>
+    /// ドラッグ&ドロップ で利用(表示位置からからアイテムの選択)
+    /// </summary>
     public static class VisualHeplerExtensionc
     {
         public static T? GetParentOfType<T>( this DependencyObject element_) where T : DependencyObject

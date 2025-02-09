@@ -1,15 +1,7 @@
 using BoxNestGroup.Files;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 
@@ -25,6 +17,7 @@ namespace BoxNestGroup.Views
         public XmlGroupTreeModel()
         {
         }
+
         ~XmlGroupTreeModel()
         {
             //Save(_fileName);
@@ -43,7 +36,7 @@ namespace BoxNestGroup.Views
         {
             bool rtn = false;
 
-            this.ToList().ForEach(x => rtn |= x.ContainsName(groupName_));
+            this?.ToList().ForEach(x => rtn |= x.ContainsName(groupName_));
 
             return rtn;
         }
@@ -62,7 +55,7 @@ namespace BoxNestGroup.Views
 
             bool rtn = false;
 
-            this.ToList().ForEach(x => rtn |= x.ContainsId(groupId_));
+            this?.ToList().ForEach(x => rtn |= x.ContainsId(groupId_));
 
             return rtn;
         }
@@ -76,7 +69,7 @@ namespace BoxNestGroup.Views
         {
             bool rtn = false;
 
-            this.ToList().ForEach(x => rtn |= x.ContainsView(group_));
+            this?.ToList().ForEach(x => rtn |= x.ContainsView(group_));
 
             return rtn;
         }
@@ -91,15 +84,15 @@ namespace BoxNestGroup.Views
             LogFile.Instance.WriteLine($"[{oldName_}] -> [{newName_}]");
             var list = new List<XmlGroupTreeView>();
 
-            foreach (var view in this)
+            this?.ToList().ForEach(view_ => 
             {
-                if (view.GroupName == oldName_)
+                if (view_.GroupName == oldName_)
                 {
-                    view.GroupName = newName_;
+                    view_.GroupName = newName_;
                 }
 
-                view.ListChild.UpdateGroupName(oldName_, newName_);
-            }
+                view_.ListChild.UpdateGroupName(oldName_, newName_);
+            });
         }
 
         /// <summary>
@@ -110,15 +103,16 @@ namespace BoxNestGroup.Views
         public int MaxNestCount(string groupName_ ,int nest_=0)
         {
             int rtn = 0;
-            foreach (var view in this)
+            this?.ToList().ForEach(view_ =>
             {
-                if (view.GroupName == groupName_)
+                if (view_.GroupName == groupName_)
                 {
-                    return Math.Max(rtn,nest_ + 1);
+                    rtn= Math.Max(rtn, nest_ + 1);
                 }
 
-                rtn =Math.Max(rtn,view.ListChild.MaxNestCount(groupName_, nest_ + 1));
-            }
+                rtn = Math.Max(rtn, view_.ListChild.MaxNestCount(groupName_, nest_ + 1));
+            });
+
 
             return rtn;
         }
@@ -131,14 +125,14 @@ namespace BoxNestGroup.Views
         /// <returns></returns>
         public int NameCount(string groupName_, int count_ =0)
         {
-            foreach (var view in this)
+            this?.ToList().ForEach(view_ =>
             {
-                if (view.GroupName == groupName_)
+                if (view_.GroupName == groupName_)
                 {
                     count_++;
                 }
-                count_ = view.ListChild.NameCount(groupName_, count_);
-            }
+                count_ = view_.ListChild.NameCount(groupName_, count_);
+            });
 
             return count_;
         }
@@ -155,17 +149,14 @@ namespace BoxNestGroup.Views
 
             // ネストしているフォルダの削除
             var listView = new List<XmlGroupTreeView>();
-            listGroupName_.ForEach(groupName => listView.AddRange(FindAllGroupName(groupName)));
+            listGroupName_.ForEach(groupName_ => listView.AddRange(FindAllGroupName(groupName_)));
 
             // すべての親の名前を取得
             var listParent = new HashSet<string>();
             listView.ForEach(view => listParent.UnionWith(view.ListAllParentGroupName()));
 
             // 親の名前を削除
-            foreach (var del in listParent)
-            {
-                rtn.Remove(del);
-            }
+            listParent?.ToList().ForEach(parent_ => rtn.Remove(parent_));
 
             rtn.Remove(string.Empty);
 
@@ -179,13 +170,12 @@ namespace BoxNestGroup.Views
         /// <returns>全フォルダ(グループ)名一覧</returns>
         public List<string> ListUniqueGroup(List<string> listGroupName_)
         {
-
             var listView =new List<XmlGroupTreeView>();
 
             listGroupName_.ForEach(groupName=> listView.AddRange(FindAllGroupName(groupName)));
 
             var rtn = new HashSet<string>(listGroupName_);
-            listView.ForEach(view => rtn.UnionWith(view.ListAllParentGroupName()));
+            listView.ForEach(view_ => rtn.UnionWith(view_.ListAllParentGroupName()));
 
             rtn.Remove(string.Empty);
             return rtn.ToList();
@@ -199,14 +189,15 @@ namespace BoxNestGroup.Views
         public IList<XmlGroupTreeView> FindAllGroupName( string groupName_)
         {
             var rtn = new List<XmlGroupTreeView>();
-            foreach (var view in this)
+
+            this?.ToList().ForEach(view =>
             {
                 if (view.GroupName == groupName_)
                 {
                     rtn.Add(view);
                 }
                 rtn.AddRange(view.ListChild.FindAllGroupName(groupName_));
-            }
+            });
             return rtn;
         }
 
@@ -222,17 +213,23 @@ namespace BoxNestGroup.Views
             {
                 return rtn;
             }
-            foreach (var view in this)
+
+            this?.ToList().ForEach(view_ =>
             {
-                if (view.GroupId == groupId_)
+                if (view_.GroupId == groupId_)
                 {
-                    rtn.Add(view);
+                    rtn.Add(view_);
                 }
-                rtn.AddRange(view.ListChild.FindAllGroupId( groupId_));
-            }
+                rtn.AddRange(view_.ListChild.FindAllGroupId(groupId_));
+            });
             return rtn;
         }
 
+        /// <summary>
+        /// グループ名からグループIDを取得
+        /// </summary>
+        /// <param name="groupName_">グループ名</param>
+        /// <returns></returns>
         public string FindGroupId(string groupName_)
         {
             var rtn =FindAllGroupName(groupName_);
@@ -241,11 +238,18 @@ namespace BoxNestGroup.Views
         }
 
 
+        /// <summary>
+        /// Xml ファイルの読み込み
+        /// </summary>
         public void Open()
         {
             Open(_fileName);
-        }   
+        }
 
+        /// <summary>
+        /// Xml ファイルの読み込み
+        /// </summary>
+        /// <param name="path_">ファイルパス</param>
         public void Open(string path_)
         {
             if (File.Exists(path_) == false)
@@ -257,32 +261,25 @@ namespace BoxNestGroup.Views
             using (var sr = new StreamReader(path_, Encoding.UTF8))
             {
                 var xml = serializer.Deserialize(sr) as XmlGroupTreeModel;
-                LogFile.Instance.WriteLine($"■xml {xml?.Count}");
+                LogFile.Instance.WriteLine($"[{xml?.Count}]");
 
-                //var listPropert = typeof(XmlGroupTreeModel).GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                //foreach (var p in listPropert)
-                //{
-                //    try
-                //    {
-                //        typeof(XmlGroupTreeModel)?.GetProperty(p.Name)?.SetValue(this, p.GetValue(xml));
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        LogFile.Instance.WriteLine("■Open Error: {0}", ex.Message);
-                //    }
-                //}
                 xml?.ToList().ForEach(x_ => this.Add(x_));
                 sr.Close();
             }
-            LogFile.Instance.WriteLine($"■this {this?.Count}");
-
         }
 
+        /// <summary>
+        /// Xml ファイルの保存
+        /// </summary>
         public void Save()
         {
             Save(_fileName);
         }
 
+        /// <summary>
+        /// Xml ファイルの保存
+        /// </summary>
+        /// <param name="path_">ファイルパス</param>
         public void Save(string path_)
         {
             var serializer = new XmlSerializer(typeof(XmlGroupTreeModel));

@@ -1,12 +1,9 @@
-﻿using BoxNestGroup.Managers;
+﻿using BoxNestGroup.Files;
+using BoxNestGroup.Managers;
 using BoxNestGroup.Properties;
 using System.IO;
 using System.Net;
 using System.Windows;
-using System.Diagnostics;
-using DocumentFormat.OpenXml.CustomProperties;
-using DocumentFormat.OpenXml.InkML;
-using BoxNestGroup.Files;
 
 namespace BoxNestGroup
 {
@@ -33,7 +30,6 @@ namespace BoxNestGroup
             InitializeComponent();
 
             _setListner();
-
             _setAuthBox();
         }
 
@@ -53,7 +49,7 @@ namespace BoxNestGroup
         private void _setAuthBox()
         {
             var url = BoxManager.Instance.AuthorizationUrl;
-            LogFile.Instance.WriteLine($"■ setAuthBox url : {url}");
+            LogFile.Instance.WriteLine($"[{url}]");
             _boxOAuthWebBrowser.Source = new System.Uri(url);
         }
 
@@ -93,7 +89,7 @@ namespace BoxNestGroup
                 {
                     var request = context.Request;
 
-                    var rawUrl = request.RawUrl;    // 		RawUrl	"/callback?code=yWtJmL9c2xgtZd3V2jTwCDiMMASK0sF5"	string
+                    var rawUrl = request.RawUrl;    // 		RawUrl	"/callback?code=yZd3V2MMASKWtJmL9c2xgtjTwCDi0sF5"	string
                     var userCode = rawUrl?.Replace(@"/callback?code=", "")??string.Empty;
 
                     return userCode;
@@ -124,22 +120,14 @@ namespace BoxNestGroup
 
                     _listener?.Stop();
                     
-                    var loginFile = System.IO.Directory.GetCurrentDirectory()+@"\"+ Properties.Resource.FILE_NAME_LOGIN_HTML;
-                    //var uri = currentFolder + _htmlLogin;
-
-                    //uri ="file:///" + uri.Replace(@"\","/");
-                    //Debug.WriteLine("■ setAuthBox url : {0}", uri);
-                    //BoxOAuthWebBrowser.Source = new System.Uri(uri);
+                    var loginFile = Directory.GetCurrentDirectory()+@"\"+ Properties.Resource.FILE_NAME_LOGIN_HTML;
 
                     _boxOAuthWebBrowser.NavigateToString(File.ReadAllText(File.ReadAllText(loginFile)));
 
                     Thread.Sleep(1000);
                 }
-
                 this.Close();
             }
         }
-        /*       
-*/
     }
 }

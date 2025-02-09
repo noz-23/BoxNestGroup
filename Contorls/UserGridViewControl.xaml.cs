@@ -2,7 +2,6 @@
 using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using BoxNestGroup.Windows;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,53 +30,54 @@ namespace BoxNestGroup.Contorls
         /// 「追加/更新」ボタン操作
         ///  About画面の表示
         /// </summary>
-        private async void _buttonMakeAndRenewUserGroupClick(object sender, RoutedEventArgs e)
+        private void _buttonMakeAndRenewUserGroupClick(object sender, RoutedEventArgs e)
         {
+            if (BoxManager.Instance.IsOnlne == false)
+            {
+                // オフラインの場合は必要がない
+                return;
+            }
+
             // 更新は削除と追加で行う
             var delList = new List<UserDataGridView>();
             var addList = new List<UserDataGridView>();
-            foreach (var user in SettingManager.Instance.ListUserDataGridView)
+            SettingManager.Instance.ListUserDataGridView?.ToList().ForEach(async (view_) =>
             {
-                if (BoxManager.Instance.IsOnlne == false)
-                {
-                    continue;
-                }
 
-                //if (string.IsNullOrEmpty(user.UserId) == true)
-                if(user.StatudData == UserDataGridView.Status.NEW)
+                if (view_.StatudData == UserDataGridView.Status.NEW)
                 {
-                    LogFile.Instance.WriteLine($"新規 [{user.UserName}] [{user.UserLogin}]");
+                    LogFile.Instance.WriteLine($"新規 [{view_.UserName}] [{view_.UserLogin}]");
                     // 新規
-                    var boxUser = await BoxManager.Instance.CreateUser(user.UserName, user.UserLogin);
+                    var boxUser = await BoxManager.Instance.CreateUser(view_.UserName, view_.UserLogin);
                     if (boxUser != null)
                     {
-                        delList.Add(user);
+                        delList.Add(view_);
                         addList.Add(new UserDataGridView(boxUser));
 
-                        await BoxManager.Instance.AddGroupUserFromName(boxUser, user.ListModAllGroup.Split('\n'));
+                        await BoxManager.Instance.AddGroupUserFromName(boxUser, view_.ListModAllGroup.Split('\n'));
                     }
-                    continue;
+                    return;
                 }
-                if (user.StatudData == UserDataGridView.Status.MOD)
+                if (view_.StatudData == UserDataGridView.Status.MOD)
                 {
-                    LogFile.Instance.WriteLine($"変更 [{user.UserName}] [{user.UserLogin}]");
+                    LogFile.Instance.WriteLine($"変更 [{view_.UserName}] [{view_.UserLogin}]");
                     // 変更
-                    var boxUser = await BoxManager.Instance.UpdateUser(user.UserId, user.UserName, user.UserLogin);
+                    var boxUser = await BoxManager.Instance.UpdateUser(view_.UserId, view_.UserName, view_.UserLogin);
                     if (boxUser != null)
                     {
-                        delList.Add(user);
+                        delList.Add(view_);
                         addList.Add(new UserDataGridView(boxUser));
 
-                        await BoxManager.Instance.UpDateGroupUserFromName(boxUser, user.ListModAllGroup.Split('\n'));
+                        await BoxManager.Instance.UpDateGroupUserFromName(boxUser, view_.ListModAllGroup.Split('\n'));
                     }
-                    continue;
+                    return;
                 }
                 // オフライン
 
-            }
+            });
             // その場で処理するとエラーになるため
-            delList.ForEach(del => SettingManager.Instance.ListUserDataGridView.Remove(del));
-            addList.ForEach(add => SettingManager.Instance.ListUserDataGridView.Add(add));
+            delList.ForEach(del => SettingManager.Instance.ListUserDataGridView?.Remove(del));
+            addList.ForEach(add => SettingManager.Instance.ListUserDataGridView?.Add(add));
         }
 
         /// <summary>
@@ -102,6 +102,11 @@ namespace BoxNestGroup.Contorls
             SettingManager.Instance.SaveExcelFile(path);
         }
 
+        /// <summary>
+        /// ダブルクリック処理(グループ追加)
+        /// </summary>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _dataGridUserMouseDoubleClick(object sender_, MouseButtonEventArgs e_)
         {
             // https://qiita.com/kabosu/items/2e905a532632c1512e65

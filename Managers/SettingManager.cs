@@ -17,12 +17,6 @@ namespace BoxNestGroup.Managers
         private const int INDEX_STORAGE = 4;
         private const int INDEX_COLABO = 5;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
-        }
-
         /// <summary>
         /// シングルトン
         /// </summary>
@@ -32,30 +26,32 @@ namespace BoxNestGroup.Managers
         /// </summary>
         private SettingManager()
         {
-            //ListXmlGroupTreeView.Open();
         }
 
         ~SettingManager() 
         {
-            //ListGroupIdName.SavaData();
-            //ListXmlGroupTreeView.Save();
         }
 
         public void Create()
         {
-            //ListGroupIdName.Clear();
             ListGroupDataGridView.Clear();
             ListUserDataGridView.Clear();
             ListMembershipGroupNameLogin.Clear();
-
             ListXmlGroupTreeView.Open();
         }
 
+        /// <summary>
+        /// 更新通知
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName_));
+        }
 
         /// <summary>
         /// ログインネーム
         /// </summary>
-        private string _loginName = "認証前";
         public string LoginName 
         {
             get { return _loginName; }
@@ -67,7 +63,8 @@ namespace BoxNestGroup.Managers
                 NotifyPropertyChanged("LoginName");
             }               
         }
-        
+        private string _loginName = Properties.Resource.LOGIN_BEFOUR;
+
         /// <summary>
         /// グループビュー
         /// </summary>
@@ -121,13 +118,13 @@ namespace BoxNestGroup.Managers
                 }
                 App.Current.Dispatcher.Invoke(() => {
                     ListUserDataGridView.Add(add);
-                    listGroup.ToList().ForEach(groupName => ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(groupName, userMail)));
+                    listGroup?.ToList().ForEach(groupName => ListMembershipGroupNameLogin.Add(new MembershipGroupNameLoginView(groupName, userMail)));
                 });
             }
 
             App.Current.Dispatcher.Invoke(() =>
             {
-                listGroup.ToList().ForEach(groupName => ListGroupDataGridView.Add(new GroupDataGridView(groupName)));
+                listGroup?.ToList().ForEach(groupName => ListGroupDataGridView.Add(new GroupDataGridView(groupName)));
             });
         }
 
@@ -150,21 +147,19 @@ namespace BoxNestGroup.Managers
                 worksheet.Cell(row, INDEX_COLABO).Value = Properties.Resource.EXCEL_USER_COLABO;
                 row++;
 
-                foreach (var user in SettingManager.Instance.ListUserDataGridView)
+                SettingManager.Instance.ListUserDataGridView?.ToList().ForEach(view_ =>
                 {
-                    if (user.ListModAllGroup == string.Empty)
+                    if (string.IsNullOrEmpty(view_.ListModAllGroup)==true)
                     {
-                        continue;
+                        return;
                     }
-
-                    worksheet.Cell(row, INDEX_NAME).Value = user.UserName;
-                    worksheet.Cell(row, INDEX_MAIL).Value = user.UserLogin;
-                    worksheet.Cell(row, INDEX_GROUP).Value = user.ListModAllGroup.Replace("\n", ";");
-                    worksheet.Cell(row, INDEX_STORAGE).Value = (user.UserSpaceUsed == Properties.Resource.BOX_USER_DISK_UNLIMITED) ? UserDataGridView.BOX_UNLIMITED : user.UserSpaceUsed;
-                    worksheet.Cell(row, INDEX_COLABO).Value = (user.UserExternalCollaborate == Properties.Resource.BOX_USER_LIMIT_ENABLED) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
+                    worksheet.Cell(row, INDEX_NAME).Value = view_.UserName;
+                    worksheet.Cell(row, INDEX_MAIL).Value = view_.UserLogin;
+                    worksheet.Cell(row, INDEX_GROUP).Value = view_.ListModAllGroup.Replace("\n", ";");
+                    worksheet.Cell(row, INDEX_STORAGE).Value = (view_.UserSpaceUsed == Properties.Resource.BOX_USER_DISK_UNLIMITED) ? UserDataGridView.BOX_UNLIMITED : view_.UserSpaceUsed;
+                    worksheet.Cell(row, INDEX_COLABO).Value = (view_.UserExternalCollaborate == Properties.Resource.BOX_USER_LIMIT_ENABLED) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
                     row++;
-
-                }
+                });
 
                 workbook.SaveAs(path_);
             }
@@ -178,21 +173,20 @@ namespace BoxNestGroup.Managers
         /// <returns></returns>
         public IList<string> ConvertGroupNameToId(IList<string> listGroupName_)
         {
-            LogFile.Instance.WriteLine($"ConvertGroupName {string.Join(",", listGroupName_)}");
+            LogFile.Instance.WriteLine($"[{string.Join(",", listGroupName_)}]");
 
             var rtn = new List<string>();
 
             // グループ名からグループIDに変換
-            foreach (var groupName in listGroupName_)
+            listGroupName_?.ToList().ForEach(groupName_ =>
             {
-                var groupId = ListGroupDataGridView.GetBoxGroupName(groupName);
-
+                var groupId = ListGroupDataGridView.GetBoxGroupName(groupName_);
                 if (string.IsNullOrEmpty(groupId) == true)
                 {
-                    continue;
+                    return;
                 }
                 rtn.Add(groupId);
-            }
+            });
 
             return rtn;
         }

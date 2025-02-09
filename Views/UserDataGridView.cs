@@ -1,7 +1,6 @@
 ﻿using Box.V2.Models;
 using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace BoxNestGroup.Views
@@ -68,26 +67,22 @@ namespace BoxNestGroup.Views
             _flgInital = true;
         }
 
-        protected override void _NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
-        {
-            if (_flgInital == true)
-            {
-                _statudData = (string.IsNullOrEmpty(UserId) ==true) ? Status.NEW : Status.MOD;
-                base._NotifyPropertyChanged("StatusName");
-            }
-
-            base._NotifyPropertyChanged(propertyName_);
-        }
-
+        /// <summary>
+        /// 初期読み込みフラグ
+        /// </summary>
         private bool _flgInital = false;
 
-        private Status _statudData = Status.NONE;
+        /// <summary>
+        /// ステータス表示
+        /// </summary>
         public Status StatudData
         {
             get => _statudData;
             private set => _statudData = value;
         }
-        public string StatusName 
+        private Status _statudData = Status.NONE;
+
+        public string StatusName
         {
             get => StatusString(_statudData);
         }
@@ -96,40 +91,40 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// ユーザー名
         /// </summary>
-        private string _userName = string.Empty;
         public string UserName
         {
             get => _userName;
             set => _SetValue(ref _userName, value);
         }
+        private string _userName = string.Empty;
+
         /// <summary>
         /// メールアドレス
         /// </summary>
-        private string _userLogin = string.Empty;
         public string UserLogin
         {
             get => _userLogin;
-            set =>_SetValue(ref _userLogin, value);
+            set => _SetValue(ref _userLogin, value);
         }
+        private string _userLogin = string.Empty;
 
         /// <summary>
         /// ユーザーID
         /// </summary>
         public string UserId { get; private set; } = string.Empty;
+
         /// <summary>
         /// 現在所属の最小表示(ネスト分引く)
         /// </summary>
-        //public string ListNowGroup{get=>string.Join("\n", FolderManager.Instance.ListMinimumGroup(_listNowAllGroup));}
         public string ListNowGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListMinimumGroup(_listNowAllGroup)); }
 
         /// <summary>
         /// 現在所属の全所属
         /// </summary>
-        private List<string> _listNowAllGroup =new List<string>();
         public string ListNowAllGroup
         {
-            get=> string.Join("\n", _listNowAllGroup);
-            set 
+            get => string.Join("\n", _listNowAllGroup);
+            set
             {
                 _listNowAllGroup.Clear();
                 _listNowAllGroup.AddRange(value.Split("\n"));
@@ -138,14 +133,14 @@ namespace BoxNestGroup.Views
                 _NotifyPropertyChanged("ListNowGroup");
             }
         }
+        private List<string> _listNowAllGroup = new List<string>();
 
         /// <summary>
         /// 変更後の追加
         /// </summary>
-        private List<string> _listModGroup = new List<string>();
         public string ListModGroup
         {
-            get=> string.Join("\n", _listModGroup);
+            get => string.Join("\n", _listModGroup);
             set
             {
                 _listModGroup.Clear();
@@ -154,12 +149,12 @@ namespace BoxNestGroup.Views
                 _NotifyPropertyChanged("ListModAllGroup");
             }
         }
+        private List<string> _listModGroup = new List<string>();
+
         /// <summary>
         /// 変更後の前所属(ネスト後)
         /// </summary>
-        //public string ListModAllGroup{get=> string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listModGroup));}
         public string ListModAllGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListUniqueGroup(_listModGroup)); }
-
 
         /// <summary>
         /// ユーザーの領域制限
@@ -175,6 +170,20 @@ namespace BoxNestGroup.Views
         /// </summary>
         private BoxUser? _userBox = null;
 
+        /// <summary>
+        /// 通知の変更
+        /// </summary>
+        /// <param name="propertyName_"></param>
+        protected override void _NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
+        {
+            if (_flgInital == true)
+            {
+                _statudData = (string.IsNullOrEmpty(UserId) ==true) ? Status.NEW : Status.MOD;
+                base._NotifyPropertyChanged("StatusName");
+            }
+
+            base._NotifyPropertyChanged(propertyName_);
+        }
 
         /// <summary>
         /// グループ名の更新

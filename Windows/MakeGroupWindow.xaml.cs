@@ -14,12 +14,12 @@ namespace BoxNestGroup.Windows
         {
             InitializeComponent();
 
-            foreach (var view in SettingManager.Instance.ListGroupDataGridView)
-            {
-                ListGroup.Add(new MakeGroupView( view));
-            }
+            SettingManager.Instance.ListGroupDataGridView?.ToList().ForEach(view_ => ListGroup.Add(new MakeGroupView(view_)));
         }
 
+        /// <summary>
+        /// 作成グループリスト
+        /// </summary>
         public ObservableCollection<MakeGroupView> ListGroup{get;private set;} =new ObservableCollection<MakeGroupView>();
 
         /// <summary>

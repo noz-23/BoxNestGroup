@@ -14,7 +14,6 @@ namespace BoxNestGroup.Windows
         /// <summary>
         /// 選択されたグループリスト
         /// </summary>
-        //public string ListSelectGroup { get => string.Join("\n", FolderManager.Instance.ListUniqueGroup(_listSelect)); }
         public string ListSelectGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListUniqueGroup(_listSelect.ToList())); }
 
         /// <summary>
@@ -26,7 +25,6 @@ namespace BoxNestGroup.Windows
             InitializeComponent();
 
             _listSelect.UnionWith( groups.Split("\n"));
-            //_setCheckedItem(_treeBoxGroup.ItemsSource as ObservableCollection<FolderGroupTreeView>);
             _setCheckedItem(_treeBoxGroup.ItemsSource as XmlGroupTreeModel);
         }
 
@@ -34,7 +32,6 @@ namespace BoxNestGroup.Windows
         /// チェックボックスの状態を設定
         /// </summary>
         /// <param name="list_"></param>
-        //private void _setCheckedItem(ObservableCollection<FolderGroupTreeView> list_)
         private void _setCheckedItem(XmlGroupTreeModel? list_)
         {
             list_?.ToList().ForEach(item =>
@@ -48,7 +45,6 @@ namespace BoxNestGroup.Windows
         /// チェックされたアイテムを取得
         /// </summary>
         /// <param name="list_"></param>
-        //private void _getCheckItem(ObservableCollection<FolderGroupTreeView> list_)
         private void _getCheckItem(XmlGroupTreeModel? list_)
         {
             list_?.ToList().ForEach(item =>
@@ -80,7 +76,6 @@ namespace BoxNestGroup.Windows
         private void _okButtonClick(object sender_, RoutedEventArgs e_)
         {
             _listSelect.Clear();
-            //_getCheckItem(_treeBoxGroup.ItemsSource as ObservableCollection<FolderGroupTreeView>);
             _getCheckItem(_treeBoxGroup.ItemsSource as XmlGroupTreeModel);
 
             DialogResult = true;

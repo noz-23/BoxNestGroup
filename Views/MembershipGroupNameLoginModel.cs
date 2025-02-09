@@ -1,13 +1,5 @@
-﻿using Box.V2.Models;
-using BoxNestGroup.Files;
-using BoxNestGroup.Managers;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Collections.Generic;
+﻿using BoxNestGroup.Files;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
@@ -26,7 +18,7 @@ namespace BoxNestGroup.Views
                 return 0;
             }
 
-            return this.ToList().FindAll((d) => (d.GroupName == groupName_))?.Count ?? 0;
+            return this.ToList().FindAll(view_ => (view_.GroupName == groupName_))?.Count ?? 0;
         }
 
         /// <summary>
@@ -43,7 +35,7 @@ namespace BoxNestGroup.Views
                 return rtn;
             }
 
-            this.ToList().FindAll((d) => (d.UserLogin == userLogin_))?.ForEach(member=> rtn.Add(member.GroupName));
+            this.ToList().FindAll((d) => (d.UserLogin == userLogin_))?.ForEach(member_=> rtn.Add(member_.GroupName));
 
             return rtn;
         }
@@ -53,13 +45,12 @@ namespace BoxNestGroup.Views
         /// <param name="userId_">ユーザーID</param>
         /// <param name="listAdd_">追加したいリストを指定する場合のグループ名一覧</param>
         /// <returns>ユーザーとグループの紐づけ一覧</returns>
-        //public IList<BoxGroupMembership> ListGroupMembershipFromUserId(string userId_, IList<string>? listAdd_ = null)
         public IList<MembershipGroupNameLoginView> ListGroupMembershipFromUserAddress(string userAddress_, IList<string>? listAdd_ = null)
         {
-            var rtn = this.ToList().FindAll((d) => (d.UserLogin == userAddress_));
+            var rtn = this.ToList().FindAll(view_ => (view_.UserLogin == userAddress_));
             if (listAdd_ != null)
             {
-                return rtn.FindAll((d) => (listAdd_.Contains(d.GroupName)) == true);
+                return rtn.FindAll(view_ => (listAdd_.Contains(view_.GroupName)) == true);
             }
 
             return rtn;
@@ -74,7 +65,7 @@ namespace BoxNestGroup.Views
         {
             LogFile.Instance.WriteLine($"[{oldName_}] -> [{newName_}]");
 
-            this.ToList().FindAll( m => m.GroupName == oldName_)?.ForEach(m => m.GroupName = newName_);  
+            this.ToList().FindAll(view_ => view_.GroupName == oldName_)?.ForEach(view_ => view_.GroupName = newName_);  
         }
     }
 }

@@ -1,25 +1,29 @@
 ﻿using BoxNestGroup.Files;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
+    /// <summary>
+    /// グループ作成用ビュー
+    /// </summary>
     public class MakeGroupView: BaseView
     {
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="groupView_">元のグループビュー</param>
         public MakeGroupView(GroupDataGridView groupView_) : base()
         {
             LogFile.Instance.WriteLine($"{groupView_.GroupName} {groupView_.GroupId}");
-            //
 
             IsChecked = false;
             GroupName = groupView_.GroupName;
             GroupId = groupView_.GroupId;
         }
 
+        /// <summary>
+        /// 選択したか
+        /// </summary>
         public bool IsChecked { get; set; } = false; 
 
         /// <summary>

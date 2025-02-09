@@ -1,7 +1,6 @@
 ﻿using Box.V2.Models;
 using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace BoxNestGroup.Views
@@ -35,15 +34,9 @@ namespace BoxNestGroup.Views
 
             UserCount = SettingManager.Instance.ListMembershipGroupNameLogin.CountBoxUserInGroupName(GroupName);
 
-            //_inital();
-            //
             string name = string.Empty;
 
             // 設定がない場合は作る
-            //if (FolderManager.Instance.Contains(GroupName) == false)
-            //{
-            //    FolderManager.Instance.CreateFolder(GroupName);
-            //}
             if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(GroupName) == false)
             {
                 SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, null));
@@ -58,7 +51,7 @@ namespace BoxNestGroup.Views
         public GroupDataGridView(BoxGroup group_)
         {
             LogFile.Instance.WriteLine($"{group_.Id} {group_.Name}");
-            //_groupBox = group_;
+            //
             GroupName = group_.Name;
             OldGroupName = group_.Name;
             GroupId = group_.Id;
@@ -68,64 +61,99 @@ namespace BoxNestGroup.Views
 
             // グループ名の変更された場合の処理
             string name = string.Empty;
-            //if (SettingManager.Instance.ListGroupIdName.TryGetValue(GroupId, out name) == true)
-            //{
-            //    // 設定と現状の名前が違う場合
-            //    if (GroupName != name)
-            //    {
-            //        //if (FolderManager.Instance.Contains(name) == true)
-            //        //{
-            //        //    FolderManager.Instance.UpdateGroupName(name, GroupName);
-            //        //}
-            //        if (SettingManager.Instance.ListXmlGroupTreeView.ContainsName(GroupName) == false)
-            //        {
-            //            SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(name, GroupName);
-            //        }
-            //    }
-            //}
+
             var listTreeView = SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupId(GroupId);
-            foreach (var view in listTreeView)
+            listTreeView?.ToList().ForEach(view_ => 
             {
-                if (view.GroupName != GroupName)
+                if (view_.GroupName != GroupName)
                 {
-                    view.GroupName = GroupName;
+                    view_.GroupName = GroupName;
                 }
-            }
+            });
 
             // 設定がない場合は作る
-            //if (FolderManager.Instance.Contains(GroupName) == false)
-            //{
-            //    FolderManager.Instance.CreateFolder(GroupName);
-            //}
             if (SettingManager.Instance.ListXmlGroupTreeView.ContainsId(GroupId) == false)
             {
                 SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, GroupId, null));
             }
 
             var listAllGroupName = SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupName(GroupName);
-
-
-            if (listAllGroupName.Count>0)
+            listAllGroupName?.ToList().ForEach(view_ =>
             {
-                foreach (var view in listAllGroupName)
+                // TreeView にグループIDがない場合は追加する
+                if (string.IsNullOrEmpty(view_.GroupId) == true)
                 {
-                    if (string.IsNullOrEmpty(view.GroupId)==true)
-                    {
-                        view.GroupId = GroupId;
-                    }
+                    view_.GroupId = GroupId;
                 }
-            }
-            else
+            });
+
+            if (listAllGroupName == null)
             {
+                // ない場合は新規作成
                 SettingManager.Instance.ListXmlGroupTreeView.Add(new XmlGroupTreeView(GroupName, GroupId, null));
             }
 
-            //SettingManager.Instance.ListGroupIdName[GroupId] = GroupName;
             _flgInital = true;
         }
 
         /// <summary>
-        /// 
+        /// コンストラクタの場合、状態更新しない
+        /// </summary>
+        private bool _flgInital = false;
+
+        /// <summary>
+        /// ステータス表示
+        /// </summary>
+
+        public Status StatudData
+        {
+            get => _statudData;
+            private set => _statudData = value;
+        }
+        private Status _statudData = Status.NONE;
+
+        public string StatusName
+        {
+            get => StatusString(_statudData);
+        }
+
+        /// <summary>
+        /// グループ名
+        /// </summary>
+        public string GroupName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// グループ名変更判定
+        /// </summary>
+        public bool IsSameOldGroupName { get => GroupName == OldGroupName; }
+
+        /// <summary>
+        /// 旧グループ名
+        /// </summary>
+        public string OldGroupName { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// グループID
+        /// </summary>
+        public string GroupId { get; set; } = string.Empty;
+        /// <summary>
+        /// 最大のネスト最大数(基本並び替え用)
+        /// </summary>
+        public int MaxNestCount { get => SettingManager.Instance.ListXmlGroupTreeView.MaxNestCount(GroupName); }
+
+
+        /// <summary>
+        /// フォルダの数
+        /// </summary>
+        public int FolderCount { get => SettingManager.Instance.ListXmlGroupTreeView.NameCount(GroupName); }
+
+        /// <summary>
+        /// ユーザーの数
+        /// </summary>
+        public int UserCount { get; private set; } = 0;
+
+        /// <summary>
+        /// 通知の変更
         /// </summary>
         /// <param name="propertyName_"></param>
         protected override void _NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")
@@ -137,63 +165,5 @@ namespace BoxNestGroup.Views
             }
             base._NotifyPropertyChanged(propertyName_);
         }
-
-        /// <summary>
-        /// コンストラクタの場合、状態更新しない
-        /// </summary>
-        private bool _flgInital = false;
-
-        /// <summary>
-        /// 状態
-        /// </summary>
-
-        private Status _statudData = Status.NONE;
-        public Status StatudData
-        {
-            get => _statudData;
-            private set => _statudData = value;
-        }
-        public string StatusName
-        {
-            get => StatusString(_statudData);
-        }
-
-        /// <summary>
-        /// グループ名
-        /// </summary>
-        public string GroupName { get; set; } = string.Empty;
-        public bool IsSameOldGroupName { get => GroupName == OldGroupName; }
-
-        public string OldGroupName { get; private set; } = string.Empty;
-
-        /// <summary>
-        /// グループID
-        /// </summary>
-        public string GroupId { get; set; } = string.Empty;
-        /// <summary>
-        /// 最大のネスト最大数(基本並び替え用)
-        /// </summary>
-        //public int MaxNestCount { get => maxNestCount(FolderManager.Instance.ListPathFindFolderName(GroupName)); }
-        public int MaxNestCount { get => SettingManager.Instance.ListXmlGroupTreeView.MaxNestCount(GroupName); }
-
-
-        /// <summary>
-        /// フォルダの数
-        /// </summary>
-        //public int FolderCount { get => FolderManager.Instance.ListPathFindFolderName(GroupName).Count; }
-        public int FolderCount { get => SettingManager.Instance.ListXmlGroupTreeView.NameCount(GroupName); }
-
-        /// <summary>
-        /// ユーザーの数
-        /// </summary>
-        public int UserCount { get; private set; } = 0;
-
-
-        /// <summary>
-        /// 最大のネスト数の取得
-        /// </summary>
-        /// <param name="list_">パス一覧</param>
-        /// <returns>最大のネスト数</returns>
-
     }
 }

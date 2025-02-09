@@ -150,4 +150,7 @@
   <data name="LOGIN_FAIL" xml:space="preserve">
     <value>取得失敗</value>
   </data>
+  <data name="LOGIN_BEFOUR" xml:space="preserve">
+    <value>認証前</value>
+  </data>
 </root>

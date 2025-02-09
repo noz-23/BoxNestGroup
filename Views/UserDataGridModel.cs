@@ -1,10 +1,5 @@
 ﻿using BoxNestGroup.Files;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
@@ -29,7 +24,7 @@ namespace BoxNestGroup.Views
         {
             LogFile.Instance.WriteLine($"[{oldName_}] -> [{newName_}]");
 
-            this.ToList().ForEach(m => m.UpdateGroupName(oldName_, newName_));
+            this?.ToList().ForEach(m => m.UpdateGroupName(oldName_, newName_));
         }
     }
 }

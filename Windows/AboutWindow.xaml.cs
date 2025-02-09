@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Windows;
 
 namespace BoxNestGroup.Windows
 {
@@ -26,12 +26,14 @@ namespace BoxNestGroup.Windows
             this.Close();
         }
 
+        /// <summary>
+        /// アプリケーションバージョン
+        /// </summary>
         public string ApplicationVersion 
         {
             get
             {
                 var asmName =Assembly.GetExecutingAssembly().GetName();
-
                 return $"{asmName.Name} Ver.{asmName?.Version?.ToString()??string.Empty} \nLisence: MIT license\n";
             }
         }

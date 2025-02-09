@@ -1,20 +1,20 @@
-﻿using DocumentFormat.OpenXml.Office2010.PowerPoint;
-using DocumentFormat.OpenXml.Vml.Office;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace BoxNestGroup.Files
 {
+    /// <summary>
+    /// XML 読み書きのBase
+    /// </summary>
+    /// <typeparam name="T">利用しやすいので親のテンプレート</typeparam>
     public class BaseXml<T> where T : class
     {
+        /// <summary>
+        /// XMLファイルを読み込む
+        /// </summary>
+        /// <param name="path_"></param>
         public void Open(string path_)
         {
             var serializer = new XmlSerializer(typeof(T));
@@ -23,13 +23,14 @@ namespace BoxNestGroup.Files
                 var xml = serializer.Deserialize(sr) as T;
 
                 var listPropert = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                foreach (var p in listPropert)
-                {
-                    typeof(T)?.GetProperty(p.Name)?.SetValue(this, p.GetValue(xml));
-                }
+                listPropert?.ToList().ForEach(p_ => typeof(T)?.GetProperty(p_.Name)?.SetValue(this, p_.GetValue(xml)));
             }
         }
 
+        /// <summary>
+        /// XMLファイルに保存する
+        /// </summary>
+        /// <param name="path_"></param>
         public void Save(string path_)
         {
             var serializer = new XmlSerializer(typeof(T));

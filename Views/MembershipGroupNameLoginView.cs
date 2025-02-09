@@ -1,11 +1,4 @@
 ﻿using BoxNestGroup.Files;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BoxNestGroup.Views
 {
@@ -36,6 +29,5 @@ namespace BoxNestGroup.Views
             GroupName = groupName_;
             UserLogin = userLogin_;
         }
-
     }
 }

@@ -1,13 +1,12 @@
-﻿using BoxNestGroup.Managers;
+﻿using BoxNestGroup.Extensions;
+using BoxNestGroup.Files;
+using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using BoxNestGroup.Windows;
-using BoxNestGroup.Extensions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Controls;
-using System.Security.Policy;
-using BoxNestGroup.Files;
 
 namespace BoxNestGroup.Contorls
 {
@@ -100,34 +99,42 @@ namespace BoxNestGroup.Contorls
 
             }
         }
-
+        
+        /// <summary>
+        /// コンテキストメニュー 追加クリック
+        /// </summary>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _addClick(object sender_, RoutedEventArgs e_)
         {
             var win = new MakeGroupWindow();
             if (win.ShowDialog() == true)
             {
-                //var element = e_.OriginalSource as FrameworkElement;
-                //var item = element?.DataContext as XmlGroupTreeView;
                 var item = _treeView.SelectedItem as XmlGroupTreeView;
 
                 LogFile.Instance.WriteLine($"[{item?.GroupName}]");
 
                 var listMake = win.ListGroup.ToList().FindAll(s_ => s_.IsChecked == true);
-                foreach (var view in listMake)
+
+                listMake?.ToList().ForEach(view_ => 
                 {
-                    if (item?.ListChild.ToList().Find(x_ => x_.GroupName == view.GroupName) != null)
+                    if (item?.ListChild.ToList().Find(x_ => x_.GroupName == view_.GroupName) != null)
                     {
-                        continue;
+                        return;
                     }
-                    item?.ListChild.Add(new XmlGroupTreeView(view.GroupName,view.GroupId, item));
-                }
+                    item?.ListChild.Add(new XmlGroupTreeView(view_.GroupName, view_.GroupId, item));
+
+                });
             }
         }
+
+        /// <summary>
+        /// コンテキストメニュー 削除クリック
+        /// </summary>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _deleteClick(object sender_, RoutedEventArgs e_)
         {
-            //var element = e_.OriginalSource as FrameworkElement;
-            //var item = element?.DataContext as XmlGroupTreeView;
-
             var item = _treeView.SelectedItem as XmlGroupTreeView;
 
             LogFile.Instance.WriteLine($"[{item?.GroupName}]");
