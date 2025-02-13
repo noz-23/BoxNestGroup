@@ -50,6 +50,10 @@ ClosedXML : MIT
 
   https://github.com/ClosedXML/ClosedXML
 
+Costura.Fody : MIT
+
+  https://github.com/Fody/Costura
+
 
 ## 6.バージョン履歴
 

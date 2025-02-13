@@ -1,7 +1,9 @@
 ﻿using Box.V2.Models;
 using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using BoxNestGroup.Extensions;
 
 namespace BoxNestGroup.Views
 {
@@ -133,7 +135,7 @@ namespace BoxNestGroup.Views
                 _NotifyPropertyChanged("ListNowGroup");
             }
         }
-        private List<string> _listNowAllGroup = new List<string>();
+        public ObservableCollection<string> _listNowAllGroup { get; private set; } = new ObservableCollection<string>();
 
         /// <summary>
         /// 変更後の追加
