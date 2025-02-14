@@ -11,7 +11,6 @@
     <system:String x:Key="UserGroupAll">現在[所　属]</system:String>
     <system:String x:Key="UserUsed">容量制限</system:String>
     <system:String x:Key="UserColabo">外部コラボ</system:String>
-    <system:String x:Key="UserName">ユーザー名</system:String>
     <system:String x:Key="GroupName">グループ名</system:String>
     <system:String x:Key="GroupId">グループID</system:String>
     <system:String x:Key="GroupNestMax">ネスト最大数</system:String>

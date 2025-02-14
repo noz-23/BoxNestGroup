@@ -1,5 +1,6 @@
 using BoxNestGroup.Files;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -142,23 +143,28 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="listGroupName_">全フォルダ(グループ)名一覧</param>
         /// <returns>最小のフォルダ(グループ)名一覧</returns>
-        public IList<string> ListMinimumGroup(List<string> listGroupName_)
+        public IList<string> ListMinimumGroup(ICollection<string> listGroupName_)
         {
+            LogFile.Instance.WriteLine($"listGroupName_{string.Join(",", listGroupName_)}");
+
             var listNest = new HashSet<string>();
             var rtn = new HashSet<string>(listGroupName_);
 
-            // ネストしているフォルダの削除
+            // ネストしているグループ名の削除
             var listView = new List<XmlGroupTreeView>();
-            listGroupName_.ForEach(groupName_ => listView.AddRange(FindAllGroupName(groupName_)));
+            listGroupName_.ToList().ForEach(groupName_ => listView.AddRange(FindAllGroupName(groupName_)));
+            LogFile.Instance.WriteLine($"listView{string.Join(",", listView)}");
 
             // すべての親の名前を取得
             var listParent = new HashSet<string>();
             listView.ForEach(view => listParent.UnionWith(view.ListAllParentGroupName()));
+            LogFile.Instance.WriteLine($"listParent{string.Join(",", listParent)}");
 
             // 親の名前を削除
             listParent?.ToList().ForEach(parent_ => rtn.Remove(parent_));
 
             rtn.Remove(string.Empty);
+            LogFile.Instance.WriteLine($"rtn{string.Join(",", rtn)}");
 
             return rtn.ToList();
         }
@@ -168,17 +174,17 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="listGroupName_">ネスト前のグループ名一覧</param>
         /// <returns>全フォルダ(グループ)名一覧</returns>
-        public List<string> ListUniqueGroup(List<string> listGroupName_)
+        public ICollection<string> ListUniqueGroup(ICollection<string> listGroupName_)
         {
             var listView =new List<XmlGroupTreeView>();
 
-            listGroupName_.ForEach(groupName=> listView.AddRange(FindAllGroupName(groupName)));
+            listGroupName_.ToList().ForEach(groupName=> listView.AddRange(FindAllGroupName(groupName)));
 
             var rtn = new HashSet<string>(listGroupName_);
             listView.ForEach(view_ => rtn.UnionWith(view_.ListAllParentGroupName()));
 
             rtn.Remove(string.Empty);
-            return rtn.ToList();
+            return rtn;
         }
 
         /// <summary>
@@ -266,6 +272,9 @@ namespace BoxNestGroup.Views
                 xml?.ToList().ForEach(x_ => this.Add(x_));
                 sr.Close();
             }
+
+            this?.ToList().ForEach(x_ => x_.SetParent(x_));
+
         }
 
         /// <summary>

@@ -37,8 +37,10 @@ namespace BoxNestGroup.Views
             UserLogin = user_?.Login ?? string.Empty;
             UserId = user_?.Id ?? string.Empty;
 
-            _listNowAllGroup.Clear();
-            _listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_?.Login??string.Empty));
+            //_listNowAllGroup.Clear();
+            //_listNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_?.Login??string.Empty));
+            ListNowAllGroup.Clear();
+            ListNowAllGroup.AddRange(SettingManager.Instance.ListMembershipGroupNameLogin.ListGroupNameInUser(user_?.Login ?? string.Empty));
 
             UserSpaceUsed = ((user_?.SpaceUsed ?? -1) != -1) ? user_?.SpaceUsed?.ToString()??string.Empty:Properties.Resource.BOX_USER_DISK_UNLIMITED;
             UserExternalCollaborate = (user_?.IsExternalCollabRestricted == true) ? Properties.Resource.BOX_USER_LIMIT_ENABLED : Properties.Resource.BOX_USER_LIMIT_DISABELD;
@@ -61,8 +63,10 @@ namespace BoxNestGroup.Views
             UserLogin = login_;
             UserId = Properties.Resource.ID_NAME_OFFLINE;
 
-            _listNowAllGroup.Clear();
-            _listNowAllGroup.AddRange(listGroup_);
+            //_listNowAllGroup.Clear();
+            //_listNowAllGroup.AddRange(listGroup_);
+            ListNowAllGroup.Clear();
+            ListNowAllGroup.AddRange(listGroup_);
 
             UserSpaceUsed = (strage_.Contains(BOX_UNLIMITED) == true) ? Properties.Resource.BOX_USER_DISK_UNLIMITED : strage_;
             UserExternalCollaborate = (colabo_.Contains(BOX_DISABLED) == true) ? Properties.Resource.BOX_USER_LIMIT_ENABLED : Properties.Resource.BOX_USER_LIMIT_DISABELD;
@@ -118,24 +122,36 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 現在所属の最小表示(ネスト分引く)
         /// </summary>
-        public string ListNowGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListMinimumGroup(_listNowAllGroup)); }
+        //public string ListNowGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListMinimumGroup(_listNowAllGroup)); }
+        public ObservableCollection<string> ListNowGroup{get =>new ObservableCollection<string>(SettingManager.Instance.ListXmlGroupTreeView.ListMinimumGroup(ListNowAllGroup));}
 
         /// <summary>
         /// 現在所属の全所属
         /// </summary>
-        public string ListNowAllGroup
-        {
-            get => string.Join("\n", _listNowAllGroup);
+        //public string ListNowAllGroup
+        //{
+        //    get => string.Join("\n", _listNowAllGroup);
+        //    set
+        //    {
+        //        _listNowAllGroup.Clear();
+        //        _listNowAllGroup.AddRange(value.Split("\n"));
+        //        _listNowAllGroup.Sort();
+        //        _NotifyPropertyChanged();
+        //        _NotifyPropertyChanged("ListNowGroup");
+        //    }
+        //}
+        public ObservableCollection<string> ListNowAllGroup
+        { 
+            get=> _listNowAllGroup;
             set
             {
                 _listNowAllGroup.Clear();
-                _listNowAllGroup.AddRange(value.Split("\n"));
-                _listNowAllGroup.Sort();
+                _listNowAllGroup.AddRange(value);
                 _NotifyPropertyChanged();
                 _NotifyPropertyChanged("ListNowGroup");
             }
         }
-        public ObservableCollection<string> _listNowAllGroup { get; private set; } = new ObservableCollection<string>();
+        private ObservableCollection<string> _listNowAllGroup = new ObservableCollection<string>();
 
         /// <summary>
         /// 変更後の追加
@@ -194,12 +210,19 @@ namespace BoxNestGroup.Views
         /// <param name="newName_">新しいグループ</param>
         public void UpdateGroupName(string oldName_, string newName_)
         {
-            if (_listNowAllGroup.Contains(oldName_) == true) 
+            //if (_listNowAllGroup.Contains(oldName_) == true) 
+            //{
+            //    _listNowAllGroup.Remove(oldName_);
+            //    _listNowAllGroup.Add(newName_);
+            //}
+            //_listNowAllGroup.Sort();
+            if (ListNowAllGroup.Contains(oldName_) == true)
             {
-                _listNowAllGroup.Remove(oldName_);
-                _listNowAllGroup.Add(newName_);
+                ListNowAllGroup.Remove(oldName_);
+                ListNowAllGroup.Add(newName_);
             }
-            _listNowAllGroup.Sort();
+            ListNowAllGroup.Sort();
+
         }
     }
 }

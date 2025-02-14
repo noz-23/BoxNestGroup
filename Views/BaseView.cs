@@ -10,7 +10,7 @@ namespace BoxNestGroup.Views
         /// </summary>
         public enum Status
         {
-            [Description("なし")]
+            [Description("　　")]
             NONE,
             [Description("新規")]
             NEW,
