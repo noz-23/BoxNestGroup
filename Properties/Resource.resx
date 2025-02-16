@@ -153,4 +153,7 @@
   <data name="LOGIN_BEFOUR" xml:space="preserve">
     <value>認証前</value>
   </data>
+  <data name="FILE_NAME_XML_GROUP_TREE_VIEW" xml:space="preserve">
+    <value>XmlGroupTree.xml</value>
+  </data>
 </root>

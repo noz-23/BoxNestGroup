@@ -3,6 +3,8 @@ using BoxNestGroup.Views;
 using ClosedXML.Excel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using static BoxNestGroup.Views.BaseView;
 
 namespace BoxNestGroup.Managers
 {
@@ -147,15 +149,19 @@ namespace BoxNestGroup.Managers
                 worksheet.Cell(row, INDEX_COLABO).Value = Properties.Resource.EXCEL_USER_COLABO;
                 row++;
 
+                // 変更
+                var allWrite =(System.Windows.MessageBox.Show("変更箇所だけ書き出すか?","確認",MessageBoxButton.YesNo) ==MessageBoxResult.Yes);
+
                 SettingManager.Instance.ListUserDataGridView?.ToList().ForEach(view_ =>
                 {
-                    if (string.IsNullOrEmpty(view_.ListModAllGroup)==true)
+                    if (allWrite == false && view_.StatudData != Status.NONE)
                     {
                         return;
                     }
+
                     worksheet.Cell(row, INDEX_NAME).Value = view_.UserName;
                     worksheet.Cell(row, INDEX_MAIL).Value = view_.UserLogin;
-                    worksheet.Cell(row, INDEX_GROUP).Value = view_.ListModAllGroup.Replace("\n", ";");
+                    worksheet.Cell(row, INDEX_GROUP).Value = string.Join(";",view_.ListNowAllGroup);
                     worksheet.Cell(row, INDEX_STORAGE).Value = (view_.UserSpaceUsed == Properties.Resource.BOX_USER_DISK_UNLIMITED) ? UserDataGridView.BOX_UNLIMITED : view_.UserSpaceUsed;
                     worksheet.Cell(row, INDEX_COLABO).Value = (view_.UserExternalCollaborate == Properties.Resource.BOX_USER_LIMIT_ENABLED) ? UserDataGridView.BOX_ENABLED : UserDataGridView.BOX_DISABLED;
                     row++;

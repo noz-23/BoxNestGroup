@@ -1,5 +1,8 @@
 ﻿using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace BoxNestGroup.Windows
@@ -14,17 +17,18 @@ namespace BoxNestGroup.Windows
         /// <summary>
         /// 選択されたグループリスト
         /// </summary>
-        public string ListSelectGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListUniqueGroup(_listSelect.ToList())); }
-
+        public ObservableCollection<string> ListSelectGroup { get=> new ObservableCollection<string>( SettingManager.Instance.ListXmlGroupTreeView.ListUniqueGroup(_listSelect)); }
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="groups"></param>
-        public SelectGroupWindows( string groups)
+        public SelectGroupWindows(IList<string> listGroup)
         {
             InitializeComponent();
 
-            _listSelect.UnionWith( groups.Split("\n"));
+            var item =_treeBoxGroup.ItemContainerGenerator;
+
+            _listSelect.UnionWith(listGroup);
             _setCheckedItem(_treeBoxGroup.ItemsSource as XmlGroupTreeModel);
         }
 
@@ -60,8 +64,8 @@ namespace BoxNestGroup.Windows
         /// <summary>
         /// キャンセルボタンクリック
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _canselButtonClick(object sender_, RoutedEventArgs e_)
         {
             DialogResult = false;
@@ -71,8 +75,8 @@ namespace BoxNestGroup.Windows
         /// <summary>
         /// OKボタンクリック
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _okButtonClick(object sender_, RoutedEventArgs e_)
         {
             _listSelect.Clear();

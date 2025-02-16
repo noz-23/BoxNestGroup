@@ -53,10 +53,7 @@ namespace BoxNestGroup.Windows
         /// <param name="e_"></param>
         private async void _loaded(object sender_, RoutedEventArgs e_)
         {
-            if (Run != null)
-            {
-                await Task.Run(async () => { await Run.Invoke(this); });
-            }
+            await Task.Run( () => {  Run?.Invoke(this); });
             this.Close();
         }
     }

@@ -6,11 +6,12 @@ namespace BoxNestGroup
 {
     /// <summary>
     /// SettingsWindow.xaml の相互作用ロジック
+    /// 設定表示
     /// </summary>
     public partial class SettingsWindow : Window
     {
         /// <summary>
-        /// 設定表示
+        /// コンストラクタ
         /// </summary>
         public SettingsWindow()
         {
@@ -28,9 +29,9 @@ namespace BoxNestGroup
         /// 「保存」ボタン操作
         /// 　各種データを保存して閉じる
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void saveClick(object sender, RoutedEventArgs e)
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
+        private void saveClick(object sender_, RoutedEventArgs e_)
         {
             Settings.Default.ClientID = textBoxClientID.Text;
             Settings.Default.SecretID = textBoxSecretID.Text;
@@ -47,9 +48,9 @@ namespace BoxNestGroup
         /// <summary>
         /// 「キャンセル」ボタン操
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cancelClick(object sender, RoutedEventArgs e)
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
+        private void cancelClick(object sender_, RoutedEventArgs e_)
         {
             this.Close();
         }

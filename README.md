@@ -50,6 +50,10 @@ ClosedXML : MIT
 
   https://github.com/ClosedXML/ClosedXML
 
+Costura.Fody : MIT
+
+  https://github.com/Fody/Costura
+
 
 ## 6.バージョン履歴
 
@@ -88,6 +92,12 @@ ClosedXML : MIT
  　グループの階層構造をXML化
 
  　それに伴いグループ名とIDを紐づけてるテキストファイルを廃止
+
+ 2025/02/16 0.3.2 更新
+
+ 　ユーザーのグループ表示をリストボックスに変更
+
+ 　不具合修正(XMLの親設定)
 
 ## 7.連絡
 

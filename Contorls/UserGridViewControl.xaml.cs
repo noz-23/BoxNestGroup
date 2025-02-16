@@ -1,4 +1,5 @@
-﻿using BoxNestGroup.Files;
+﻿using BoxNestGroup.Extensions;
+using BoxNestGroup.Files;
 using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using BoxNestGroup.Windows;
@@ -13,11 +14,6 @@ namespace BoxNestGroup.Contorls
     /// </summary>
     public partial class UserGridViewControl : System.Windows.Controls.UserControl
     {
-        /// <summary>
-        /// 「StringResouce.xaml」からの読み出し
-        /// </summary>
-        private const string USER_GROUP_NOW = "UserGroupNow";
-
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -54,7 +50,8 @@ namespace BoxNestGroup.Contorls
                         delList.Add(view_);
                         addList.Add(new UserDataGridView(boxUser));
 
-                        await BoxManager.Instance.AddGroupUserFromName(boxUser, view_.ListModAllGroup.Split('\n'));
+                        //await BoxManager.Instance.AddGroupUserFromName(boxUser, view_.ListModAllGroup.Split('\n'));
+                        await BoxManager.Instance.AddGroupUserFromName(boxUser, view_.ListNowAllGroup);
                     }
                     return;
                 }
@@ -68,7 +65,8 @@ namespace BoxNestGroup.Contorls
                         delList.Add(view_);
                         addList.Add(new UserDataGridView(boxUser));
 
-                        await BoxManager.Instance.UpDateGroupUserFromName(boxUser, view_.ListModAllGroup.Split('\n'));
+                        //await BoxManager.Instance.UpDateGroupUserFromName(boxUser, view_.ListModAllGroup.Split('\n'));
+                        await BoxManager.Instance.UpDateGroupUserFromName(boxUser, view_.ListNowAllGroup);
                     }
                     return;
                 }
@@ -88,18 +86,19 @@ namespace BoxNestGroup.Contorls
         /// <param name="e"></param>
         private void saveExcelButtonClick(object sender_, RoutedEventArgs e_)
         {
-            var dlg = new SaveFileDialog();
-
-            dlg.Filter = "EXCEL ファイル|*.xlsx";
-            dlg.FilterIndex = 1;
-            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            using (var dlg = new System.Windows.Forms.SaveFileDialog() )
             {
-                return;
-            }
+                dlg.Filter = "EXCEL ファイル|*.xlsx";
+                dlg.FilterIndex = 1;
+                if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    return;
+                }
 
-            var path = dlg.FileName;
-            // ファイルを保存処理
-            SettingManager.Instance.SaveExcelFile(path);
+                var path = dlg.FileName;
+                // ファイルを保存処理
+                SettingManager.Instance.SaveExcelFile(path);
+            }
         }
 
         /// <summary>
@@ -109,42 +108,19 @@ namespace BoxNestGroup.Contorls
         /// <param name="e_"></param>
         private void _dataGridUserMouseDoubleClick(object sender_, MouseButtonEventArgs e_)
         {
-            // https://qiita.com/kabosu/items/2e905a532632c1512e65
-            var elem = e_.MouseDevice.DirectlyOver as FrameworkElement;
-            if (elem == null)
+            //// https://qiita.com/kabosu/items/2e905a532632c1512e65
+            //// https://gist.github.com/kikuchy/2559432
+            if (_dataGridUser.SelectedItem is UserDataGridView view)
             {
-                return;
-            }
-            // ParentでDataGridCellが拾えなかった時はTemplatedParentを参照
-            // （Borderをダブルクリックした時）
-            var cell = (elem.Parent as DataGridCell)?? elem.TemplatedParent as DataGridCell;
-            if (cell == null)
-            {
-                return;
-            }
-            // ここでcellの内容を処理
-            // （cell.DataContextにバインドされたものが入っているかと思います）
-            if (cell.Column.Header==null)
-            {
-                return;
-            }
-            // https://gist.github.com/kikuchy/2559432
-            if (cell.Column.Header.ToString() != App.Current.Resources[USER_GROUP_NOW].ToString())
-            {
-                return;
-            }
-            var data = cell.DataContext as UserDataGridView;
-            if (data == null)
-            {
-                return;
-            }
-            LogFile.Instance.WriteLine($"変更 [{data.ListNowGroup}] [{data.ListNowAllGroup}]");
+                LogFile.Instance.WriteLine($"変更 [{view.ListNowGroup}] [{view.ListNowAllGroup}]");
 
-            var selectGroupWin = new SelectGroupWindows(data.ListNowGroup);
+                var selectGroupWin = new SelectGroupWindows(view.ListNowAllGroup);
 
-            if (selectGroupWin.ShowDialog() == true)
-            {
-                data.ListNowAllGroup = selectGroupWin.ListSelectGroup;
+                if (selectGroupWin.ShowDialog() == true)
+                {
+                    selectGroupWin.ListSelectGroup.Sort();
+                    view.ListNowAllGroup = selectGroupWin.ListSelectGroup;
+                }
             }
         }
     }

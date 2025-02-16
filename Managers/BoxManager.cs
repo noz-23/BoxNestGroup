@@ -48,21 +48,21 @@ namespace BoxNestGroup.Managers
         /// <summary>
         /// クライアントIDがあるか
         /// </summary>
-        public bool IsHaveClientID { get => IsNoData(Settings.Default.ClientID?.Trim() ?? string.Empty); }
+        public bool IsHaveClientID { get => _isNoData(Settings.Default.ClientID?.Trim() ?? string.Empty); }
         /// <summary>
         /// シークレットがあるか
         /// </summary>
-        public bool IsSecretID { get => IsNoData(Settings.Default.SecretID?.Trim() ?? string.Empty); }
+        public bool IsSecretID { get => _isNoData(Settings.Default.SecretID?.Trim() ?? string.Empty); }
 
         /// <summary>
         /// アクセストークンを取得済みか(true:取得済み)
         /// </summary>
-        public bool IsHaveAccessToken { get => IsNoData(Settings.Default.AccessToken?.Trim() ?? string.Empty); }
+        public bool IsHaveAccessToken { get => _isNoData(Settings.Default.AccessToken?.Trim() ?? string.Empty); }
 
         /// <summary>
         /// リフレッシュトークンを取得済みか(true:取得済み)
         /// </summary>
-        public bool IsHaveRefreshToken { get => IsNoData(Settings.Default.RefreshToken?.Trim() ?? string.Empty); }
+        public bool IsHaveRefreshToken { get => _isNoData(Settings.Default.RefreshToken?.Trim() ?? string.Empty); }
 
         /// <summary>
         /// オンライン接続してるか
@@ -91,11 +91,14 @@ namespace BoxNestGroup.Managers
             {
                 return;
             }
-            var session = await _client.Auth.AuthenticateAsync(userCode_);
-            _client = new BoxClient(_config, session);
             //
             try
             {
+                // アクセストークンの取得
+                var session = await _client.Auth.AuthenticateAsync(userCode_);
+                _client = new BoxClient(_config, session);
+
+                // リフレッシュトークンの保存
                 session = await _client.Auth.RefreshAccessTokenAsync(session.AccessToken);
                 _client = new BoxClient(_config, session);
             }
@@ -135,11 +138,18 @@ namespace BoxNestGroup.Managers
                 return;
             }
 
-            LogFile.Instance.WriteLine($"{Settings.Default.AccessToken}");
-            var session = await _client.Auth.RefreshAccessTokenAsync(Settings.Default.AccessToken);
-            _client = new BoxClient(_config, session);
+            try
+            {
+                LogFile.Instance.WriteLine($"{Settings.Default.AccessToken}");
+                var session = await _client.Auth.RefreshAccessTokenAsync(Settings.Default.AccessToken);
+                _client = new BoxClient(_config, session);
 
-            SetTokens(session.AccessToken, session.RefreshToken);
+                SetTokens(session.AccessToken, session.RefreshToken);
+            }
+            catch (Exception ex_)
+            {
+                LogFile.Instance.WriteLine($"Exception [{ex_.Message}]");
+            }
         }
 
 
@@ -497,9 +507,9 @@ namespace BoxNestGroup.Managers
         /// <param name="data_"></param>
         /// <param name="propertyName_"></param>
         /// <returns></returns>
-        private bool IsNoData(string data_, [CallerMemberName] string propertyName_ = "")
+        private bool _isNoData(string data_, [CallerMemberName] string propertyName_ = "")
         {
-            LogFile.Instance.WriteLine($"IsNoData [{data_}][{propertyName_}]");
+            LogFile.Instance.WriteLine($"_isNoData [{data_}][{propertyName_}]");
             switch (data_)
             {
                 case "N/A":

@@ -123,8 +123,7 @@ namespace BoxNestGroup
                     var loginFile = Directory.GetCurrentDirectory()+@"\"+ Properties.Resource.FILE_NAME_LOGIN_HTML;
 
                     _boxOAuthWebBrowser.NavigateToString(File.ReadAllText(File.ReadAllText(loginFile)));
-
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000);
                 }
                 this.Close();
             }

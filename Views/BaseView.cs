@@ -10,7 +10,7 @@ namespace BoxNestGroup.Views
         /// </summary>
         public enum Status
         {
-            [Description("なし")]
+            [Description("　　")]
             NONE,
             [Description("新規")]
             NEW,
@@ -30,6 +30,22 @@ namespace BoxNestGroup.Views
             var attributes = gm[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
             var description = ((DescriptionAttribute)attributes[0]).Description;
             return description;
+        }
+
+        /// <summary>
+        /// ステータス表示
+        /// </summary>
+
+        public Status StatudData
+        {
+            get => _StatudData;
+            private set => _StatudData = value;
+        }
+        protected Status _StatudData = Status.NONE;
+
+        public string StatusName
+        {
+            get => StatusString(_StatudData);
         }
 
 

@@ -142,6 +142,15 @@ namespace BoxNestGroup.Properties {
         }
         
         /// <summary>
+        ///   XmlGroupTree.xml に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string FILE_NAME_XML_GROUP_TREE_VIEW {
+            get {
+                return ResourceManager.GetString("FILE_NAME_XML_GROUP_TREE_VIEW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   [OFFLINE] に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ID_NAME_OFFLINE {

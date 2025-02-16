@@ -8,15 +8,15 @@ namespace BoxNestGroup.Extensions
     /// </summary>
     public static class VisualHeplerExtensionc
     {
-        public static T? GetParentOfType<T>( this DependencyObject element_) where T : DependencyObject
+        public static T? GetParentOfType<T>( this DependencyObject src_) where T : DependencyObject
         {
-            while(element_!=null)
+            while(src_ != null)
             {
-                if(element_ is T rtn)
+                if(src_ is T rtn)
                 {
                     return rtn;
                 }
-                element_ = VisualTreeHelper.GetParent(element_);
+                src_ = VisualTreeHelper.GetParent(src_);
             }
 
             return null;

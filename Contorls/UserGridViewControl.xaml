@@ -46,8 +46,10 @@
             AutoGenerateColumns="False"
             HeadersVisibility="All"
             CanUserAddRows="True"
-            MouseDoubleClick="_dataGridUserMouseDoubleClick"
             >
+            <!-- 
+            MouseDoubleClick="_dataGridUserMouseDoubleClick"
+            -->
             <DataGrid.RowHeaderStyle>
                 <Style TargetType="{x:Type DataGridRowHeader}">
                     <Setter Property="Content" Value="{Binding StatusName, Mode=OneWay}"/>
@@ -99,12 +101,32 @@
                     Width="3*"
                     IsReadOnly="True"
                     Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserId, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}" />
-                <DataGridTextColumn
+                <DataGridTemplateColumn
                     Header="{Binding Mode=OneWay, Source={StaticResource UserGroupNow}}"
-                    Binding="{Binding ListNowGroup, Mode=OneWay}"
                     Width="4*"
                     IsReadOnly="True"
-                    Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"
+                    >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ListBox
+                                MaxHeight="100"
+                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"                                
+                                ItemsSource="{Binding ListNowGroup, Mode=OneWay}"
+                                MouseDoubleClick="_dataGridUserMouseDoubleClick"
+                                Background="Aquamarine"
+                                >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
                     <DataGridColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="Aquamarine"/>
@@ -115,13 +137,32 @@
                             <Setter Property="Background" Value="Aquamarine"/>
                         </Style>
                     </DataGridColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
                     Header="{Binding Mode=OneWay, Source={StaticResource UserGroupAll}}"
-                    Binding="{Binding ListNowAllGroup, Mode=OneWay}"
                     Width="4*"
                     IsReadOnly="True"
-                    Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserAllGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
+                    Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserAllGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"
+                    >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ListBox
+                                MaxHeight="100"
+                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"                                
+                                ItemsSource="{Binding ListNowAllGroup, Mode=OneWay}"
+                                >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn
                     Header="{Binding Mode=OneWay, Source={StaticResource UserUsed}}"
                     Binding="{Binding UserSpaceUsed}"
