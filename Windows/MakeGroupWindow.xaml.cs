@@ -7,9 +7,13 @@ namespace BoxNestGroup.Windows
 {
     /// <summary>
     /// MakeGroupWindow.xaml の相互作用ロジック
+    /// グループ名作成
     /// </summary>
     public partial class MakeGroupWindow : Window
     {
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public MakeGroupWindow()
         {
             InitializeComponent();
@@ -25,8 +29,8 @@ namespace BoxNestGroup.Windows
         /// <summary>
         /// キャンセルボタンクリック
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _canselButtonClick(object sender_, RoutedEventArgs e_)
         {
             DialogResult = false;
@@ -36,8 +40,8 @@ namespace BoxNestGroup.Windows
         /// <summary>
         /// OKボタンクリック
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _okButtonClick(object sender_, RoutedEventArgs e_)
         {
             DialogResult = true;

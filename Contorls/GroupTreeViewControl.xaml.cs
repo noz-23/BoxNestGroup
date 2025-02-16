@@ -135,17 +135,17 @@ namespace BoxNestGroup.Contorls
         /// <param name="e_"></param>
         private void _deleteClick(object sender_, RoutedEventArgs e_)
         {
-            var item = _treeView.SelectedItem as XmlGroupTreeView;
-
-            LogFile.Instance.WriteLine($"[{item?.GroupName}]");
-            if (item == null)
+            if( _treeView.SelectedItem is XmlGroupTreeView item)
             {
-                return;
+                LogFile.Instance.WriteLine($"[{item?.GroupName}]");
+                if (item == null)
+                {
+                    return;
+                }
+
+                var parent = item.Parent?.ListChild ?? SettingManager.Instance.ListXmlGroupTreeView;
+                parent?.Remove(item);
             }
-
-            var parent = item.Parent?.ListChild ?? SettingManager.Instance.ListXmlGroupTreeView;
-            parent.Remove(item);
-
         }
     }
 }

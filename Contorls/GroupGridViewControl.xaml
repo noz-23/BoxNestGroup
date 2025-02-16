@@ -93,6 +93,5 @@
                     Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowGroupUserCount, Converter={StaticResource BoolVisibilityConverter}}"/>
             </DataGrid.Columns>
         </DataGrid>
-
     </Grid>
 </UserControl>

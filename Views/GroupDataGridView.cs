@@ -102,22 +102,6 @@ namespace BoxNestGroup.Views
         private bool _flgInital = false;
 
         /// <summary>
-        /// ステータス表示
-        /// </summary>
-
-        public Status StatudData
-        {
-            get => _statudData;
-            private set => _statudData = value;
-        }
-        private Status _statudData = Status.NONE;
-
-        public string StatusName
-        {
-            get => StatusString(_statudData);
-        }
-
-        /// <summary>
         /// グループ名
         /// </summary>
         public string GroupName { get; set; } = string.Empty;
@@ -160,7 +144,7 @@ namespace BoxNestGroup.Views
         {
             if (_flgInital == true )
             {
-                _statudData = (string.IsNullOrEmpty(GroupId) == true) ? Status.NEW : Status.MOD;
+                _StatudData = (string.IsNullOrEmpty(GroupId) == true) ? Status.NEW : Status.MOD;
                 base._NotifyPropertyChanged("StatusName");
             }
             base._NotifyPropertyChanged(propertyName_);

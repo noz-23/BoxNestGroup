@@ -23,6 +23,11 @@
             Drop="_drop"
             ItemsSource="{Binding ListXmlGroupTreeView,Source={x:Static manager:SettingManager.Instance}, Mode=OneWay}"
             >
+            <TreeView.Resources>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True"/>
+                </Style>
+            </TreeView.Resources>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding ListChild}">
                     <StackPanel Orientation="Horizontal">

@@ -32,6 +32,22 @@ namespace BoxNestGroup.Views
             return description;
         }
 
+        /// <summary>
+        /// ステータス表示
+        /// </summary>
+
+        public Status StatudData
+        {
+            get => _StatudData;
+            private set => _StatudData = value;
+        }
+        protected Status _StatudData = Status.NONE;
+
+        public string StatusName
+        {
+            get => StatusString(_StatudData);
+        }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void _NotifyPropertyChanged([CallerMemberName] String propertyName_ = "")

@@ -101,26 +101,6 @@
                     Width="3*"
                     IsReadOnly="True"
                     Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserId, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}" />
-
-                <!--
-                <DataGridTextColumn
-                    Header="{Binding Mode=OneWay, Source={StaticResource UserGroupNow}}"
-                    Binding="{Binding ListNowGroup, Mode=OneWay}"
-                    Width="4*"
-                    IsReadOnly="True"
-                    Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserNowGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}">
-                    <DataGridColumn.HeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="Aquamarine"/>
-                        </Style>
-                    </DataGridColumn.HeaderStyle>
-                    <DataGridColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="Aquamarine"/>
-                        </Style>
-                    </DataGridColumn.CellStyle>
-                </DataGridTextColumn>               
-                             -->
                 <DataGridTemplateColumn
                     Header="{Binding Mode=OneWay, Source={StaticResource UserGroupNow}}"
                     Width="4*"
@@ -135,6 +115,7 @@
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"                                
                                 ItemsSource="{Binding ListNowGroup, Mode=OneWay}"
                                 MouseDoubleClick="_dataGridUserMouseDoubleClick"
+                                Background="Aquamarine"
                                 >
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
@@ -157,14 +138,6 @@
                         </Style>
                     </DataGridColumn.CellStyle>
                 </DataGridTemplateColumn>
-                <!--
-                <DataGridTextColumn
-                    Header="{Binding Mode=OneWay, Source={StaticResource UserGroupAll}}"
-                    Binding="{Binding ListNowAllGroup, Mode=OneWay}"
-                    Width="4*"
-                    IsReadOnly="True"
-                    Visibility="{Binding Source={x:Static property:Settings.Default}, Path=ShowUserAllGroup, Converter={StaticResource BoolVisibilityConverter},Mode=OneWay}"/>
-                             -->
                 <DataGridTemplateColumn
                     Header="{Binding Mode=OneWay, Source={StaticResource UserGroupAll}}"
                     Width="4*"

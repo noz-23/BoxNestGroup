@@ -79,22 +79,6 @@ namespace BoxNestGroup.Views
         private bool _flgInital = false;
 
         /// <summary>
-        /// ステータス表示
-        /// </summary>
-        public Status StatudData
-        {
-            get => _statudData;
-            private set => _statudData = value;
-        }
-        private Status _statudData = Status.NONE;
-
-        public string StatusName
-        {
-            get => StatusString(_statudData);
-        }
-
-
-        /// <summary>
         /// ユーザー名
         /// </summary>
         public string UserName
@@ -122,24 +106,11 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 現在所属の最小表示(ネスト分引く)
         /// </summary>
-        //public string ListNowGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListMinimumGroup(_listNowAllGroup)); }
         public ObservableCollection<string> ListNowGroup{get =>new ObservableCollection<string>(SettingManager.Instance.ListXmlGroupTreeView.ListMinimumGroup(ListNowAllGroup));}
 
         /// <summary>
         /// 現在所属の全所属
         /// </summary>
-        //public string ListNowAllGroup
-        //{
-        //    get => string.Join("\n", _listNowAllGroup);
-        //    set
-        //    {
-        //        _listNowAllGroup.Clear();
-        //        _listNowAllGroup.AddRange(value.Split("\n"));
-        //        _listNowAllGroup.Sort();
-        //        _NotifyPropertyChanged();
-        //        _NotifyPropertyChanged("ListNowGroup");
-        //    }
-        //}
         public ObservableCollection<string> ListNowAllGroup
         { 
             get=> _listNowAllGroup;
@@ -156,23 +127,23 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 変更後の追加
         /// </summary>
-        public string ListModGroup
-        {
-            get => string.Join("\n", _listModGroup);
-            set
-            {
-                _listModGroup.Clear();
-                _listModGroup.AddRange(value.Split("\n"));
-                _NotifyPropertyChanged();
-                _NotifyPropertyChanged("ListModAllGroup");
-            }
-        }
-        private List<string> _listModGroup = new List<string>();
+        //public string ListModGroup
+        //{
+        //    get => string.Join("\n", _listModGroup);
+        //    set
+        //    {
+        //        _listModGroup.Clear();
+        //        _listModGroup.AddRange(value.Split("\n"));
+        //        _NotifyPropertyChanged();
+        //        _NotifyPropertyChanged("ListModAllGroup");
+        //    }
+        //}
+        //private List<string> _listModGroup = new List<string>();
 
         /// <summary>
         /// 変更後の前所属(ネスト後)
         /// </summary>
-        public string ListModAllGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListUniqueGroup(_listModGroup)); }
+        //public string ListModAllGroup { get => string.Join("\n", SettingManager.Instance.ListXmlGroupTreeView.ListUniqueGroup(_listModGroup)); }
 
         /// <summary>
         /// ユーザーの領域制限
@@ -196,7 +167,7 @@ namespace BoxNestGroup.Views
         {
             if (_flgInital == true)
             {
-                _statudData = (string.IsNullOrEmpty(UserId) ==true) ? Status.NEW : Status.MOD;
+                _StatudData = (string.IsNullOrEmpty(UserId) ==true) ? Status.NEW : Status.MOD;
                 base._NotifyPropertyChanged("StatusName");
             }
 
@@ -210,12 +181,6 @@ namespace BoxNestGroup.Views
         /// <param name="newName_">新しいグループ</param>
         public void UpdateGroupName(string oldName_, string newName_)
         {
-            //if (_listNowAllGroup.Contains(oldName_) == true) 
-            //{
-            //    _listNowAllGroup.Remove(oldName_);
-            //    _listNowAllGroup.Add(newName_);
-            //}
-            //_listNowAllGroup.Sort();
             if (ListNowAllGroup.Contains(oldName_) == true)
             {
                 ListNowAllGroup.Remove(oldName_);

@@ -21,17 +21,17 @@ namespace BoxNestGroup.Contorls
         /// <summary>
         /// 「グループ作成」ボタン操作
         /// </summary>
-        private async void _buttonMakeAndRenewGroupButtonClick(object sender_, RoutedEventArgs e_)
+        private void _buttonMakeAndRenewGroupButtonClick(object sender_, RoutedEventArgs e_)
         {
             // 更新は削除と追加で行う
             var delList = new List< GroupDataGridView >();
             var addList = new List<GroupDataGridView>();
-            foreach (var group in SettingManager.Instance.ListGroupDataGridView)
+            SettingManager.Instance.ListGroupDataGridView?.ToList().ForEach(async( group )=>
             {
                 if (string.IsNullOrEmpty(group.GroupId) == true)
                 {
                     // 新規
-                    if(BoxManager.Instance.IsOnlne ==true)
+                    if (BoxManager.Instance.IsOnlne == true)
                     {
                         LogFile.Instance.WriteLine($"OffLine {group.GroupName} {group.GroupId}");
 
@@ -57,7 +57,7 @@ namespace BoxNestGroup.Contorls
                     foreach (var view in SettingManager.Instance.ListXmlGroupTreeView.FindAllGroupName(group.GroupName))
                     {
                         // 名前が同じでグループIDがない場合
-                        if (string.IsNullOrEmpty(view.GroupId)==true)
+                        if (string.IsNullOrEmpty(view.GroupId) == true)
                         {
                             LogFile.Instance.WriteLine($"Name[{group.GroupName}] [{view.GroupId}] -> [{group.GroupId}]");
                             // 名前が同じでグループIDがない場合
@@ -73,12 +73,12 @@ namespace BoxNestGroup.Contorls
                         SettingManager.Instance.ListMembershipGroupNameLogin.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListUserDataGridView.UpdateGroupName(group.OldGroupName, group.GroupName);
                     }
-                    continue;
+                    return;
                 }
                 // オフライン
                 if (group.GroupId == Properties.Resource.ID_NAME_OFFLINE)
                 {
-                    if( group.IsSameOldGroupName==false)
+                    if (group.IsSameOldGroupName == false)
                     {
                         //FolderManager.Instance.UpdateGroupName(group.OldGroupName, group.GroupName);
                         SettingManager.Instance.ListXmlGroupTreeView.UpdateGroupName(group.OldGroupName, group.GroupName);
@@ -89,7 +89,7 @@ namespace BoxNestGroup.Contorls
                         addList.Add(new GroupDataGridView(group.GroupName));
                     }
                 }
-            }
+            });
             // その場で処理するとエラーになるため
             delList.ForEach(del => SettingManager.Instance.ListGroupDataGridView.Remove(del));
             addList.ForEach(add => SettingManager.Instance.ListGroupDataGridView.Add(add));

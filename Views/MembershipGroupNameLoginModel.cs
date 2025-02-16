@@ -10,7 +10,6 @@ namespace BoxNestGroup.Views
         /// </summary>
         /// <param name="groupId_">BoxグループID</param>
         /// <returns>所属人数</returns>
-        //public int CountBoxGroupMemberShip(string groupId_)
         public int CountBoxUserInGroupName(string groupName_)
         {
             if (string.IsNullOrEmpty(groupName_) == true)
@@ -39,13 +38,14 @@ namespace BoxNestGroup.Views
 
             return rtn;
         }
+
         /// <summary>
         /// ユーザーの所属するグループリストの取得
         /// </summary>
         /// <param name="userId_">ユーザーID</param>
         /// <param name="listAdd_">追加したいリストを指定する場合のグループ名一覧</param>
         /// <returns>ユーザーとグループの紐づけ一覧</returns>
-        public IList<MembershipGroupNameLoginView> ListGroupMembershipFromUserAddress(string userAddress_, IList<string>? listAdd_ = null)
+        public IList<MembershipGroupNameLoginView> ListGroupMembershipFromUserAddress(string userAddress_, ICollection<string>? listAdd_ = null)
         {
             var rtn = this.ToList().FindAll(view_ => (view_.UserLogin == userAddress_));
             if (listAdd_ != null)

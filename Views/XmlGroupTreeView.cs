@@ -10,12 +10,11 @@ namespace BoxNestGroup.Views
         /// </summary>
         private XmlGroupTreeView()
         {
+            // XML で読み込み時に利用
         }
         
-        public XmlGroupTreeView(string groupName_, XmlGroupTreeView? parent_) :this()
+        public XmlGroupTreeView(string groupName_, XmlGroupTreeView? parent_) :this(groupName_,string.Empty, parent_)
         {
-            GroupName = groupName_;
-            Parent = parent_;
         }
 
         public XmlGroupTreeView(string groupName_, string groupId_, XmlGroupTreeView? parent_) : this()
@@ -104,15 +103,29 @@ namespace BoxNestGroup.Views
         /// 親リストのグループ名リスト
         /// </summary>
         /// <returns></returns>
-        public IList<string> ListAllParentGroupName()
+        public ICollection<string> ListAllParentGroupName()
         {
-            var rtn = new List<string>();
+            var rtn = new HashSet<string>();
             if (Parent != null)
             {
                 rtn.Add(Parent.GroupName);
-                rtn.AddRange(Parent.ListAllParentGroupName());
+                rtn.UnionWith(Parent.ListAllParentGroupName());
             }
             return rtn;
+        }
+
+        /// <summary>
+        /// XML利用時に親を設定するため
+        /// </summary>
+        /// <param name="parent_"></param>
+        public void SetParent(XmlGroupTreeView parent_)
+        {
+            ListChild?.ToList()?.ForEach(view_ => 
+            {
+                view_.Parent = parent_ ;
+              view_.SetParent(this);
+          
+            });
         }
     }
 }

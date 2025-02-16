@@ -26,7 +26,7 @@ namespace BoxNestGroup.Views
         /// <summary>
         /// 保存ファイル処理
         /// </summary>
-        private string _fileName =Directory.GetCurrentDirectory()+ @"\XmlGroupTree.xml";
+        private string _fileName =Directory.GetCurrentDirectory()+ @"\"+ Properties.Resource.FILE_NAME_XML_GROUP_TREE_VIEW;
 
         /// <summary>
         /// 子も含めたグループ名の検索(持っているか)
@@ -113,7 +113,6 @@ namespace BoxNestGroup.Views
 
                 rtn = Math.Max(rtn, view_.ListChild.MaxNestCount(groupName_, nest_ + 1));
             });
-
 
             return rtn;
         }
@@ -298,6 +297,5 @@ namespace BoxNestGroup.Views
                 sw.Close();
             }
         }
-
     }
 }

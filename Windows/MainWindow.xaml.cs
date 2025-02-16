@@ -186,41 +186,43 @@ namespace BoxNestGroup
         /// 「オフライン」ボタン処理
         /// 　オフライン(Excel)でやる場合
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender_"></param>
+        /// <param name="e_"></param>
         private void _buttonOffLineButtonClick(object sender_, RoutedEventArgs e_)
         {
             LogFile.Instance.WriteLine($"[{sender_.ToString()}] [{e_.ToString()}]");
 
-            var dlg = new OpenFileDialog();
-
-            dlg.Filter = "EXCEL ファイル|*.xlsx";
-            dlg.FilterIndex = 1;
-            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            using (var dlg = new OpenFileDialog()) 
             {
-                return;
-            }
 
-            var wait = new WaitWindow() { Owner = this };
-
-            wait.Run += async (win_) =>
-            {
-                win_?.MessageClear();
-                var path = dlg.FileName;
-
-                clearBox();
-                // ファイルを開く処理
-                using (var workbook = new XLWorkbook(path))
+                dlg.Filter = "EXCEL ファイル|*.xlsx";
+                dlg.FilterIndex = 1;
+                if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 {
-                    win_?.MessageAdd("Excelファイル\n {path}\n  読み込み中");
-                    var worksheet = workbook.Worksheet(1); // 1スタート(0なし)
-                                                           // シート読み込み
-                    SettingManager.Instance.LoadExcelSheet(worksheet);
+                    return;
                 }
-                await Task.Delay(500);
-            };
 
-            wait.ShowDialog();
+                var wait = new WaitWindow() { Owner = this };
+
+                wait.Run += async (win_) =>
+                {
+                    win_?.MessageClear();
+                    var path = dlg.FileName;
+
+                    clearBox();
+                    // ファイルを開く処理
+                    using (var workbook = new XLWorkbook(path))
+                    {
+                        win_?.MessageAdd("Excelファイル\n {path}\n  読み込み中");
+                        var worksheet = workbook.Worksheet(1); // 1スタート(0なし)
+                                                               // シート読み込み
+                        SettingManager.Instance.LoadExcelSheet(worksheet);
+                    }
+                    await Task.Delay(500);
+                };
+
+                wait.ShowDialog();
+            }
         }
     }
 }
