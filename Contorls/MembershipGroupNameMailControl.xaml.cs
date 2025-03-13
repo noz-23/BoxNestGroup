@@ -1,16 +1,23 @@
-﻿namespace BoxNestGroup.Contorls
+﻿/*
+ * Reprise Report Log Analyzer
+ * Copyright (c) 2024 noz-23
+ *  https://github.com/noz-23/
+ * 
+ * Licensed under the MIT License 
+ * 
+ */
+namespace BoxNestGroup.Contorls;
+
+/// <summary>
+/// MembershipGroupNameMailControl.xaml の相互作用ロジック
+/// </summary>
+public partial class MembershipGroupNameMailControl : System.Windows.Controls.UserControl
 {
     /// <summary>
-    /// MembershipGroupNameMailControl.xaml の相互作用ロジック
+    /// コンストラクタ
     /// </summary>
-    public partial class MembershipGroupNameMailControl : System.Windows.Controls.UserControl
+    public MembershipGroupNameMailControl()
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public MembershipGroupNameMailControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

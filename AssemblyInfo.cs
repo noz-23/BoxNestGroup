@@ -1,3 +1,11 @@
+/*
+ * Reprise Report Log Analyzer
+ * Copyright (c) 2024 noz-23
+ *  https://github.com/noz-23/
+ * 
+ * Licensed under the MIT License 
+ * 
+ */
 using System.Windows;
 
 [assembly: ThemeInfo(

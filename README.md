@@ -99,6 +99,11 @@ Costura.Fody : MIT
 
  　不具合修正(XMLの親設定)
 
+  2025/03/16 0.3.3 更新
+
+ 　コード整理
+
+
 ## 7.連絡
 
 nzds23@yahoo.co.jp

@@ -1,51 +1,58 @@
-﻿using BoxNestGroup.Managers;
+﻿/*
+ * Reprise Report Log Analyzer
+ * Copyright (c) 2024 noz-23
+ *  https://github.com/noz-23/
+ * 
+ * Licensed under the MIT License 
+ * 
+ */
+using BoxNestGroup.Managers;
 using BoxNestGroup.Views;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace BoxNestGroup.Windows
+namespace BoxNestGroup.Windows;
+
+/// <summary>
+/// MakeGroupWindow.xaml の相互作用ロジック
+/// グループ名作成
+/// </summary>
+public partial class MakeGroupWindow : Window
 {
     /// <summary>
-    /// MakeGroupWindow.xaml の相互作用ロジック
-    /// グループ名作成
+    /// コンストラクタ
     /// </summary>
-    public partial class MakeGroupWindow : Window
+    public MakeGroupWindow()
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public MakeGroupWindow()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            SettingManager.Instance.ListGroupDataGridView?.ToList().ForEach(view_ => ListGroup.Add(new MakeGroupView(view_)));
-        }
+        SettingManager.Instance.ListGroupDataGridView?.ToList().ForEach(view_ => ListGroup.Add(new MakeGroupView(view_)));
+    }
 
-        /// <summary>
-        /// 作成グループリスト
-        /// </summary>
-        public ObservableCollection<MakeGroupView> ListGroup{get;private set;} =new ObservableCollection<MakeGroupView>();
+    /// <summary>
+    /// 作成グループリスト
+    /// </summary>
+    public ObservableCollection<MakeGroupView> ListGroup{get;private set;} =new ObservableCollection<MakeGroupView>();
 
-        /// <summary>
-        /// キャンセルボタンクリック
-        /// </summary>
-        /// <param name="sender_"></param>
-        /// <param name="e_"></param>
-        private void _canselButtonClick(object sender_, RoutedEventArgs e_)
-        {
-            DialogResult = false;
-            Close();
-        }
+    /// <summary>
+    /// キャンセルボタンクリック
+    /// </summary>
+    /// <param name="sender_"></param>
+    /// <param name="e_"></param>
+    private void _canselButtonClick(object sender_, RoutedEventArgs e_)
+    {
+        DialogResult = false;
+        Close();
+    }
 
-        /// <summary>
-        /// OKボタンクリック
-        /// </summary>
-        /// <param name="sender_"></param>
-        /// <param name="e_"></param>
-        private void _okButtonClick(object sender_, RoutedEventArgs e_)
-        {
-            DialogResult = true;
-            Close();
-        }
+    /// <summary>
+    /// OKボタンクリック
+    /// </summary>
+    /// <param name="sender_"></param>
+    /// <param name="e_"></param>
+    private void _okButtonClick(object sender_, RoutedEventArgs e_)
+    {
+        DialogResult = true;
+        Close();
     }
 }

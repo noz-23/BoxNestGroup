@@ -19,8 +19,8 @@
     <UserSecretsId>30228c13-abea-4d14-a6d9-eb8189a796da</UserSecretsId>
     <StartupObject>BoxNestGroup.App</StartupObject>
     <NeutralLanguage>ja-JP</NeutralLanguage>
-    <AssemblyVersion>0.3.0</AssemblyVersion>
-    <FileVersion>0.3.0</FileVersion>
+    <AssemblyVersion>0.3.3</AssemblyVersion>
+    <FileVersion>0.3.3</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

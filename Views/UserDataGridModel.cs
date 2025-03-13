@@ -1,30 +1,37 @@
-﻿using BoxNestGroup.Files;
+﻿/*
+ * Reprise Report Log Analyzer
+ * Copyright (c) 2024 noz-23
+ *  https://github.com/noz-23/
+ * 
+ * Licensed under the MIT License 
+ * 
+ */
+using BoxNestGroup.Files;
 using System.Collections.ObjectModel;
 
-namespace BoxNestGroup.Views
+namespace BoxNestGroup.Views;
+
+/// <summary>
+/// ユーザー情報の表示用クラス
+/// </summary>
+public class UserDataGridModel: ObservableCollection<UserDataGridView>
 {
     /// <summary>
-    /// ユーザー情報の表示用クラス
+    /// コンストラクタ
     /// </summary>
-    public class UserDataGridModel: ObservableCollection<UserDataGridView>
+    public UserDataGridModel() 
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public UserDataGridModel() 
-        {
-        }
+    }
 
-        /// <summary>
-        /// ユーザー名の更新
-        /// </summary>
-        /// <param name="oldName_">古いグループ</param>
-        /// <param name="newName_">新しいグループ</param>
-        public void UpdateGroupName(string oldName_, string newName_)
-        {
-            LogFile.Instance.WriteLine($"[{oldName_}] -> [{newName_}]");
+    /// <summary>
+    /// ユーザー名の更新
+    /// </summary>
+    /// <param name="oldName_">古いグループ</param>
+    /// <param name="newName_">新しいグループ</param>
+    public void UpdateGroupName(string oldName_, string newName_)
+    {
+        LogFile.Instance.WriteLine($"[{oldName_}] -> [{newName_}]");
 
-            this?.ToList().ForEach(m => m.UpdateGroupName(oldName_, newName_));
-        }
+        this?.ToList().ForEach(m => m.UpdateGroupName(oldName_, newName_));
     }
 }
